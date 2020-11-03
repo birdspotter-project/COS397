@@ -1,0 +1,50 @@
+@startuml
+actor user
+left to right direction
+cloud "ACG Compute" {
+  [Queue AI Analysis]
+  [Export Result Data]
+}
+folder System {
+node "Server Application" {
+  [Authenticate]
+  [User Management]
+  [Web Interface]
+  [Data Indexer]
+  [File Management]
+  [Analyze]
+  [Import Result]
+}
+
+
+database "Data Storage" {
+  frame "Users" {
+    [User]
+  }
+  frame "Data Sets" {
+    [Data Set]
+    [Raw Data path]
+    [Image paths]
+  }
+  frame "Processed Data" {
+      [Result Data]
+  }
+}
+database "File Storage" {
+ [Images]
+ [Raw Data]
+}
+}
+[Web Interface] <--> user
+[Result Data] -- [Data Indexer]
+[Data Set] -- [Data Indexer]
+[Raw Data path] -- [File Management]
+[Image paths] -- [File Management]
+[Images] -- [File Management]
+[Raw Data] -- [File Management]
+[User] - [Authenticate]
+[User] - [User Management]
+[Analyze] --> [Queue AI Analysis]
+[Import Result] <-- [Export Result Data]
+@enduml
+

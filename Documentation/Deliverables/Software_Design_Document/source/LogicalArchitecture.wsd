@@ -1,0 +1,30 @@
+@startuml
+left to right direction
+object Model {
+    -Users
+    -Data Sets
+    -Result Data
+    -Analysis Scripts
+    +update()
+    +query()
+}
+Model <-- View
+Model <-- Controller
+View - Controller
+object Controller {
+    +Generate Analysis Script
+    +List Data Sets
+    +Parse Results
+    +Ingest Data
+    +Authenticate
+    +Queue analysis
+    +Modify User
+}
+object View {
+    +View Data Sets
+    +View Result Map
+    +View Result Charts
+    +Analyze
+}
+@enduml
+
