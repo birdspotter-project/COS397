@@ -21,6 +21,7 @@ entity "Dataset" as ds {
     *isPublic: boolean
     date_created: date
     raw_data: raw_id
+    shpfile: shpfile_id
     sharedWith: []user_id  
 }
 entity "Role" as role {
@@ -61,7 +62,7 @@ entity "RawData" as raw {
 
 user ||- role
 user }o-- ds
-ds }|-- shp
+ds }|--|| shp
 ds |o- raw
 shp ||- img
 @enduml
