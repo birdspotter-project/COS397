@@ -1,0 +1,67 @@
+@startuml ER-Diagram
+skinparam linetype ortho
+entity "User" as user {
+    *user_id: string(10)
+    --
+    *username: string
+    first_name: string
+    last_name: string
+    role: role_id
+    email: string
+    password: string
+    created_date: date
+    last_login: date
+    data_sets: []data_id
+}
+entity "Dataset" as ds {
+    *data_id: string(10) 
+    --
+    *name: string
+    *owner: user_id
+    *isPublic: boolean
+    date_created: date
+    raw_data: raw_id
+    sharedWith: []user_id  
+}
+entity "Role" as role {
+    *role_id: string(10) 
+    --
+    *name: string
+    permissionLevel: number
+}
+
+entity "Shapefile" as shp {
+    *shpfile_id: string(10) 
+    --
+    IslandName: string
+    CIREG: string
+    Photo-date: date
+    Observer: string
+    Species: string
+    Behavior: int
+    CertainP1: boolean
+    Behaviorp2: string
+    Comments: string
+    Point_x: float
+    Point_y: float
+    Latatude: float
+    Longitude: float
+    Image: img_id
+}
+entity "Image" as img {
+    *img_id: string(10)
+    --
+    img_path: string
+}
+entity "RawData" as raw {
+    *raw_id: string(10)
+    --
+    data_path: string
+}
+
+user ||- role
+user }o-- ds
+ds }|-- shp
+ds |o- raw
+shp ||- img
+@enduml
