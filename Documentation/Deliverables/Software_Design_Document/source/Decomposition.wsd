@@ -1,44 +1,59 @@
 @startuml
 Class GUI{
     openWindow
-    displayWindows()
+    DisplayWindows()
+    SwapWindow(windowName)
 }
 Class MapView{
     shapefile file
-    dataPoint[] datapoints
+    DataPoint[] dataPoints
+    string colorScheme
 
-    displayDataPoint()
+    SelectDataset()
+    DisplayDataPoint()
 }
 Class DataView{
-    string currentDataset
-    string location
-    string[] species
+    string[] currentDatasets
+    DataPoint[] dataPoints
+    string visualization
 
-    selectDataset()
-    displayData()
+    ChangeVisualization()
+    AddDataset()
+    RemoveDataSet()
+    DisplayData()
 }
 Class BiasView{
     string currentDataset
-    string location
-    string[] species
+    DataPoint[] dataPoints
+    string visualization
 
-    selectDataset()
-    displayBias()
+    ChangeVisualization()
+    SelectDataset()
+    DisplayBias()
 }
 Class ImportView{
     bool canImport
     bool canExport
-    
-    import(setName, dateRange)
-    export(setName, date, file[])
+
+    Import(setName, dateRange, input/output)
+    Export(setName, date, file[])
 
 }
 Class DataPoint{
-    float[] coordinates
-    string birdType
-    float confidence
-    string nestingType
-    bool isHidden
+    int objectID
+    string IslandNamd
+    string CIREG
+    date PhotoDate
+    string Observer
+    string Species
+    int Behavior
+    string CertainP1
+    string BehaviorP2
+    string Comments
+    float Point_x
+    float Point_y
+    float Lat
+    float Long
 }
 
 GUI <|-- MapView
@@ -46,4 +61,6 @@ GUI <|-- BiasView
 GUI <|-- DataView
 GUI <|-- ImportView
 MapView <|-- DataPoint
+DataView <|-- DataPoint
+BiasView <|-- DataPoint
 @enduml
