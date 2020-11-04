@@ -40,7 +40,7 @@ entity "Shapefile" as shp {
     Observer: string
     Species: string
     Behavior: int
-    CertainP1: boolean
+    CertainP1: string
     Behaviorp2: string
     Comments: string
     Point_x: float
