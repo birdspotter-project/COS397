@@ -5,17 +5,17 @@ Class GUI{
     SwapWindow(windowName)
 }
 Class MapView{
-    shapefile file
-    DataPoint[] dataPoints
-    string colorScheme
+    file: shapefile
+    dataPoints: DataPoint[]
+    colorScheme string
 
     SelectDataset()
     DisplayDataPoint()
 }
 Class DataView{
-    string[] currentDatasets
-    DataPoint[] dataPoints
-    string visualization
+    currentDatasets: string[]
+    dataPoints: DataPoint[]
+    visualization: string
 
     ChangeVisualization()
     AddDataset()
@@ -23,17 +23,17 @@ Class DataView{
     DisplayData()
 }
 Class BiasView{
-    string currentDataset
-    DataPoint[] dataPoints
-    string visualization
+    currentDatasets: string[]
+    dataPoints: DataPoint[]
+    visualization: string
 
     ChangeVisualization()
     SelectDataset()
     DisplayBias()
 }
 Class ImportView{
-    bool canImport
-    bool canExport
+    canImport: bool
+    canExport: bool
 
     Import(setName, dateRange, input/output)
     Export(setName, date, file[])
