@@ -40,20 +40,20 @@ Class ImportView{
 
 }
 Class DataPoint{
-    int objectID
-    string IslandNamd
-    string CIREG
-    date PhotoDate
-    string Observer
-    string Species
-    int Behavior
-    string CertainP1
-    string BehaviorP2
-    string Comments
-    float Point_x
-    float Point_y
-    float Lat
-    float Long
+    objectID: int
+    IslandNamd: string
+    CIREG: string
+    PhotoDate: date
+    Observer: string
+    Species: string
+    Behavior: int
+    CertainP1: string
+    BehaviorP2: string
+    Comments: string
+    Point_x: float
+    Point_y: float
+    Lat: float
+    Long: float
 }
 
 GUI <|-- MapView
