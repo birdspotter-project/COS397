@@ -18,10 +18,10 @@ from django.urls import path, include
 from . import views
 
 urlpatterns = [
-	path('', views.index, name='index'),
-	path('data/', include('dataviz.urls')),
-	path('map/', include('map.urls')),
-	path('import/', include('dataio.urls')),
-	path('accounts/', include('accounts.urls')),
+    path('', views.index, name='index'),
+    path('data/', include('birdspotter.dataviz.urls')),
+    path('map/', include('birdspotter.map.urls')),
+    path('import/', include('birdspotter.dataio.urls')),
+    path('accounts/', include('birdspotter.accounts.urls')),
     path('admin/', admin.site.urls),
 ]
