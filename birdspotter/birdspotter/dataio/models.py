@@ -15,7 +15,7 @@ class Dataset(models.Model):
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     is_public = models.BooleanField(default=False)
     date_created = models.DateTimeField()
-    raw_data = models.ForeignKey(RawData, on_delete=models.CASCADE)
+    raw_data = models.ForeignKey(RawData, on_delete=models.CASCADE, null=True)
 
 
 class Shapefile(models.Model):
@@ -27,9 +27,9 @@ class Shapefile(models.Model):
     species = models.CharField(max_length=100)
     behavior = models.IntegerField()
     certain_p1 = models.CharField(max_length=20)
-    comments = models.CharField(max_length=500)
+    comments = models.CharField(max_length=500, blank=True)
     point_x = models.FloatField()
     point_y = models.FloatField()
     latitude = models.FloatField()
     longitude = models.FloatField()
-    image = models.ForeignKey(Image, on_delete=models.CASCADE)
+    image = models.ForeignKey(Image, on_delete=models.CASCADE, null=True)
