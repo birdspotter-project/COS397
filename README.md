@@ -2,8 +2,8 @@
 BirdSpotter is a graphical interface for integrating and viewing machine learning and field survey data for rapid population estimation of colonial nesting birds
 
 ### Deliverables
-[Software Requirements Specification](Documentation/Deliverables/Software_Requirements_Specification/SRS.pdf)
-[Software Design Document](Documentation/Deliverables/Software_Design_Document/SDD.pdf)
+- [Software Requirements Specification](Documentation/Deliverables/Software_Requirements_Specification/SRS.pdf)
+- [Software Design Document](Documentation/Deliverables/Software_Design_Document/SDD.pdf)
 
 ### Development Instructions
 1. Clone repo into desired directory using `git clone`
