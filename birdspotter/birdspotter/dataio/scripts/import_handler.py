@@ -21,7 +21,7 @@ def import_shapefile(shapefile):
                 owner = User.objects.get_by_natural_key('testUser')
             dataset = Dataset(name='Damaristest', is_public=True, date_created=datetime.now(), owner=owner,
                               raw_data=None, raw_data_id=None)
-            # dataset.save()
+            dataset.save()
             shp_objects = []
             for _, record in shp.iterrows():
                 shp_objects.append(Shapefile(data_set=dataset, island_name=record.IslandName, cireg=record.CIREG,
@@ -32,5 +32,5 @@ def import_shapefile(shapefile):
                                              point_x=record.geometry.x, point_y=record.geometry.y, latitude=record.Lat,
                                              longitude=record.Long, image=None))
             now = datetime.now()
-            # Shapefile.objects.bulk_create(shp_objects, 100)
+            Shapefile.objects.bulk_create(shp_objects, 100)
             return 'Objects created successfully in %d seconds' % (now - datetime.now()).total_seconds()
