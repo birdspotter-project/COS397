@@ -1,14 +1,19 @@
 @startuml
 start
 
-repeat
-:login_view;
-repeat while (valid credentials) is (no)
-->yes;
+
 
 repeat
 
 :main_view;
+if (login) then (login)
+    repeat
+    repeat while (valid credentials) is (no)
+    ->yes;
+else (no login)
+endif
+
+
 :select dataset;
 /'
 this nested repeat was the only way I could think of to get the
@@ -30,19 +35,21 @@ elseif (bias_view) then (\nchange\nscreen)
     :bias_view;
     :select visualization;
     repeat while ( ) is (select\nchart)
-elseif (import_view) then (\nchange\nscreen)
-    repeat
-    :import_view;
-    :select dataset;
-    repeat while ( ) is (import)
 elseif (export_view) then (\nchange\nscreen)
     repeat
     :export_view;
     :select dataset;
     repeat while ( ) is (export)
+elseif (import_view) then (\nchange\nscreen)
+    repeat
+    :import_view;
+    :select dataset;
+    repeat while ( ) is (import)
+
 endif
 
 repeat while (return to main_view) is (no)
+
 
 
 @enduml
