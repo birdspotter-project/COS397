@@ -24,7 +24,9 @@ but makes this look worse
 repeat
 
 if (map_view) then (\nchange\nscreen)
+    repeat
     :map_view;
+    repeat while ( ) is (report\nerror)
 elseif (data_view) then (\nchange\nscreen)
     repeat
     :data_view;
