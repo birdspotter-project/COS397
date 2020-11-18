@@ -1,0 +1,48 @@
+@startuml
+start
+
+repeat
+:login_view;
+repeat while (valid credentials) is (no)
+->yes;
+
+repeat
+
+:main_view;
+:select dataset;
+/'
+this nested repeat was the only way I could think of to get the
+desired flow, still not quite sure how to get the 'yes' label on
+the bottom, and leaving an unclosed repeat is probably bad form,
+but makes this look worse
+'/
+repeat
+
+if (map_view) then (\nchange\nscreen)
+    :map_view;
+elseif (data_view) then (\nchange\nscreen)
+    repeat
+    :data_view;
+    :select visualization;
+    repeat while ( ) is (select\nchart)
+elseif (bias_view) then (\nchange\nscreen)
+    repeat
+    :bias_view;
+    :select visualization;
+    repeat while ( ) is (select\nchart)
+elseif (import_view) then (\nchange\nscreen)
+    repeat
+    :import_view;
+    :select dataset;
+    repeat while ( ) is (import)
+elseif (export_view) then (\nchange\nscreen)
+    repeat
+    :export_view;
+    :select dataset;
+    repeat while ( ) is (export)
+endif
+
+repeat while (return to main_view) is (no)
+
+
+@enduml
