@@ -15,42 +15,49 @@ endif
 
 
 :select dataset;
-/'
-this nested repeat was the only way I could think of to get the
-desired flow, still not quite sure how to get the 'yes' label on
-the bottom, and leaving an unclosed repeat is probably bad form,
-but makes this look worse
-'/
+
 repeat
 
-if (map_view) then (\nchange\nscreen)
-    repeat
-    :map_view;
-    repeat while ( ) is (report\nerror)
-elseif (data_view) then (\nchange\nscreen)
-    repeat
-    :data_view;
-    :select visualization;
-    repeat while ( ) is (select\nchart)
-elseif (bias_view) then (\nchange\nscreen)
-    repeat
-    :bias_view;
-    :select visualization;
-    repeat while ( ) is (select\nchart)
-elseif (export_view) then (\nchange\nscreen)
-    repeat
-    :export_view;
-    :select dataset;
-    repeat while ( ) is (export)
-elseif (import_view) then (\nchange\nscreen)
-    repeat
-    :import_view;
-    :select dataset;
-    repeat while ( ) is (import)
+if (get view) then (General\nUser)
+    if (map_view) then (\nchange\nscreen)
+        repeat
+        :map_view;
+        repeat while ( ) is (report\nerror)
+    elseif (data_view) then (\nchange\nscreen)
+        repeat
+        :data_view;
+        :select visualization;
+        repeat while ( ) is (select\nchart)
+    elseif (bias_view) then (\nchange\nscreen)
+        repeat
+        :bias_view;
+        :select visualization;
+        repeat while ( ) is (select\nchart)
+    else (continue)
+
+    endif
+elseif (export) then (Registered User)
+    :select save parameters;
+    :select save location;
+
+    if (confirm) then (yes)
+        :save Data;
+    else ()
+    endif
+
+
+elseif (import) then (Privileged user)
+    :select data location;
+    :apply dataset name;
+    if (confirm) then (yes)
+        :upload dataset to ACG;
+    else (no)
+    
+    endif
 
 endif
-
 repeat while (return to main_view) is (no)
+repeat while ( ) is ( )
 
 
 
