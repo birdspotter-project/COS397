@@ -6,6 +6,7 @@ from birdspotter.accounts.models import User
 from datetime import datetime
 import zipfile
 import io
+import re
 
 def import_shapefile(shapefile):
     binary = shapefile.read()
@@ -16,10 +17,11 @@ def import_shapefile(shapefile):
             return 'Error finding shapefile'
         with zip.open(file_loc[0]) as f:
             shp = gp.GeoDataFrame.from_features(f)
+            file_name = re.findall(r"(\w+).shp", file_loc[0])
             owner = None
             if settings.DEBUG:
                 owner = User.objects.get_by_natural_key('testUser')
-            dataset = Dataset(name='Damaristest', is_public=True, date_created=datetime.now(), owner=owner,
+            dataset = Dataset(name=file_name, is_public=True, date_created=datetime.now(), owner=owner,
                               raw_data=None, raw_data_id=None)
             dataset.save()
             shp_objects = []
