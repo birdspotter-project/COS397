@@ -15,7 +15,7 @@ class Dataset(models.Model):
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     is_public = models.BooleanField(default=False)
     date_created = models.DateTimeField()
-    raw_data = models.ForeignKey(RawData, on_delete=models.CASCADE, null=True)
+    raw_data = models.ForeignKey(RawData, on_delete=models.CASCADE, null=True, blank=True)
 
 
 class Shapefile(models.Model):

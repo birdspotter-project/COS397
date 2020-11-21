@@ -1,5 +1,6 @@
 import geopandas as gp
 from django.conf import settings
+from django.utils import timezone
 from fiona.io import ZipMemoryFile
 from birdspotter.dataio.models import Dataset, Shapefile
 from birdspotter.accounts.models import User
@@ -17,7 +18,7 @@ def import_shapefile(shapefile):
             return 'Error finding shapefile'
         with zip.open(file_loc[0]) as f:
             shp = gp.GeoDataFrame.from_features(f)
-            file_name = re.findall(r"(\w+).shp", file_loc[0])
+            file_name = re.findall(r"(\w+).shp", file_loc[0])[0]
             owner = None
             if settings.DEBUG:
               try:
@@ -25,7 +26,7 @@ def import_shapefile(shapefile):
               except:
                 owner = User(username='testUser')
                 owner.save()
-            dataset = Dataset(name=file_name, is_public=True, date_created=datetime.now(), owner=owner,
+            dataset = Dataset(name=file_name, is_public=True, date_created=datetime.now(tz=timezone.utc), owner=owner,
                               raw_data=None, raw_data_id=None)
             dataset.save()
             shp_objects = []
