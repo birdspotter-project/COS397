@@ -20,7 +20,11 @@ def import_shapefile(shapefile):
             file_name = re.findall(r"(\w+).shp", file_loc[0])
             owner = None
             if settings.DEBUG:
+              try:
                 owner = User.objects.get_by_natural_key('testUser')
+              except:
+                owner = User(username='testUser')
+                owner.save()
             dataset = Dataset(name=file_name, is_public=True, date_created=datetime.now(), owner=owner,
                               raw_data=None, raw_data_id=None)
             dataset.save()
