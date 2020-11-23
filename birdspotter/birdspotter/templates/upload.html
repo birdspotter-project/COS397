@@ -1,5 +1,9 @@
+{% extends 'base.html'%}
+{% include 'navbar.html' %}
+{% block content %}
 <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
     <input type="file" name="document">
     <p><button type="submit">Upload</button> </p>
 </form>
+{% endblock %}
