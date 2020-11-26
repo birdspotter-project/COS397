@@ -26,7 +26,7 @@ def import_shapefile(shapefile):
               except:
                 owner = User(username='testUser')
                 owner.save()
-            dataset = Dataset(name=file_name, is_public=True, date_created=datetime.now(tz=timezone.utc), owner=owner,
+            dataset = Dataset(name=file_name, is_public=True, owner=owner,
                               raw_data=None, raw_data_id=None)
             dataset.save()
             shp_objects = []
