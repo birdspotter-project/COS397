@@ -6,5 +6,6 @@ from .scripts.import_handler import import_shapefile
 def index(request):
 	if request.method == "POST":
 		if doc := request.FILES['document'] if 'document' in request.FILES else None:
-			return HttpResponse(import_shapefile(doc))
+			import_shapefile(doc)
+			return render(request, 'success.html', {'redirect': '/'})
 	return render(request, 'upload.html', {'isAdmin': False})

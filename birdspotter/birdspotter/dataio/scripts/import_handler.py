@@ -4,7 +4,6 @@ from django.utils import timezone
 from fiona.io import ZipMemoryFile
 from birdspotter.dataio.models import Dataset, Shapefile
 from birdspotter.accounts.models import User
-from datetime import datetime
 import zipfile
 import io
 import re
@@ -38,6 +37,5 @@ def import_shapefile(shapefile):
                                              comments=record.Comments if record.Comments else '',
                                              point_x=record.geometry.x, point_y=record.geometry.y, latitude=record.Lat,
                                              longitude=record.Long, image=None))
-            now = datetime.now()
             Shapefile.objects.bulk_create(shp_objects, 100)
-            return 'Objects created successfully in %d seconds' % (now - datetime.now()).total_seconds()
+            return
