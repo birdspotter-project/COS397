@@ -1,6 +1,14 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-# Create your views here.
+from birdspotter.dataio.scripts.get_user_datasets import get_datasets_for_user
+from birdspotter.accounts.models import User
 
 def index(request):
-	return HttpResponse('This is the application index')
+	u = None
+	try:
+		u = User.objects.get_by_natural_key('testUser')
+	except:
+		u = User(username='testUser')
+		u.save()
+	datasets = get_datasets_for_user(u).values()
+	return render(request, 'index.html', {'datasets': datasets})
