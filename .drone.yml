@@ -1,0 +1,10 @@
+    pipeline:
+      build:
+        image: python:3.5.2
+        commands:
+          - pip3 install -r requirements.txt
+          - cd birdspotter
+          - python ./manage.py test
+          - cd ..
+        when:
+          event: [push, pull_request] # trigger step on push and pull events
