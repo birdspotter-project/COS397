@@ -8,7 +8,7 @@ import zipfile
 import io
 import re
 
-def import_shapefile(shapefile):
+def import_shapefile(shapefile, date_created):
     binary = shapefile.read()
     with ZipMemoryFile(binary) as zip:
         zf = zipfile.ZipFile(io.BytesIO(binary))
@@ -25,7 +25,7 @@ def import_shapefile(shapefile):
               except:
                 owner = User(username='testUser')
                 owner.save()
-            dataset = Dataset(name=file_name, is_public=True, owner=owner,
+            dataset = Dataset(name=file_name, is_public=True, owner=owner, date_collected=date_created,
                               raw_data=None, raw_data_id=None)
             dataset.save()
             shp_objects = []
