@@ -1,16 +1,42 @@
-from django.db import models
+"""All models related to data portrayed by the system for visualizations and analysis
+"""
 from django.conf import settings
+from django.db import models
 
 
 class Image(models.Model):
+    """Image that will be stored in fileserver and referenced in map view
+    
+    Attributes:
+        img_path (str): File path to image in fileserver
+    """
+
     img_path = models.FileField()
 
 
 class RawData(models.Model):
+    """Raw data that is stored in the system, can be Zip files, Shapefiles, or Geotiffs that will
+    be sent to the computation server
+    
+    Attributes:
+        path (str): File path to file on fileserver
+    """
+
     path = models.FileField()
 
 
 class Dataset(models.Model):
+    """Dataset object that is created either by importing a shapefile, or from resulting analysis
+    
+    Attributes:
+        date_collected (datetime.date): Date when the data was collected
+        date_created (datetime.datetime): Datetime when the dataset was uploaded to the system
+        is_public (bool): If the dataset can be seen by all users
+        name (str): Dataset name
+        owner (User): User who uploaded and is responsible for the dataset
+        raw_data (RawData): ForeignKey to dataio.RawData
+    """
+
     name = models.CharField(max_length=50)
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     is_public = models.BooleanField(default=False)
@@ -20,6 +46,25 @@ class Dataset(models.Model):
 
 
 class Shapefile(models.Model):
+    """Database implementation of a Shapefile row
+    
+    Attributes:
+        behavior (int): Boolean value of whether bird is nesting or not
+        certain_p1 (TYPE): Certainty of identification (Y-> Certain, NB-> unknown behavior, NS-> Unknown species)
+        cireg (str): Island registration number
+        comments (str): Observer comments
+        data_set (Dataset): ForeignKey to dataio.Dataset
+        image (Image): ForeignKey to dataio.Image
+        island_name (str): Island name
+        latitude (float): Latitude
+        longitude (float): Longitude
+        observer (string): Name of observer
+        photo_date (date): Date of photo
+        point_x (float): x coordinate in relation to raster image
+        point_y (float): y coordinate in relation to raster image
+        species (str): bird species
+    """
+
     data_set = models.ForeignKey(Dataset, on_delete=models.CASCADE)
     island_name = models.CharField(max_length=50)
     cireg = models.CharField(max_length=20)
