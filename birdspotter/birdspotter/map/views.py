@@ -28,8 +28,8 @@ def index(request):
     Long           float64
     '''
     #currently hardcoded in for testing, moves to DemarisCove directory. 
-    #I have added the DemarisCove folder under the documentation as it seemed appropriate
-    mypath = "../Documentation/DemarisCove/Damariscov.shp"
+    #expects directory to be on the same level as Repo base folder.
+    mypath = "../../DemarisCove/Damariscov.shp"
     gdf = gpd.read_file(mypath)
 
     args['isAdmin'] = False
