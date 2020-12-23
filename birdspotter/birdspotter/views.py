@@ -10,5 +10,6 @@ def index(request):
 	except:
 		u = User(username='testUser')
 		u.save()
+	print(request.user.is_authenticated)
 	datasets = get_datasets_for_user(u).values()
 	return render(request, 'index.html', {'datasets': datasets})
