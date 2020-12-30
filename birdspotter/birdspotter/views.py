@@ -4,12 +4,18 @@ from birdspotter.dataio.scripts.get_user_datasets import get_datasets_for_user
 from birdspotter.accounts.models import User
 
 def index(request):
-	u = None
+	current_user = None
 	try:
-		u = User.objects.get_by_natural_key('testUser')
-	except:
-		u = User(username='testUser')
-		u.save()
+		current_user = User.objects.get_by_natural_key(request.user)
+	except Exception as e:
+		# current_user = 
+		print(e)
+		# Placeholder for showing just public datasets
+		# current_user = User(username='testUser')
+		# current_user.save()
 	print(request.user.is_authenticated)
-	datasets = get_datasets_for_user(u).values()
+	if current_user:
+		datasets = get_datasets_for_user(current_user).values()
+	else:
+		datasets = None
 	return render(request, 'index.html', {'datasets': datasets})
