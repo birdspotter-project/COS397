@@ -8,11 +8,7 @@ def index(request):
 	try:
 		current_user = User.objects.get_by_natural_key(request.user)
 	except Exception as e:
-		# current_user = 
 		print(e)
-		# Placeholder for showing just public datasets
-		# current_user = User(username='testUser')
-		# current_user.save()
 	print(request.user.is_authenticated)
 	if current_user:
 		datasets = get_datasets_for_user(current_user).values()
