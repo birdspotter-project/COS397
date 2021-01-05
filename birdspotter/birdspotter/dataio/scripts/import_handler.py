@@ -10,7 +10,7 @@ from birdspotter.accounts.models import User
 from birdspotter.dataio.models import Dataset, Shapefile
 
 
-def import_shapefile(shapefile, date_created):
+def import_shapefile(request, shapefile, date_created):
     """Takes InMemoryFile and form data (date_created) as imports data into Shapefile model and 
     creates a Dataset for each file
 
@@ -28,13 +28,7 @@ def import_shapefile(shapefile, date_created):
         with zip_mem.open(file_loc[0]) as open_file:
             shp = gp.GeoDataFrame.from_features(open_file)
             file_name = re.findall(r"(\w+).shp", file_loc[0])[0]
-            owner = None
-            if settings.DEBUG:
-                try:
-                    owner = User.objects.get_by_natural_key('testUser')
-                except:
-                    owner = User(username='testUser')
-                    owner.save()
+            owner = User.objects.get_by_natural_key(request.user)
             dataset = Dataset(name=file_name, is_public=True, owner=owner,
                               date_collected=date_created, raw_data=None, raw_data_id=None)
             dataset.save()
