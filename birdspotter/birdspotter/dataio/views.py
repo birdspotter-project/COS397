@@ -24,12 +24,12 @@ def index(request):
             success = import_shapefile(request, form.cleaned_data['file_to_import'], form.cleaned_data['created_date'])
             if success:
                 args['statusDiv'] = "File upload successful"
-                return TemplateResponse(request, 'success.html', args)
-                #return render(request, 'template.html', {'redirect': '/'})
+                #return TemplateResponse(request, 'success.html', args)
+                return render(request, 'success.html', {'redirect': '/'})
             else:
                 args['statusDiv'] = "File upload fail, please upload a valid zipfile"
-                return TemplateResponse(request, 'success.html', args)
-                #return render(request, 'template.html', {'redirect': '/'})
+                #return TemplateResponse(request, 'success.html', args)
+                return render(request, 'success.html', {'redirect': '/'})
 
     form = ImportShapefileForm()
     context = {
