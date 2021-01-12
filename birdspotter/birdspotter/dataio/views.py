@@ -9,10 +9,10 @@ def index(request):
     """Landing page for dataio path
 
     Args:
-        request (HTTPRequest): Description
+        request (HTTPRequest): api requst
 
     Returns:
-        render
+        Attempts to import the uploaded shapefile and notifies the user if the import was sucessful
     """
     if request.method == "POST":
         form = ImportShapefileForm(data=request.POST, files=request.FILES)

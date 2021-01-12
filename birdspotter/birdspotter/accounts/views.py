@@ -3,13 +3,22 @@ from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 
+from birdspotter.accounts.models import User
 from .forms import AccountForm
 
 
 def login_view(request):
+	"""Login view that is displayed in the nav bar when a user is not authenticated
+
+	Args:
+		request (HTTPRequest): api request
+
+	Returns:
+		Attempts to authenticate user and redirects to the application index 
+	"""
 	if request.method == 'POST':
 		if user := authenticate(request, username=request.POST['username'], password=request.POST['password']):
-			login(request, user)	
+			login(request, user)
 			return redirect('/')
 		else:
 			return redirect('/')
@@ -21,8 +30,16 @@ def logout_view(request):
 
 @login_required
 def account_view(request):
-	form = AccountForm()
-	context = {
-		'form': form
-	}
-	return render(request, 'account.html', context)
+	if request.method == 'POST':
+		form = AccountForm(request.POST, instance=request.user)
+		if form.is_valid():
+			form.save()
+			return render(request, 'success.html', {'redirect': '/accounts/profile'})
+
+	form = AccountForm(initial={
+		'username': request.user.username,
+		'first_name': request.user.first_name,
+		'last_name': request.user.last_name,
+		'email': request.user.email,
+		})
+	return render(request, 'account.html', {'form': form})

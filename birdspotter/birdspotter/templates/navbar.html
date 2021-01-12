@@ -6,7 +6,7 @@
 
 	<div class="collapse navbar-collapse" id="navbarSupportedContent">
 		<ul class="navbar-nav mr-auto">
-			<span class="navbar-text">{{ request.user }}</span>
+			<span class="navbar-text">{{ request.user.username }}</span>
 			</ul>
 			<ul class="navbar-nav">
                 <li class="nav-item">
@@ -21,11 +21,10 @@
 			{% if request.user.is_authenticated %}
 			<li class="nav-item dropdown">
 				<a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-				{{ request.user }}</a>
+				{{ request.user.username }}</a>
 				<div class="dropdown-menu dropdown-menu-right" style="padding-bottom: 10px; width: 20em">
-						<a class="dropdown-item"href="accounts/">Profile</a>
+						<a class="dropdown-item"href="accounts/profile/">Profile</a>
 						<div style="padding-left: 20px"><button type="submit" class="btn btn-danger" onclick="location.href='accounts/logout/'">Logout</button></div>
-						<!-- <button></button><a class="dropdown-item"href="accounts/logout/">Logout</a> -->
 				</div>
 			</li>
 			{% else %}

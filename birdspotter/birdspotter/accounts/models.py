@@ -15,3 +15,5 @@ class User(AbstractUser):
     def save(self, *args, **kwargs):
 	    self.password = make_password(self.password)
 	    super(User, self).save(*args, **kwargs)
+    def __str__(self):
+    	return f"Username: %s\nFirstname: %s\nLastname: %s\nEmail: %s" % (self.username, self.first_name, self.last_name, self.email)
