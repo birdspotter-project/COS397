@@ -9,4 +9,4 @@ class ImportShapefileForm(forms.Form):
         file_to_import (File): File that will be saved into fileserver and read into database
         """
     created_date = forms.DateField()
-    file_to_import = forms.FileField()
+    file_to_import = forms.FileField(label=".zip file to import")

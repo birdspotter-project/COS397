@@ -32,7 +32,7 @@
 			<li class="nav-item dropdown">
         		<a class="nav-link dropdown-toggle " href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Login</a>
         		<div class="dropdown-menu dropdown-menu-right" style="padding: 15px; padding-bottom: 10px; width: 20em">
-                	<form class="form-horizontal" method="post" accept-charset="UTF-8" action="accounts/login/">
+                	<form class="form-horizontal" method="post" accept-charset="UTF-8" action="/accounts/login/">
 						{% csrf_token %}
                 		<input class="form-control login" type="text" name="username" placeholder="Username.." /><br>
                 		<input class="form-control login" type="password" name="password" placeholder="Password.."/>
