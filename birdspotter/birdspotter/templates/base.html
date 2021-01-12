@@ -29,41 +29,6 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
             integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
             crossorigin="anonymous"></script>
-    <script type="text/javascript" charset="utf8"
-            src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.js"></script>
-    <script>
-        $(document).ready(function () {
-            var table = $('#datasets').DataTable();
-            $('#datasets tbody').on('click', 'td', function () {
-                var tr = $(this).closest('tr');
-                if (!(tr.hasClass('childRowData') || $(this).hasClass('details-control'))) {
-                    if (tr.hasClass('selected')) {
-                        tr.removeClass('selected');
-                        $(".dataset-action").addClass('disabled')
-                    } else {
-                        table.$('tr.selected').removeClass('selected');
-                        tr.addClass('selected');
-                        $(".dataset-action").removeClass('disabled')
-                    }
-                }
-            });
-            // Add event listener for opening and closing details
-            $('#datasets tbody').on('click', 'td.details-control', function () {
-                var tr = $(this).closest('tr');
-                var row = table.row(tr);
-
-                if (row.child.isShown()) {
-                    // This row is already open - close it
-                    row.child.hide();
-                    tr.removeClass('shown');
-                } else {
-                    // Open this row
-                    row.child("<label for='metadata'>Metadata:<label><textarea id='metadata'>default value</textarea>", "childRowData").show();
-                    tr.addClass('shown');
-                }
-            });
-        });
-    </script>
     {% endblock %}
     
 </body>

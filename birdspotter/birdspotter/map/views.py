@@ -12,7 +12,6 @@ def index(request):
     '''
 
     datasets = get_datasets_for_user(request.user)
-    print(datasets[0])
     args = {}
     columns = ['IslandName', 'CIREG', 'PhotoDate', 'Observer', 'Species', 'Behavior', 'CertainP1',
                         'BehaviorP2', 'Comments', 'POINT_X', 'POINT_Y', 'Lat', 'Long', 'geometry']
