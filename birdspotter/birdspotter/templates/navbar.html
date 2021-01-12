@@ -18,16 +18,15 @@
 			<li class="nav-item">
 				<a class="nav-link" href="/import">Import</a>
 			</li>
-			{% if request.user.is_authenticated%}
+			{% if request.user.is_authenticated %}
 			<li class="nav-item dropdown">
-        		<a class="nav-link dropdown-toggle " href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Account</a>
-				<div class="dropdown-menu dropdown-menu-right">
-                	<a class="nav-link" href="/accounts/logout">Logout</a>
-                	<a class="nav-link" href="/accounts/profile">Profile</a>
-        		</div>
-				<!--
-				<a class="nav-link" href="/accounts">Account</a>
-				-->
+				<a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				{{ request.user }}</a>
+				<div class="dropdown-menu dropdown-menu-right" style="padding-bottom: 10px; width: 20em">
+						<a class="dropdown-item"href="accounts/">Profile</a>
+						<div style="padding-left: 20px"><button type="submit" class="btn btn-danger" onclick="location.href='accounts/logout/'">Logout</button></div>
+						<!-- <button></button><a class="dropdown-item"href="accounts/logout/">Logout</a> -->
+				</div>
 			</li>
 			{% else %}
 			<li class="nav-item dropdown">
