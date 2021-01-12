@@ -15,7 +15,7 @@ def index(request):
     Returns:
         render
     """
-    args = {}
+    args = {'redirect': '/'}
 
     if request.method == "POST":
         form = ImportShapefileForm(data=request.POST, files=request.FILES)
@@ -25,11 +25,11 @@ def index(request):
             if success:
                 args['statusDiv'] = "File upload successful"
                 #return TemplateResponse(request, 'success.html', args)
-                return render(request, 'success.html', {'redirect': '/'})
+                return render(request, 'success.html', args)
             else:
                 args['statusDiv'] = "File upload fail, please upload a valid zipfile"
                 #return TemplateResponse(request, 'success.html', args)
-                return render(request, 'success.html', {'redirect': '/'})
+                return render(request, 'success.html', args)
 
     form = ImportShapefileForm()
     context = {
