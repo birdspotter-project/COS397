@@ -10,7 +10,7 @@ def index(request):
 	"""
 	current_user = None
 	try:
-		current_user = User.objects.get_by_natural_key(request.user.username)
+		current_user = User.objects.get_by_natural_key(request.user)
 	except Exception as e:
 		print(e)
 	if current_user:

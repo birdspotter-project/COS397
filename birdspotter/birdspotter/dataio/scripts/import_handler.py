@@ -31,7 +31,7 @@ def import_shapefile(request, shapefile, date_created):
                 with zip_mem.open(file_loc[0]) as open_file:
                     shp = gp.GeoDataFrame.from_features(open_file)
                     file_name = re.findall(r"(\w+).shp", file_loc[0])[0]
-                    owner = User.objects.get_by_natural_key(request.user)
+                    owner = User.objects.get_by_natural_key(request.user.username)
                     dataset = Dataset(name=file_name, is_public=True, owner=owner,
                                       date_collected=date_created, raw_data=None, raw_data_id=None)
                     dataset.save()
