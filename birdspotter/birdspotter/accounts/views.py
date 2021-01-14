@@ -1,9 +1,7 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 
-from birdspotter.accounts.models import User
 from .forms import AccountForm
 
 
@@ -24,9 +22,11 @@ def login_view(request):
 			return redirect('/')
 	return redirect('/')
 
+
 def logout_view(request):
 	logout(request)
 	return redirect('/')
+
 
 @login_required
 def account_view(request):
