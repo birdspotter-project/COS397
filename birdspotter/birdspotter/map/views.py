@@ -1,3 +1,5 @@
+from birdspotter.dataio.models import Dataset, Shapefile
+from birdspotter.dataio.scripts.get_user_datasets import *
 import plotly
 from django.template.response import TemplateResponse
 import geopandas as gpd
@@ -9,6 +11,7 @@ def index(request):
     '''
     '''
 
+    datasets = get_datasets_for_user(request.user)
     args = {}
     columns = ['IslandName', 'CIREG', 'PhotoDate', 'Observer', 'Species', 'Behavior', 'CertainP1',
                         'BehaviorP2', 'Comments', 'POINT_X', 'POINT_Y', 'Lat', 'Long', 'geometry']
