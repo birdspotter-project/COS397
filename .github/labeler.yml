@@ -1,6 +1,8 @@
 # Add 'code' to any changes within 'src' folder or any subfolders
 code:
   - birdspotter/**/*
+  - birdspotter/birdspotter/**/*
+  - birdspotter/*
 dev:
   - .devcontainer/**/*
 docs:
