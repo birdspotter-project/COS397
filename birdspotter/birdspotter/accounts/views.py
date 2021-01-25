@@ -24,9 +24,6 @@ def login_view(request):
                                 username=request.POST['username'],
                                 password=request.POST['password']):
             login(request, user)
-            return redirect('/')
-        else:
-            return redirect('/')
     return redirect('/')
 
 
