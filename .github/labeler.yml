@@ -12,5 +12,5 @@ cicd:
   - .drone*
 docker:
   - birdspotter/docker/**/*
-deps-update
+deps-update:
   - birdspotter/requirements.txt
