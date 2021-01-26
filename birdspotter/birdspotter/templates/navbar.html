@@ -23,8 +23,8 @@
 				<a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 				{{ request.user }}</a>
 				<div class="dropdown-menu dropdown-menu-right" style="padding-bottom: 10px; width: 20em">
-						<a class="dropdown-item"href="accounts/profile/">Profile</a>
-						<div style="padding-left: 20px"><button type="submit" class="btn btn-danger" onclick="location.href='accounts/logout/'">Logout</button></div>
+						<a class="dropdown-item"href="/accounts/profile/">Profile</a>
+						<div style="padding-left: 20px"><button type="submit" class="btn btn-danger" onclick="location.href='/accounts/logout/'">Logout</button></div>
 				</div>
 			</li>
 			{% else %}
