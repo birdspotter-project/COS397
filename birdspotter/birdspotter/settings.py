@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'birdspotter.accounts',
     'birdspotter.dataio',
-    'birdspotter'
+    'birdspotter',
+    'widget_tweaks',
 ]
 AUTH_USER_MODEL = 'accounts.User'
 
