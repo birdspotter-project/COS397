@@ -1,10 +1,19 @@
-    pipeline:
-      build:
-        image: python:3.5.2
-        commands:
-          - pip3 install -r requirements.txt
-          - cd birdspotter
-          - python ./manage.py test
-          - cd ..
-        when:
-          event: [push, pull_request] # trigger step on push and pull events
+kind: pipeline
+type: docker
+name: default
+workspace:
+  base: /app
+steps:
+- name: unit-test
+  image: devinchristianson/birdspotter:all-deps
+  commands:
+    - cd /app/birdspotter
+    - pip3 install -r requirements.txt
+    - python manage.py makemigrations && python manage.py migrate
+    - python ./manage.py test
+trigger:
+  branch:
+    - master
+  event:
+    - push
+    - pull_request

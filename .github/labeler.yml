@@ -1,0 +1,14 @@
+# Add 'code' to any changes within 'src' folder or any subfolders
+code:
+  - any: ['birdspotter/**/*','birdspotter/*','!birdspotter/docker/**/*','!birdspotter/docker/*']
+dev:
+  - .devcontainer/**/*
+docs:
+  - Documentation/**/*
+  - Documentation/*
+cicd:
+  - any: ['.github/**/*','.github/*', '.drone/**/*','.drone*']
+docker:
+  - ['birdspotter/docker/**/*','birdspotter/docker/*']
+deps-update:
+  - birdspotter/requirements.txt
