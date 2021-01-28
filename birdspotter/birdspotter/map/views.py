@@ -32,7 +32,7 @@ def index(request):
     '''
     #currently hardcoded in for testing, moves to DemarisCove directory. 
     #expects directory to be on the same level as Repo base folder.
-    mypath = "../../DemarisCove/Damariscov.shp"
+    mypath = "../../DamarisCove/Damariscov.shp"
     gdf = gpd.read_file(mypath)
 
     args['isAdmin'] = False
