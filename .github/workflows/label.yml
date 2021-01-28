@@ -6,7 +6,9 @@
 # https://github.com/actions/labeler/blob/master/README.md
 
 name: Auto-Labeler
-on: [pull_request_target, push]
+on: 
+  pull_request: 
+    types: [ opened, synchronize, reopened ]
 
 jobs:
   label:
