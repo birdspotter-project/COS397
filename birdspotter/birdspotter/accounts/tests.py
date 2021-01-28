@@ -84,5 +84,4 @@ class AccountEditingTests(TestCase):
             form = AccountForm(data={'email': email}, instance=self.user)
             if success := form.is_valid():
                 form.save()
-            breakpoint()
             self.assertFalse(success)
