@@ -1,23 +1,30 @@
-"""All models related to data portrayed by the system for visualizations and analysis
+"""All models related to data portrayed by the system for
+visualizations and analysis
 """
 from django.conf import settings
 from django.db import models
 
+import uuid
+
 
 class Image(models.Model):
     """Image that will be stored in fileserver and referenced in map view
-    
+
     Attributes:
         img_path (str): File path to image in fileserver
     """
 
     img_path = models.FileField()
+    image_id = models.UUIDField(primary_key=False,
+                                default=uuid.uuid4,
+                                editable=False, unique=True)
 
 
 class RawData(models.Model):
-    """Raw data that is stored in the system, can be Zip files, Shapefiles, or Geotiffs that will
+    """Raw data that is stored in the system, can be Zip files,
+    Shapefiles, or Geotiffs that will
     be sent to the computation server
-    
+
     Attributes:
         path (str): File path to file on fileserver
     """
@@ -26,8 +33,8 @@ class RawData(models.Model):
 
 
 class Dataset(models.Model):
-    """Dataset object that is created either by importing a shapefile, or from resulting analysis
-    
+    """Dataset object that is created either by importing a shapefile,
+    or from resulting analysis
     Attributes:
         date_collected (datetime.date): Date when the data was collected
         date_created (datetime.datetime): Datetime when the dataset was uploaded to the system
@@ -38,16 +45,21 @@ class Dataset(models.Model):
     """
 
     name = models.CharField(max_length=50)
-    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    dataset_id = models.UUIDField(primary_key=False,
+                                  default=uuid.uuid4,
+                                  editable=False, unique=True)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL,
+                              on_delete=models.CASCADE)
     is_public = models.BooleanField(default=False)
     date_collected = models.DateField(blank=True)
     date_created = models.DateTimeField(auto_now_add=True)
-    raw_data = models.ForeignKey(RawData, on_delete=models.CASCADE, null=True, blank=True)
+    raw_data = models.ForeignKey(RawData, on_delete=models.CASCADE,
+                                 null=True, blank=True)
 
 
 class Shapefile(models.Model):
     """Database implementation of a Shapefile row
-    
+
     Attributes:
         behavior (int): Boolean value of whether bird is nesting or not
         certain_p1 (TYPE): Certainty of identification (Y-> Certain, NB-> unknown behavior, NS-> Unknown species)
@@ -66,6 +78,9 @@ class Shapefile(models.Model):
     """
 
     data_set = models.ForeignKey(Dataset, on_delete=models.CASCADE)
+    entry_id = models.UUIDField(primary_key=False,
+                                default=uuid.uuid4,
+                                editable=False, unique=True)
     island_name = models.CharField(max_length=50)
     cireg = models.CharField(max_length=20)
     photo_date = models.DateField()
