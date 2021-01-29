@@ -1,0 +1,5 @@
+uses:
+  - django
+autodetect: false
+strictness: medium
+test-warnings: true
