@@ -8,8 +8,8 @@ class AccountForm(ModelForm):
         fields = ['username', 'first_name', 'last_name', 'email']
 
         def __init__(self, *args, **kwargs):
-            super(AccountForm, self).__init__(*args, **kwargs)
-            for field_name, field in self.fields.items():
+            super().__init__(*args, **kwargs)
+            for _, field in self.fields.items():
                 if field.widget.attrs.get('class'):
                     field.widget.attrs['class'] += ' form-control'
                 else:

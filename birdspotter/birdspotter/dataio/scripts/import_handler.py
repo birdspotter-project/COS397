@@ -3,7 +3,6 @@ import re
 import zipfile
 
 import geopandas as gp
-from django.conf import settings
 from fiona.io import ZipMemoryFile
 
 from birdspotter.accounts.models import User

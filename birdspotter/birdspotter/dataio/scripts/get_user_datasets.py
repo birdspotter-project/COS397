@@ -1,6 +1,4 @@
-from birdspotter.accounts.models import User
-from birdspotter.dataio.models import Dataset, Shapefile
-import json
+from birdspotter.dataio.models import Dataset
 
 
 def get_datasets_for_user(user):
