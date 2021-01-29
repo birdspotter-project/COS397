@@ -1,7 +1,7 @@
-Nesting,Non-Nesting,Specie
-135,38,Gull
-26,8,Razorbill
-19,11,Common Eider
-46,19,Sandpiper
-87,23,Cormorant
-61,14,Great Cormorant
+,Specie,Nesting,Non-Nesting
+0,Gull,135,38
+1,Razorbill,26,8
+2,Common Eider,19,11
+3,Sandpiper,46,19
+4,Cormorant,87,23
+5,Great Cormorant,61,14
