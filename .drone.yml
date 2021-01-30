@@ -5,12 +5,40 @@ workspace:
   base: /app
 steps:
 - name: unit-test
-  image: devinchristianson/birdspotter:all-deps
+  image: devinchristianson/birdspotter:dev-deps
   commands:
     - cd /app/birdspotter
-    - pip3 install -r requirements.txt
     - python manage.py makemigrations && python manage.py migrate
     - python ./manage.py test
+- name: linter-tests
+  image: devinchristianson/birdspotter:dev-deps
+  commands:
+    - cd /app/birdspotter
+    - prospector
+- name: security-tests
+  image: devinchristianson/birdspotter:dev-deps
+  commands:
+    - cd /app/birdspotter
+    - bandit -r .
+- name: publish-dev-image
+  depends_on: [unit-test, security-tests, linter-tests]
+  when:
+    status: 
+      - success
+    event: 
+      - push
+  image: plugins/docker
+  settings:
+    repo: devinchristianson/birdspotter
+    username: 
+      from_secret: dockerhub_username
+    password: 
+      from_secret: dockerhub_password
+    dockerfile: birdspotter/docker/prod.dockerfile
+    context: birdspotter/
+    tags: 
+      - dev
+    dry_run: false
 trigger:
   branch:
     - master

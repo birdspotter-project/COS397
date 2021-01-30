@@ -2,7 +2,6 @@ from django.test import TestCase
 import time
 import random
 import string
-
 from .models import User
 from .forms import AccountForm
 
@@ -15,9 +14,10 @@ class AccountEditingTests(TestCase):
         """
         Create test user to be called from every test that contains a time string from when the test starts
         """
+        # The following credentials are used for unit testing purposes only
         self.CREDS = {
             'username': gen_name(),
-            'password': ''.join(random.choice(string.ascii_letters) for _ in range(9))
+            'password': ''.join(random.choice(string.ascii_letters) for _ in range(9)) # nosec
         }
         self.user = User.objects.create(username=self.CREDS['username'])
         self.user.set_password(self.CREDS['password'])
