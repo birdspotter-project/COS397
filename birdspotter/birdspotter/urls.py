@@ -22,7 +22,6 @@ urlpatterns = [
     path('data/', include('birdspotter.dataviz.urls')),
     path('map/', include('birdspotter.map.urls')),
     path('import/', include('birdspotter.dataio.urls')),
-    # path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/', include('birdspotter.accounts.urls')),
     path('admin/', admin.site.urls),
 ]
