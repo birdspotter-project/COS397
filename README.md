@@ -1,3 +1,4 @@
+[![codecov](https://codecov.io/gh/devinchristianson/COS397/branch/master/graph/badge.svg?token=21BMX3EDC6)](https://codecov.io/gh/devinchristianson/COS397)
 # BirdSpotter
 BirdSpotter is a graphical interface for integrating and viewing machine learning and field survey data for rapid population estimation of colonial nesting birds. The creation of this interface will allow officials to quickly and effectively draw conclusions based on data provided from human and machine learning observations of bird species, activity, and location. 
 
