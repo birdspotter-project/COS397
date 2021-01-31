@@ -4,12 +4,35 @@ name: default
 workspace:
   base: /app
 steps:
+- name: rebuild-dev-deps
+  image: plugins/docker
+  settings:
+    repo: devinchristianson/birdspotter
+    username: 
+      from_secret: dockerhub_username
+    password: 
+      from_secret: dockerhub_password
+    dockerfile: birdspotter/docker/dev-deps.dockerfile
+    context: birdspotter/
+    tags: 
+      - dev-deps
 - name: unit-test
   image: devinchristianson/birdspotter:dev-deps
+  pull: always
   commands:
     - cd /app/birdspotter
     - python manage.py makemigrations && python manage.py migrate
-    - python ./manage.py test
+    - coverage run --source='.' manage.py test
+    - coverage report
+    - coverage xml
+- name: coverage
+  image: plugins/codecov
+  depends_on: [ unit-test ]
+  settings:
+    token: 
+        from_secret: codecov_token
+    files:
+     - /app/birdspotter/coverage.xml
 - name: linter-tests
   image: devinchristianson/birdspotter:dev-deps
   commands:
