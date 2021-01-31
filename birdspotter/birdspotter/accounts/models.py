@@ -1,5 +1,4 @@
 from django.contrib.auth.models import AbstractUser
-from django.contrib.auth.hashers import make_password
 from django.db import models
 
 import uuid
@@ -14,10 +13,6 @@ class User(AbstractUser):
     user_id = models.UUIDField(primary_key=False,
                                default=uuid.uuid4, editable=False, unique=True)
 
-    def save(self, *args, **kwargs):
-        if not self.pk:
-            self.password = make_password(self.password)
-        super(User, self).save(*args, **kwargs)
     def to_dict(self):
         return {
             'username': self.username,
