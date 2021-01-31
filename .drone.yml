@@ -18,6 +18,7 @@ steps:
       - dev-deps
 - name: unit-test
   image: devinchristianson/birdspotter:dev-deps
+  pull: always
   commands:
     - cd /app/birdspotter
     - python manage.py makemigrations && python manage.py migrate
