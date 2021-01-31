@@ -1,4 +1,4 @@
-FROM devinchristianson/birdspotter:all-deps
+FROM devinchristianson/birdspotter:dev-deps
 RUN apt update -y && apt install -y git locales sudo fish && echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && locale-gen
 RUN adduser --disabled-password --gecos "" vscode && usermod -aG sudo vscode \
     && echo vscode ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/vscode \
