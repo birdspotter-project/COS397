@@ -21,8 +21,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '1x0(#3afyyont_8x6yvtog2^&u5gf@9x@&#+o1=onnfg+5e!q^'
+# SECURITY WARNING: keep the secret key used in production secret! 
+# Airtable task is open for this
+SECRET_KEY = '1x0(#3afyyont_8x6yvtog2^&u5gf@9x@&#+o1=onnfg+5e!q^' #nosec
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -41,7 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'birdspotter.accounts',
     'birdspotter.dataio',
-    'birdspotter'
+    'birdspotter',
+    'widget_tweaks',
 ]
 AUTH_USER_MODEL = 'accounts.User'
 

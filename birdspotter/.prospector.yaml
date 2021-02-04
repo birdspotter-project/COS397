@@ -1,0 +1,8 @@
+uses:
+  - django
+autodetect: false
+strictness: medium
+test-warnings: true
+ignore-paths:
+# dataviz hasn't been implemented yet
+  - birdspotter/dataviz/

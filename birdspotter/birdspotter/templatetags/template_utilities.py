@@ -31,10 +31,7 @@ def get_date(dictionary, key):
     Returns:
         datetime.date: date component of datetime
     """
-    if val := dictionary[key]:
-        return val.date()
-    else:
-        return val
+    return dictionary[key].date()
 
 
 @register.filter
