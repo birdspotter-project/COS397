@@ -14,7 +14,7 @@ def index(request):
     # Total bird count data
     birds = ["Gull", "Razorbill", "Common Eider", "Sandpiper"
              , "Cormorants", "Great Cormorant"]
-    data_total = {'Specie': [birds[i] for i in range(len(birds))],
+    data_total = {'Specie': birds,
                   'Pop': [round(random.gauss(100, 50)) for _ in range(len(birds))]}
     bird_data_total = pd.DataFrame(data_total)
     #bird_data_total.loc[bird_data_total['Pop'] < 2.0, 'Specie'] = 'Other Birds' # Represents 'other birds' based on relative data size
