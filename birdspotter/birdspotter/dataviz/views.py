@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+#from django.http import HttpResponse
 import plotly
 import plotly.express as px
 import plotly.graph_objects as go
@@ -28,7 +28,7 @@ def index(request):
              , "Cormorants", "Great Cormorant"]
     data_nesting = {'Specie': [birds[i] for i in range(len(birds))],
                     'Nesting': [round(random.gauss(100, 50)) for _ in range(len(birds))]}
-    bird_nesting_data = pd.DataFrame(data_nesting)
+    #bird_nesting_data = pd.DataFrame(data_nesting)
 
     # Nesting bird count graph fig
     #fig_bird_nesting = px.pie(bird_nesting_data, values='Nesting', names='Specie', title='Specie Behavior')
