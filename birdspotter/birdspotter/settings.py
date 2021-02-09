@@ -34,15 +34,15 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'birdspotter.accounts',
+    'birdspotter.dataio',
+    'birdspotter',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'birdspotter.accounts',
-    'birdspotter.dataio',
-    'birdspotter',
     'widget_tweaks',
 ]
 AUTH_USER_MODEL = 'accounts.User'
