@@ -12,12 +12,14 @@ steps:
       from_secret: dockerhub_username
     password: 
       from_secret: dockerhub_password
-    dockerfile: birdspotter/docker/dev-deps.dockerfile
+    dockerfile: docker/Dockerfile
     context: birdspotter/
+    target: dev
     tags: 
       - dev-deps
 - name: unit-test
   image: devinchristianson/birdspotter:dev-deps
+  depends_on: [ rebuild-dev-deps ]
   pull: always
   commands:
     - cd /app/birdspotter
@@ -27,7 +29,7 @@ steps:
     - coverage xml
 - name: coverage
   image: plugins/codecov
-  depends_on: [ unit-test ]
+  depends_on: [ unit-test, rebuild-dev-deps ]
   settings:
     token: 
         from_secret: codecov_token
@@ -35,14 +37,10 @@ steps:
      - /app/birdspotter/coverage.xml
 - name: linter-tests
   image: devinchristianson/birdspotter:dev-deps
+  depends_on: [ rebuild-dev-deps ]
   commands:
     - cd /app/birdspotter
     - prospector
-- name: security-tests
-  image: devinchristianson/birdspotter:dev-deps
-  commands:
-    - cd /app/birdspotter
-    - bandit -r .
 - name: publish-dev-image
   depends_on: [unit-test, security-tests, linter-tests]
   when:
