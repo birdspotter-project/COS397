@@ -10,6 +10,7 @@ FROM base as dev
 RUN pip --disable-pip-version-check install 'prospector==1.3.1' 'bandit==1.7.0' 'coverage==5.4'
 
 FROM base AS prod
+HEALTHCHECK CMD curl -s -f -I localhost:8000/health/
 RUN apt install -y libpq-dev \
     && pip3 --disable-pip-version-check --no-cache-dir install python-dev 'psycopg2==2.8.6'
 WORKDIR /usr/src/app
