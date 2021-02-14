@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 from pathlib import Path
 import os
+import logging
+from django.core.management.utils import get_random_secret_key  
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -23,13 +25,23 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret! 
 # Airtable task is open for this
-SECRET_KEY = '1x0(#3afyyont_8x6yvtog2^&u5gf@9x@&#+o1=onnfg+5e!q^' #nosec
+SECRET_KEY =  os.getenv('SECRET_KEY')
+if(not SECRET_KEY):
+    SECRET_KEY = get_random_secret_key()
+    logging.warning("WARNING - IMPORTANT: SECRET_KEY env var was not set, random secret key was used")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG')
+
+PROD_DB = os.getenv('PROD_DB')
 
 ALLOWED_HOSTS = []
 
+
+HEALTH_CHECK = {
+    'DISK_USAGE_MAX': 90,  # percent
+    'MEMORY_MIN': 100,    # in MB
+}
 
 # Application definition
 
@@ -44,6 +56,9 @@ INSTALLED_APPS = [
     'birdspotter.dataio',
     'birdspotter',
     'widget_tweaks',
+    'health_check',
+    'health_check.db',
+    'health_check.storage'
 ]
 AUTH_USER_MODEL = 'accounts.User'
 
@@ -84,13 +99,24 @@ WSGI_APPLICATION = 'birdspotter.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+if not PROD_DB or PROD_DB.lower() == 'false' :
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
-}
+elif PROD_DB.lower() == 'true':
+    DATABASES = {    
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.getenv('DBNAME'),
+            'USER': os.getenv('DBUSERNAME'),
+            'PASSWORD': os.getenv('DBPASSWORD'),
+            'HOST': os.getenv('DBHOST'),
+            'PORT': '5432',
+        }   
+    }
 
 
 # Password validation

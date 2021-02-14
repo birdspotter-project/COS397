@@ -24,4 +24,5 @@ urlpatterns = [
     path('import/', include('birdspotter.dataio.urls')),
     path('accounts/', include('birdspotter.accounts.urls')),
     path('admin/', admin.site.urls),
+    path('health/', include('health_check.urls'))
 ]
