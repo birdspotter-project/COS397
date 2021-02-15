@@ -13,7 +13,8 @@ steps:
     target: dev
     tags: 
       - dev-deps
-    dry_run: true 
+    dry_run: true
+    purge: false
 - name: unit-test
   image: devinchristianson/birdspotter:dev-deps
   depends_on: [ rebuild-dev-deps ]
