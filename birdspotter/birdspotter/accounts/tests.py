@@ -131,7 +131,7 @@ class ChangePasswordTests(TestCase):
         self.assertTrue(result.check_password(new_password))
 
     def test_incorrect_old_password(self):
-        creds = self.setup()
+        self.setup()
         new_password = gen_password()
         resp = self.run_request('', new_password)
         result = User.objects.get(username=resp.wsgi_request.user.username)
@@ -176,7 +176,7 @@ class ChangePasswordTests(TestCase):
         creds = self.setup()
         user = User.objects.get(username=creds['username'])
         # 3rd most common password accoring to nordpass.com
-        new_password = 'picture1'
+        new_password = 'picture1' #nosec
         content = {
             'old_password': creds['password'],
             'new_password1': new_password,
@@ -189,7 +189,7 @@ class ChangePasswordTests(TestCase):
     def test_password_numeric(self):
         creds = self.setup()
         user = User.objects.get(username=creds['username'])
-        new_password = '161876292354838259283908'
+        new_password = '161876292354838259283908' #nosec
         content = {
             'old_password': creds['password'],
             'new_password1': new_password,
