@@ -12,11 +12,11 @@ steps:
     context: birdspotter/
     target: dev
     tags: 
-      - dev-deps
+      - ${DRONE_COMMIT}
     dry_run: true
     purge: false
 - name: unit-test
-  image: devinchristianson/birdspotter:dev-deps
+  image: devinchristianson/birdspotter:${DRONE_COMMIT}
   depends_on: [ rebuild-dev-deps ]
   pull: if-not-exists
   commands:
@@ -34,7 +34,7 @@ steps:
     files:
      - /app/birdspotter/coverage.xml
 - name: linter-tests
-  image: devinchristianson/birdspotter:dev-deps
+  image: devinchristianson/birdspotter:${DRONE_COMMIT}
   depends_on: [ rebuild-dev-deps ]
   pull: if-not-exists
   commands:
