@@ -1,0 +1,41 @@
+{% include 'base.html'%}
+{% block content %}
+<html>
+    <style>
+     .flex-container {
+         display: inline-flex;
+         position: relative;
+         align-items: flex-start;
+     }
+     .flex-container > div {
+         height: 100%;
+         width: 100%;
+         border-style: solid;
+         border-radius: 3px;
+         border-color: coral;
+     }
+     .container {
+         min-height: 100%;
+         min-width: 100%;
+         padding-left: 0px;
+         padding-right: 0px;
+         position: absolute;
+         display: flex;
+         flex-direction: column;
+         overflow: visible;
+     }
+    </style>
+</html>
+<body>
+    <div class="container">
+        <div class="flex-container">
+            <div>{{ total_graph|safe }}</div>
+            <div>{{ nesting_graph|safe }}</div>
+        </div>
+        <div class="flex-container">
+            <div>{{ table|safe }}</div>
+            <div>{{ line_graph|safe }}</div>
+        </div>
+    </div>
+</body>
+{% endblock %}
