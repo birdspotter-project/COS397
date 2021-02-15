@@ -21,8 +21,10 @@ def gen_password():
     return ''.join(random.choice(string.ascii_letters) for _ in range(9)) # nosec
 
 def create_testuser():
+    usrname = gen_name()
     CREDS = {
-            'username': gen_name(),
+            'username': usrname,
+            'email': '%s@test.com' % usrname,
             'password': gen_password()
         }
     user = User.objects.create(username=CREDS['username'])
