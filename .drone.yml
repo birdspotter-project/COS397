@@ -8,19 +8,16 @@ steps:
   image: plugins/docker
   settings:
     repo: devinchristianson/birdspotter
-    username: 
-      from_secret: dockerhub_username
-    password: 
-      from_secret: dockerhub_password
     dockerfile: docker/Dockerfile
     context: birdspotter/
     target: dev
     tags: 
       - dev-deps
+    dry_run: true 
 - name: unit-test
   image: devinchristianson/birdspotter:dev-deps
   depends_on: [ rebuild-dev-deps ]
-  pull: always
+  pull: if-not-exists
   commands:
     - cd /app/birdspotter
     - python manage.py makemigrations && python manage.py migrate
@@ -38,6 +35,7 @@ steps:
 - name: linter-tests
   image: devinchristianson/birdspotter:dev-deps
   depends_on: [ rebuild-dev-deps ]
+  pull: if-not-exists
   commands:
     - cd /app/birdspotter
     - prospector
