@@ -1,7 +1,7 @@
-from django.test import TestCase
 import time
 import random
 import string
+from django.test import TestCase
 from .models import User
 from .forms import AccountForm
 
