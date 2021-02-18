@@ -1,0 +1,56 @@
+version: "3.9"
+services:
+  birdspotter:
+    restart: unless-stopped
+    build:
+      context: ../birdspotter
+      dockerfile: ../docker/Dockerfile
+      target: prod
+    env_file: 
+      - .env
+    environment:
+      - DBHOST=postgres
+    depends_on: 
+      postgres:
+        condition: service_healthy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.whoami.rule=Host(`birdspotter.localhost`)"
+      - "traefik.http.routers.whoami.entrypoints=web"
+  traefik:
+    image: traefik:latest
+    ports:
+      - 8000:80
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    command:
+      - "--ping.entryPoint=ping"
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entryPoints.ping.address=:8082"
+    depends_on: 
+      - birdspotter
+    healthcheck:
+      test: ["CMD", "traefik" ,"healthcheck"]
+      interval: 30s
+      timeout: 3s
+      retries: 30
+  postgres:
+    restart: unless-stopped
+    image: postgres:13
+    env_file: 
+      - .env
+    environment:
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./initdb.sql:/docker-entrypoint-initdb.d/initdb.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+volumes:
+    pgdata:

@@ -4,11 +4,7 @@
 	"name": "Miniconda (Python 3)",
 	"build": { 
 		"context": "..",
-		"dockerfile": "Dockerfile",
-		"args": {
-			"INSTALL_NODE": "true",
-			"NODE_VERSION": "lts/*"
-		}
+		"dockerfile": "Dockerfile"
 	},
 
 	// Set *default* container specific settings.json values on container create.
