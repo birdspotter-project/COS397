@@ -46,15 +46,15 @@ HEALTH_CHECK = {
 # Application definition
 
 INSTALLED_APPS = [
+    'birdspotter.accounts',
+    'birdspotter.dataio',
+    'birdspotter',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'birdspotter.accounts',
-    'birdspotter.dataio',
-    'birdspotter',
     'widget_tweaks',
     'health_check',
     'health_check.db',
@@ -118,6 +118,7 @@ elif PROD_DB.lower() == 'true':
         }   
     }
 
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators

@@ -35,7 +35,7 @@
 						{% csrf_token %}
                 		<input class="form-control login" type="text" name="username" placeholder="Username.." /><br>
                 		<input class="form-control login" type="password" name="password" placeholder="Password.."/>
-                		<button type="button" class="btn btn-link" value=resetpasswd>Forgot Password</button>
+                		<button type="button" class="btn btn-link" onclick="location.href='/accounts/password_reset/'">Forgot Password</button>
                 		<div>
                   			<button class="btn btn-primary" type="submit" name="submit" value="Login">Login</button>
                   			<button type="button" class="btn btn-secondary ml-2" value=register>Request Access</button>
