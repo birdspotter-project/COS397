@@ -3,29 +3,40 @@ import geopandas as gpd
 import plotly
 import plotly.express as px
 import numpy as np
+import pandas as pd
+from birdspotter.dataio.scripts.get_user_datasets import get_dataset_data
 
 def index(request):
     """
-    base function for the Map View handling
+    base function for the Map View handling, checks permissions of the user and dispatches to other functions
     """
 
-    #datasets = get_datasets_for_user(request.user)
     args = {}
-    args['isAdmin'] = True
 
-    #currently hardcoded in for testing, moves to DemarisCove directory. 
-    #expects directory to be on the same level as Repo base folder.
-    plot = create_map(args['isAdmin'])
+    if request.user.is_authenticated:
+        args['isAdmin'] = True
+    else:
+        args['isAdmin'] = False
+
+    shapefile_lines = get_dataset_data(args['isAdmin'])
+
+    df = pd.DataFrame({})
+    #populate DataFrame
+    for key in shapefile_lines:
+        df[key] = shapefile_lines[key]
+    #create corresponding GeoDataFrame
+    gdf = gpd.GeoDataFrame(df, geometry=gpd.points_from_xy(df.longitude, df.latitude))
+    
+    plot = create_map(args['isAdmin'], gdf)
     args['graph_div'] = plot
+    
     return render(request, 'map.html', args)
 
 
-def create_map(is_admin):
+def create_map(is_admin, gdf):
     """
     return a figure from plotly.offline.plot
     """
-    mypath = "../../DamarisCove/Damariscov.shp"
-    gdf = gpd.read_file(mypath)
 
 
     fields = {"lon":None, "lat":None, "species":None}
@@ -43,7 +54,6 @@ def create_map(is_admin):
     for _ in gdf:
         #get species
         if _.lower() in ["species"]:
-            print("test1")
             fields["species"] = getattr(gdf, _)
             break
 
@@ -125,7 +135,7 @@ def zoom_center(lons: tuple = None, lats: tuple = None,
         used to select the constrained axis.
 
     Returns
-    --------
+     --------
     zoom: float, from 1 to 20
     center: dict, gps position with 'lon' and 'lat' keys
 
