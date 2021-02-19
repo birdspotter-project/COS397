@@ -1,5 +1,7 @@
 {% include 'base.html'%}
 {% load widget_tweaks %}
+<div class='container mt-2'>
+<h2>Profile</h2>
 <form class="form-horizontal" role="form" action="." method="post">
     {% csrf_token %}
     {% for field in form %}
@@ -34,3 +36,4 @@
         <div class="col-sm-offset-2 col-sm-10">
             <button onclick="location.href='/accounts/password_change/'" class="btn">Change password</button>
         </div>
+</div>
