@@ -46,3 +46,7 @@ def account_view(request):
         'email': request.user.email,
     })
     return render(request, 'account.html', {'form': form})
+
+
+def register_view(request):
+    if 
