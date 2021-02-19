@@ -32,7 +32,7 @@ if(not SECRET_KEY):
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG')
-
+CRISPY_FAIL_SILENTLY = not DEBUG
 PROD_DB = os.getenv('PROD_DB')
 
 ALLOWED_HOSTS = []
@@ -58,7 +58,8 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'health_check',
     'health_check.db',
-    'health_check.storage'
+    'health_check.storage',
+    'crispy_forms'
 ]
 AUTH_USER_MODEL = 'accounts.User'
 
@@ -161,3 +162,5 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'),]
 
 # Redirect to home page after login
 LOGIN_REDIRECT_URL = '/'
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
