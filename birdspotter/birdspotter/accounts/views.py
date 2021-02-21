@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 
 
-from .forms import AccountForm
+from .forms import AccountForm, RegisterForm
 
 
 def login_view(request):
@@ -33,7 +33,7 @@ def logout_view(request):
 @login_required
 def account_view(request):
     if request.method == 'POST':
-        form = AccountForm(request.POST, instance=request.user)
+        form = AccountForm(request.POST)
         if form.is_valid():
             form.save()
             return render(request, 'success.html',
@@ -49,4 +49,23 @@ def account_view(request):
 
 
 def register_view(request):
-    if 
+    if request.method == 'POST':
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            args = {}
+            user = form.save()
+            if user:
+                args = {
+                    'statusDiv': 'Account created successfully',
+                    'result': 'success',
+                    'redirect': '/'
+                }
+            else:
+                args = {
+                    'statusDiv': 'Error creating account',
+                    'result': 'danger',
+                    'redirect': '/accounts/register/'
+                }
+            return render(request, 'result.html', args)
+    form = RegisterForm()
+    return render(request, 'registration/register_user.html', {'form': form})
