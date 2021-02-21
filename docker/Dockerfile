@@ -11,11 +11,14 @@ RUN pip --disable-pip-version-check install 'prospector==1.3.1' 'bandit==1.7.0' 
 
 FROM base AS prod
 HEALTHCHECK CMD curl -s -f -I localhost:8000/health/
-RUN apt install -y libpq-dev python-dev \
+RUN apt update --fix-missing && apt install -y libpq-dev python-dev \
     && pip3 --disable-pip-version-check --no-cache-dir install 'psycopg2==2.8.6'
 WORKDIR /usr/src/app
+RUN mkdir /static
 COPY ./birdspotter ./birdspotter
 COPY ./manage.py .
 ENV PROD_DB=true
+ENV PROD_EMAIL=true
 EXPOSE 8000
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+RUN python3 manage.py collectstatic
+CMD ["python3", "manage.py", "runserver", "0.0.0.0:8000"]

@@ -34,7 +34,7 @@ if(not SECRET_KEY):
 DEBUG = os.getenv('DEBUG')
 CRISPY_FAIL_SILENTLY = not DEBUG
 PROD_DB = os.getenv('PROD_DB')
-
+PROD_EMAIL = os.getenv('PROD_EMAIL')
 ALLOWED_HOSTS = []
 
 
@@ -118,8 +118,21 @@ elif PROD_DB.lower() == 'true':
             'PORT': '5432',
         }   
     }
-
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_HOST = ''
+EMAIL_PORT = ''
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = ''
+EMAIL_USE_TLS = ''
+EMAIL_TIMEOUT = ''
+if not PROD_EMAIL or PROD_EMAIL.lower() == 'false' :
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+elif PROD_EMAIL.lower() == 'true' :
+    EMAIL_HOST = os.getenv('EMAIL_HOST', 'email')
+    EMAIL_PORT = os.getenv('EMAIL_PORT', '25')
+    EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+    EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+    EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS')
+    EMAIL_TIMEOUT = 5
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
@@ -156,10 +169,18 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
-
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'),] 
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'birdspotter/staticfiles')] 
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+if not DEBUG :
+    STATIC_URL = '/static/'
+    MEDIA_URL = '/media/'
+    MEDIA_ROOT = '/media'
+    STATIC_ROOT = '/static'
 # Redirect to home page after login
 LOGIN_REDIRECT_URL = '/'
 
