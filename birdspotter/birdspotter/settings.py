@@ -48,6 +48,7 @@ HEALTH_CHECK = {
 INSTALLED_APPS = [
     'birdspotter.accounts',
     'birdspotter.dataio',
+    'birdspotter.analysis',
     'birdspotter',
     'django.contrib.admin',
     'django.contrib.auth',
