@@ -6,20 +6,6 @@ from django.db import models
 
 import uuid
 
-
-class Image(models.Model):
-    """Image that will be stored in fileserver and referenced in map view
-
-    Attributes:
-        img_path (str): File path to image in fileserver
-    """
-
-    img_path = models.FileField()
-    image_id = models.UUIDField(primary_key=False,
-                                default=uuid.uuid4,
-                                editable=False, unique=True)
-
-
 class RawData(models.Model):
     """Raw data that is stored in the system, can be Zip files,
     Shapefiles, or Geotiffs that will
@@ -27,10 +13,10 @@ class RawData(models.Model):
 
     Attributes:
         path (str): File path to file on fileserver
+        dataset (Dataset): dataset that contains the raw data
     """
 
     path = models.FileField()
-
 
 class Dataset(models.Model):
     """Dataset object that is created either by importing a shapefile,
@@ -53,10 +39,31 @@ class Dataset(models.Model):
     is_public = models.BooleanField(default=False)
     date_collected = models.DateField(blank=True)
     date_created = models.DateTimeField(auto_now_add=True)
-    raw_data = models.ForeignKey(RawData, on_delete=models.CASCADE,
+    geotiff = models.ForeignKey(RawData, on_delete=models.CASCADE,
                                  null=True, blank=True)
 
+class Image(models.Model):
+    """Image that will be stored in fileserver and referenced in map view
 
+    Attributes:
+        img_path (str): File path to image in fileserver
+    """
+
+    img_path = models.FileField()
+    image_id = models.UUIDField(primary_key=False,
+                                default=uuid.uuid4,
+                                editable=False, unique=True)
+    dataset = models.ForeignKey(Dataset, on_delete=models.CASCADE)
+class RawShapefile(models.Model):
+    """Raw Shapefile that has a dataset and raw data
+        rawshp (RawData): RawData containing shapefile
+        dataset (Dataset): Dataset that the shapefile belongs to
+    """
+    rawshp = models.ForeignKey(RawData, on_delete=models.CASCADE)
+    dataset = models.ForeignKey(Dataset, on_delete=models.CASCADE)
+    image_id = models.UUIDField(primary_key=False,
+                                default=uuid.uuid4,
+                                editable=False, unique=True)
 class Shapefile(models.Model):
     """Database implementation of a Shapefile row
 
