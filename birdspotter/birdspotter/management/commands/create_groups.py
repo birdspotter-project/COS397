@@ -46,5 +46,4 @@ class Command(BaseCommand):
                     except:
                         logging.warning("Permission %s not found" % dj_str)
                         continue
-                    print("Adding %s" % model_perm)
                     new_group.permissions.add(model_perm)
