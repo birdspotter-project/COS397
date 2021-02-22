@@ -60,7 +60,8 @@ INSTALLED_APPS = [
     'health_check',
     'health_check.db',
     'health_check.storage',
-    'crispy_forms'
+    'crispy_forms',
+    'django_mailbox'
 ]
 AUTH_USER_MODEL = 'accounts.User'
 

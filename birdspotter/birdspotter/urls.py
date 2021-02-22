@@ -23,7 +23,7 @@ urlpatterns = [
     path('map/', include('birdspotter.map.urls')),
     path('import/', include('birdspotter.dataio.urls')),
     path('accounts/', include('birdspotter.accounts.urls')),
-    path('analysis/', include('birdspotter.analysis.urls')),
+    path('queue/', include('birdspotter.analysis.urls')),
     path('admin/', admin.site.urls),
     path('health/', include('health_check.urls'))
 ]
