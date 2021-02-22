@@ -18,7 +18,7 @@ PERMISSIONS = {
         "dataset": ["add", "delete", "change", "view", "export"],
         "shapefile": ["add", "delete", "change", "view"],
         "image": ["add", "delete", "change", "view"],
-        "rawData": ["add", "delete", "change", "view"],
+        "raw data": ["add", "delete", "change", "view"],
     },
     "Privileged": {
         "dataset": ["add", "delete", "change", "view", "export"],
