@@ -30,20 +30,14 @@
                             <div class="dropdown-menu dropdown-menu-right">
                                 <a class="nav-link" href="/map">Map View</a>
                                 <a class="nav-link" href="/data">Data View</a>
+                                <a class="nav-link" href="/queue/{{ dataset|get_item:'dataset_id' }}">Queue Analysis</a>
                                 <!--should only be available to superusers and the owner(s)-->
                                 <a class="nav-link" href="/edit">Edit Dataset</a>
                                 <!--should only be available to registered users-->
                                 <a class="nav-link" href="/Export">Export</a>                                
 
                             </div>
-                            <!--
-                            <a class="nav-link" href="/accounts">Account</a>
-                            -->
                         </div>
-                        <!--
-                        <button>Actions</button>
-                        -->
-                        
                     </td>
                 </tr>
             {% endfor %}
@@ -56,34 +50,6 @@
     <script>
     $(document).ready(function () {
         var table = $('#datasets').DataTable();
-        $('#datasets tbody').on('click', 'td', function () {
-            var tr = $(this).closest('tr');
-            if (!(tr.hasClass('childRowData') || $(this).hasClass('details-control'))) {
-                if (tr.hasClass('selected')) {
-                    tr.removeClass('selected');
-                    $(".dataset-action").addClass('disabled')
-                } else {
-                    table.$('tr.selected').removeClass('selected');
-                    tr.addClass('selected');
-                    $(".dataset-action").removeClass('disabled')
-                }
-            }
-        });
-        // Add event listener for opening and closing details
-        $('#datasets tbody').on('click', 'td.details-control', function () {
-            var tr = $(this).closest('tr');
-            var row = table.row(tr);
-    
-            if (row.child.isShown()) {
-                // This row is already open - close it
-                row.child.hide();
-                tr.removeClass('shown');
-            } else {
-                // Open this row
-                row.child("<label for='metadata'>Metadata:<label><textarea id='metadata'>default value</textarea>", "childRowData").show();
-                tr.addClass('shown');
-            }
-        });
     });
     </script>
 </body>
