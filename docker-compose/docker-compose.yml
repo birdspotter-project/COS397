@@ -15,11 +15,10 @@ services:
         condition: service_healthy
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.birdspotter.rule=Host(`birdspotter.localhost`)"
+      - "traefik.http.routers.birdspotter.rule=Host(`${DOMAIN}`)"
       - "traefik.http.routers.birdspotter.entrypoints=web"
     volumes:
       - media:/media
-      - static:/static
   traefik:
     image: traefik:latest
     ports:
@@ -55,31 +54,20 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-  static:
-    image: nginx
-    depends_on:
-      - birdspotter
-    volumes:
-      - static:/usr/share/nginx/html
-    labels:
-    - "traefik.enable=true"
-    - "traefik.http.routers.static.rule=Host(`birdspotter.localhost`) && PathPrefix(`/static`)"
-    - "traefik.http.routers.static.entrypoints=web"
-    - "traefik.http.routers.static.middlewares=static-stripprefix"
-    - "traefik.http.middlewares.static-stripprefix.stripprefix.prefixes=/static"
   media:
     image: nginx
     depends_on:
       - birdspotter
     volumes:
-      - static:/usr/share/nginx/html
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
     labels:
     - "traefik.enable=true"
-    - "traefik.http.routers.media.rule=Host(`birdspotter.localhost`) && PathPrefix(`/static`)"
+    - "traefik.http.routers.media.rule=Host(`${DOMAIN}`) && PathPrefix(`/media`)"
     - "traefik.http.routers.media.entrypoints=web"
     - "traefik.http.routers.media.middlewares=media-stripprefix"
     - "traefik.http.middlewares.media-stripprefix.stripprefix.prefixes=/media"
+  mail:
+    image: antespi/docker-imap-devel:latest
 volumes:
     pgdata:
-    static:
-    media: 
+    media:
