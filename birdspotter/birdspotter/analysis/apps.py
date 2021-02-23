@@ -2,6 +2,6 @@ from django.apps import AppConfig
 
 
 class AnalysisConfig(AppConfig):
-    name = 'analysis'
+    name = 'birdspotter.analysis'
     def ready(self):
-        import signals
+        from .signals import handle_mail # noqa
