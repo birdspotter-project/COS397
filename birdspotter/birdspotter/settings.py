@@ -36,7 +36,8 @@ CRISPY_FAIL_SILENTLY = not DEBUG
 PROD_DB = os.getenv('PROD_DB')
 PROD_EMAIL = os.getenv('PROD_EMAIL')
 ALLOWED_HOSTS = []
-
+USE_X_FORWARDED_HOST = os.getenv('USE_X_FORWARDED_HOST', 'False')
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost').split(',')
 
 HEALTH_CHECK = {
     'DISK_USAGE_MAX': 90,  # percent
@@ -59,12 +60,14 @@ INSTALLED_APPS = [
     'health_check',
     'health_check.db',
     'health_check.storage',
-    'crispy_forms'
+    'crispy_forms',
+    'private_storage'
 ]
 AUTH_USER_MODEL = 'accounts.User'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -185,3 +188,8 @@ if not DEBUG :
 LOGIN_REDIRECT_URL = '/'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+PRIVATE_STORAGE_ROOT = '/media/protected/'
+PRIVATE_STORAGE_AUTH_FUNCTION = 'private_storage.permissions.allow_authenticated'
+PRIVATE_STORAGE_SERVER = 'nginx'
+PRIVATE_STORAGE_INTERNAL_URL = '/media/protected/'
