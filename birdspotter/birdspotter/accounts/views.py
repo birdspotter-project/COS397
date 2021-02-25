@@ -5,7 +5,7 @@ from django.contrib import messages
 
 
 
-from .forms import AccountForm, RegisterForm, RequestPrivalegedAccessForm
+from .forms import AccountForm, RegisterForm, RequestPrivilegedAccessForm
 
 
 def login_view(request):
@@ -73,10 +73,8 @@ def register_view(request):
     return render(request, 'registration/register_user.html', {'form': form})
 
 @login_required
-def request_privleged_view(request):
+def request_privileged_view(request):
     if request.method == 'POST':
-        form = RequestPrivalegedAccessForm(request.POST)
-
-    messages.success('You reached the page!')
-    form = RequestPrivalegedAccessForm()
+        form = RequestPrivilegedAccessForm(request.POST)
+    form = RequestPrivilegedAccessForm()
     return render(request, 'request_group.html', {'form': form})
