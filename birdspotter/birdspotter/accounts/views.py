@@ -1,9 +1,11 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 
-from .forms import AccountForm, RegisterForm
+
+from .forms import AccountForm, RegisterForm, RequestPrivalegedAccessForm
 
 
 def login_view(request):
@@ -69,3 +71,12 @@ def register_view(request):
             return render(request, 'result.html', args)
     form = RegisterForm()
     return render(request, 'registration/register_user.html', {'form': form})
+
+@login_required
+def request_privleged_view(request):
+    if request.method == 'POST':
+        form = RequestPrivalegedAccessForm(request.POST)
+
+    messages.success('You reached the page!')
+    form = RequestPrivalegedAccessForm()
+    return render(request, 'request_group.html', {'form': form})

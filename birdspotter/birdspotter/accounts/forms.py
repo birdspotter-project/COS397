@@ -24,3 +24,9 @@ class RegisterForm(UserCreationForm):
     email = forms.EmailField()
     first_name = forms.CharField()
     last_name = forms.CharField()
+
+
+class RequestPrivalegedAccessForm(forms.Form):
+    organization = forms.CharField(required=False)
+    reason = forms.CharField(max_length=1000, required=True, label='Reason for elevated permissions', widget=forms.Textarea)
+    
