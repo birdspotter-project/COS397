@@ -6,6 +6,7 @@ click-plugins==1.1.1
 cligj==0.7.0
 Django==3.1.3
 django-crispy-forms==1.11.0
+django-private-storage==2.2.2
 django-widget-tweaks==1.4.8
 django-health-check==3.16.2
 django-mailbox==4.8.2
@@ -25,3 +26,4 @@ sqlparse==0.4.1
 urllib3==1.26.2
 python-dotenv==0.15.0
 psutil==5.8.0
+whitenoise==5.2.0
