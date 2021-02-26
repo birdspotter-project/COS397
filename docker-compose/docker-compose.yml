@@ -15,12 +15,14 @@ services:
         condition: service_healthy
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.whoami.rule=Host(`birdspotter.localhost`)"
-      - "traefik.http.routers.whoami.entrypoints=web"
+      - "traefik.http.routers.birdspotter.rule=Host(`${DOMAIN}`)"
+      - "traefik.http.routers.birdspotter.entrypoints=web"
+    volumes:
+      - media:/media
   traefik:
     image: traefik:latest
     ports:
-      - 8000:80
+      - 8001:80
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
     command:
@@ -52,5 +54,20 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+  media:
+    image: nginx
+    depends_on:
+      - birdspotter
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    labels:
+    - "traefik.enable=true"
+    - "traefik.http.routers.media.rule=Host(`${DOMAIN}`) && PathPrefix(`/media`)"
+    - "traefik.http.routers.media.entrypoints=web"
+    - "traefik.http.routers.media.middlewares=media-stripprefix"
+    - "traefik.http.middlewares.media-stripprefix.stripprefix.prefixes=/media"
+  mail:
+    image: antespi/docker-imap-devel:latest
 volumes:
     pgdata:
+    media:
