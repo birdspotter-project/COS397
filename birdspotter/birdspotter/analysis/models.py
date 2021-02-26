@@ -1,17 +1,24 @@
 from django.conf import settings
 from django.db import models
 import uuid
+from private_storage.storage.files import PrivateFileSystemStorage
 from birdspotter.dataio.models import RawData, Dataset, RawShapefile
 
 # Create your models here.
 class Algorithm(models.Model):
+    """Algorithm (script) 
+
+    Attributes:
+        name (<50 Chars): Algorithm human-readable name
+        file_name (FileField): Location of algorithm script
+    """
     name = models.CharField(max_length=50)
     algo_id = models.UUIDField(primary_key=True,
                             default=uuid.uuid4,
                             editable=False, unique=True)
     def __str__(self):
         return self.name
-    file_name = models.FileField()
+    file_name = models.FileField(storage=PrivateFileSystemStorage, upload_to="algorithms/")
 class AnalysisJob(models.Model):
     """Status and related information for Job queued on external compute
 
@@ -31,6 +38,7 @@ class AnalysisJob(models.Model):
     job_id = models.UUIDField(primary_key=False,
                                 default=uuid.uuid4,
                                 editable=False, unique=True)
+    external_job_id = models.CharField(max_length=16)
     date_started = models.DateTimeField(auto_now_add=True)
     date_finished = models.DateTimeField(auto_now_add=False)
     input_data = models.ForeignKey(RawData, related_name='uses',on_delete=models.SET_NULL,null=True)

@@ -3,7 +3,7 @@ visualizations and analysis
 """
 from django.conf import settings
 from django.db import models
-
+from private_storage.storage.files import PrivateFileSystemStorage
 import uuid
 
 class RawData(models.Model):
@@ -13,10 +13,9 @@ class RawData(models.Model):
 
     Attributes:
         path (str): File path to file on fileserver
-        dataset (Dataset): dataset that contains the raw data
     """
 
-    path = models.FileField()
+    path = models.FileField(storage=PrivateFileSystemStorage, upload_to="raw_files/")
 
 class Dataset(models.Model):
     """Dataset object that is created either by importing a shapefile,
@@ -41,15 +40,14 @@ class Dataset(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
     geotiff = models.ForeignKey(RawData, on_delete=models.CASCADE,
                                  null=True, blank=True)
-
 class Image(models.Model):
     """Image that will be stored in fileserver and referenced in map view
 
     Attributes:
         img_path (str): File path to image in fileserver
     """
-
-    img_path = models.FileField()
+    
+    img_path = models.ImageField(storage=PrivateFileSystemStorage)
     image_id = models.UUIDField(primary_key=False,
                                 default=uuid.uuid4,
                                 editable=False, unique=True)

@@ -1,4 +1,4 @@
-from birdspotter.analysis.models import AnalysisJob, Algorithm
+from birdspotter.analysis.models import Algorithm
 from birdspotter.dataio.models import Dataset
 def start_job(request, algorithm, uuid):
     """Start 

@@ -126,9 +126,10 @@ elif PROD_DB.lower() == 'true':
 EMAIL_HOST = ''
 EMAIL_PORT = ''
 EMAIL_HOST_USER = ''
-EMAIL_HOST_PASSWORD = ''
+EMAIL_HOST_PASSWORD = None
 EMAIL_USE_TLS = ''
 EMAIL_TIMEOUT = ''
+EMAIL_NOTIF_ADDR = os.getenv('EMAIL_NOTIF_ADDR', 'debug@example.org')
 if not PROD_EMAIL or PROD_EMAIL.lower() == 'false' :
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 elif PROD_EMAIL.lower() == 'true' :
