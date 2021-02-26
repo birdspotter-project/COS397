@@ -1,11 +1,17 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib import messages
+from django.http import HttpResponse
 
 
 
-from .forms import AccountForm, RegisterForm, RequestPrivilegedAccessForm
+from .models import GroupRequest
+from .forms import (AccountForm,
+                    RegisterForm, 
+                    RequestPrivilegedAccessForm, 
+                    GroupRequestForm)
 
 
 def login_view(request):
@@ -78,3 +84,23 @@ def request_privileged_view(request):
         form = RequestPrivilegedAccessForm(request.POST)
     form = RequestPrivilegedAccessForm()
     return render(request, 'request_group.html', {'form': form})
+
+@login_required
+@staff_member_required
+def group_request_view(request):
+    if request.method == 'POST':
+        pass
+    group_requests = GroupRequest.objects.filter(approved=False).filter(reviewed_by__isnull=True)
+    return render(request, 'group_requests.html', {'group_requests': group_requests})
+
+@login_required
+@staff_member_required
+def process_request_action(request, request_id, action):
+    group_request = GroupRequest.objects.get(request_id=request_id)
+    if action == 'approve':
+        group_request.approve_request(request)
+    elif action == 'deny':
+        group_request.deny_request(request)
+    else:
+        messages.error('There was an error %sing the request' % action)
+    return HttpResponse(status=200)
