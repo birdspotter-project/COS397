@@ -10,8 +10,8 @@ from django.http import HttpResponse
 from .models import GroupRequest
 from .forms import (AccountForm,
                     RegisterForm, 
-                    RequestPrivilegedAccessForm, 
-                    GroupRequestForm)
+                    RequestPrivilegedAccessForm,
+                    )
 
 
 def login_view(request):
