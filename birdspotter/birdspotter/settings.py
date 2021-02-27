@@ -35,6 +35,10 @@ DEBUG = os.getenv('DEBUG')
 CRISPY_FAIL_SILENTLY = not DEBUG
 PROD_DB = os.getenv('PROD_DB')
 
+
+TESTING = False
+TEST_RUNNER = 'birdspotter.TestRunner.TestRunner'
+
 ALLOWED_HOSTS = []
 
 

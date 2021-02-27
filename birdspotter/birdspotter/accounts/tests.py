@@ -30,6 +30,7 @@ def create_testuser():
     user = User.objects.create(username=CREDS['username'])
     user.set_password(CREDS['password'])
     user.save()
+    user.make_active()
     return (user, CREDS)
 
 class AccountEditingTests(TestCase):
