@@ -9,3 +9,4 @@ def save_user(sender, instance, created, **kwargs):
     if created:
         default_group = Group.objects.get(name='Registered')
         instance.groups.add(default_group)
+        instance.save()

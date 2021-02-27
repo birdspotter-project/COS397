@@ -33,5 +33,6 @@ class RegisterForm(UserCreationForm):
 
 
 class RequestPrivilegedAccessForm(forms.Form):
+    # TODO: redo this
     organization = forms.CharField(required=False)
     reason = forms.CharField(max_length=1000, required=True, label='Reason for elevated permissions', widget=forms.Textarea)

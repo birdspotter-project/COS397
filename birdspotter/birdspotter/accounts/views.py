@@ -63,17 +63,11 @@ def register_view(request):
             args = {}
             user = form.save()
             if user:
-                args = {
-                    'statusDiv': 'Account created successfully',
-                    'result': 'success',
-                    'redirect': '/'
-                }
+                group_request = GroupRequest(user=user)
+                group_request.save()
+                messages.success(request, 'Request created successfully. Please wait for an admin to approve your request')
             else:
-                args = {
-                    'statusDiv': 'Error creating account',
-                    'result': 'danger',
-                    'redirect': '/accounts/register/'
-                }
+                messages.error(request, 'Error creating request, please try again later.')
             return render(request, 'result.html', args)
     form = RegisterForm()
     return render(request, 'registration/register_user.html', {'form': form})

@@ -26,6 +26,10 @@ class User(AbstractUser):
     def is_admin(self):
         return self.groups.filter(name='Admin').exists()
 
+    def make_active(self):
+        self.is_active = True
+        self.save()
+
 class GroupRequest(models.Model):
     """
     Role request model that allows admin approve or deny group requests
@@ -50,6 +54,10 @@ class GroupRequest(models.Model):
         try:
             permission_group = Group.objects.get(name=self.group)
             self.user.groups.add(permission_group)
+            if self.group == 'Registered':
+                breakpoint()
+                user = User.objects.get(username=request.user.username)
+                user.make_active()
             messages.success(request, f'User {self.user} successfully added to {self.group}')
         except Exception as c:
             messages.error(request, f'Permission group {self.group} does not exist')
