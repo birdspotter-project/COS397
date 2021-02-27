@@ -1,15 +1,18 @@
-from django.contrib.auth.admin import UserAdmin as usradmin
 from django.contrib import admin as admin
+from django.contrib.auth.admin import UserAdmin
 
 from birdspotter.accounts.models import User, GroupRequest
 
-class UserAdmin(usradmin):
-	pass
+
+class UserModelAdmin(UserAdmin):
+    pass
 
 
-admin.site.register(User, UserAdmin)
+admin.site.register(User, UserModelAdmin)
+
 
 class GroupRequestAdmin(admin.ModelAdmin):
     pass
+
 
 admin.site.register(GroupRequest, GroupRequestAdmin)

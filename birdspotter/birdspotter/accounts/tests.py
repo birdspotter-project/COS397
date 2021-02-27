@@ -199,3 +199,6 @@ class ChangePasswordTests(TestCase):
         form = PasswordChangeForm(user, content)
         form.is_valid()
         self.assertTrue(form.errors['new_password2'][0] == self.ERROR_MESSAGES['numeric'])
+
+# class RegisterUserTests(TestCase):
+    

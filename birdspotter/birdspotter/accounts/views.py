@@ -1,17 +1,15 @@
-from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.contrib.admin.views.decorators import staff_member_required
-from django.contrib import messages
 from django.http import HttpResponse
+from django.shortcuts import render, redirect
 
-
-
-from .models import GroupRequest
 from .forms import (AccountForm,
-                    RegisterForm, 
+                    RegisterForm,
                     RequestPrivilegedAccessForm,
                     )
+from .models import GroupRequest
 
 
 def login_view(request):
@@ -26,7 +24,7 @@ def login_view(request):
             redirects to the application index
     """
     if request.method == 'POST':
-        if user := authenticate(request, 
+        if user := authenticate(request,
                                 username=request.POST['username'],
                                 password=request.POST['password']):
             login(request, user)
@@ -65,12 +63,14 @@ def register_view(request):
             if user:
                 group_request = GroupRequest(user=user)
                 group_request.save()
-                messages.success(request, 'Request created successfully. Please wait for an admin to approve your request')
+                messages.success(request,
+                                 'Request created successfully. Please wait for an admin to approve your request')
             else:
                 messages.error(request, 'Error creating request, please try again later.')
             return render(request, 'result.html', args)
     form = RegisterForm()
     return render(request, 'registration/register_user.html', {'form': form})
+
 
 @login_required
 def request_privileged_view(request):
@@ -79,6 +79,7 @@ def request_privileged_view(request):
     form = RequestPrivilegedAccessForm()
     return render(request, 'request_group.html', {'form': form})
 
+
 @login_required
 @staff_member_required
 def group_request_view(request):
@@ -86,6 +87,7 @@ def group_request_view(request):
         pass
     group_requests = GroupRequest.objects.filter(approved=False).filter(reviewed_by__isnull=True)
     return render(request, 'group_requests.html', {'group_requests': group_requests})
+
 
 @login_required
 @staff_member_required
@@ -96,5 +98,5 @@ def process_request_action(request, request_id, action):
     elif action == 'deny':
         group_request.deny_request(request)
     else:
-        messages.error('There was an error %sing the request' % action)
+        messages.error(request, 'There was an error %sing the request' % action)
     return HttpResponse(status=200)

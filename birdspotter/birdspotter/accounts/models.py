@@ -1,9 +1,10 @@
-from django.contrib.auth.models import AbstractUser
-from django.db import models
-from django.contrib.auth.models import Group
-from django.contrib import messages
-from django.utils import timezone
 import uuid
+
+from django.contrib import messages
+from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import Group
+from django.db import models
+from django.utils import timezone
 
 
 class User(AbstractUser):
@@ -30,6 +31,7 @@ class User(AbstractUser):
         self.is_active = True
         self.save()
 
+
 class GroupRequest(models.Model):
     """
     Role request model that allows admin approve or deny group requests
@@ -43,9 +45,9 @@ class GroupRequest(models.Model):
     group = models.CharField(max_length=20, choices=GROUP_CHOICES, default='Registered')
     submitted_date = models.DateTimeField(auto_now_add=True)
     approved = models.BooleanField(default=False)
-    reviewed_by = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name='approving_user')
+    reviewed_by = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True,
+                                    related_name='approving_user')
     reviewed_date = models.DateTimeField(blank=True, null=True)
-
 
     def approve_request(self, request):
         self.approved = True
@@ -59,10 +61,9 @@ class GroupRequest(models.Model):
                 user = User.objects.get(username=request.user.username)
                 user.make_active()
             messages.success(request, f'User {self.user} successfully added to {self.group}')
-        except Exception as c:
+        except Group.DoesNotExist:
             messages.error(request, f'Permission group {self.group} does not exist')
         self.save()
-
 
     def deny_request(self, request):
         self.approved = False
