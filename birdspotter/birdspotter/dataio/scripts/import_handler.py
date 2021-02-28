@@ -10,11 +10,11 @@ from birdspotter.dataio.models import Dataset, Shapefile, RawData, Image
 
 
 def import_data(user, user_file, date_created):
-    """Takes InMemoryFile and form data (date_created) as imports data into Shapefile model and 
-    creates a Dataset for each file
-
+    """Takes InMemoryFile user, and dat_created and imports data into the database accordingly (creates GeoTiff or Shapefile model and 
+    creates a Dataset for each file)
     Args:
-        shapefile (InMemoryFile): Description
+        user (User): Data owner
+        user_file (InMemoryFile): Description
         date_created (datetime.date): Description
 
     Returns:
