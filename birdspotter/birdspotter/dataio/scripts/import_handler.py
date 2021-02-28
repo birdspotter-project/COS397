@@ -45,7 +45,8 @@ def import_shapefile(request, shapefile, date_created):
                                                      point_x=record.geometry.x, point_y=record.geometry.y,
                                                      latitude=record.Lat, longitude=record.Long, image=None))
                 Shapefile.objects.bulk_create(shp_objects, 100)
-        return True
+                return True
+            return False
     except zipfile.BadZipfile:
         #failed to upload
         return False

@@ -1,3 +1,4 @@
+---
 kind: pipeline
 type: docker
 name: default
@@ -8,16 +9,19 @@ steps:
   image: plugins/docker
   settings:
     repo: devinchristianson/birdspotter
+    dockerfile: docker/Dockerfile
+    context: birdspotter/
+    target: dev
     username: 
       from_secret: dockerhub_username
     password: 
       from_secret: dockerhub_password
-    dockerfile: birdspotter/docker/dev-deps.dockerfile
-    context: birdspotter/
     tags: 
       - dev-deps
+    custom_dns: 1.1.1.1
 - name: unit-test
   image: devinchristianson/birdspotter:dev-deps
+  depends_on: [ rebuild-dev-deps ]
   pull: always
   commands:
     - cd /app/birdspotter
@@ -35,16 +39,13 @@ steps:
      - /app/birdspotter/coverage.xml
 - name: linter-tests
   image: devinchristianson/birdspotter:dev-deps
+  depends_on: [ rebuild-dev-deps ]
+  pull: always
   commands:
     - cd /app/birdspotter
     - prospector
-- name: security-tests
-  image: devinchristianson/birdspotter:dev-deps
-  commands:
-    - cd /app/birdspotter
-    - bandit -r .
 - name: publish-dev-image
-  depends_on: [unit-test, security-tests, linter-tests]
+  depends_on: [unit-test, linter-tests]
   when:
     status: 
       - success
@@ -57,8 +58,9 @@ steps:
       from_secret: dockerhub_username
     password: 
       from_secret: dockerhub_password
-    dockerfile: birdspotter/docker/prod.dockerfile
+    dockerfile: docker/Dockerfile
     context: birdspotter/
+    target: prod
     tags: 
       - dev
     dry_run: false
@@ -68,3 +70,8 @@ trigger:
   event:
     - push
     - pull_request
+---
+kind: signature
+hmac: 730246eb53399b8821f140fbac7b02db5d5060fc80431f0008a043c8211ec5ad
+
+...

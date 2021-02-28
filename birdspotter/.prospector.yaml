@@ -6,3 +6,7 @@ test-warnings: true
 ignore-paths:
 # dataviz hasn't been implemented yet
   - birdspotter/dataviz/
+bandit:
+  run: true
+  options:
+    recursive: .
