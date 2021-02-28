@@ -38,11 +38,13 @@ class AnalysisJob(models.Model):
     job_id = models.UUIDField(primary_key=False,
                                 default=uuid.uuid4,
                                 editable=False, unique=True)
-    external_job_id = models.CharField(max_length=16)
+    external_job_id = models.CharField(max_length=16, null=True, blank=True)
     date_started = models.DateTimeField(auto_now_add=True)
-    date_finished = models.DateTimeField(auto_now_add=False)
+    date_finished = models.DateTimeField(auto_now_add=False, null=True, blank=True)
     input_data = models.ForeignKey(RawData, related_name='uses',on_delete=models.SET_NULL,null=True)
     output_data = models.ForeignKey(RawShapefile, related_name='creates',on_delete=models.SET_NULL,
                                  null=True, blank=True)
     dataset = models.ForeignKey(Dataset, on_delete=models.CASCADE)
     algorithm_used = models.ForeignKey(Algorithm, to_field='algo_id', on_delete=models.SET_NULL,null=True)
+    def __str__(self):
+        return str(self.dataset) + " analyzed by " + str(self.algorithm_used) + ", started at " + self.date_started.strftime('%Y-%m-%d %H:%M')

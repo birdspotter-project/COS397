@@ -40,6 +40,8 @@ class Dataset(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
     geotiff = models.ForeignKey(RawData, on_delete=models.CASCADE,
                                  null=True, blank=True)
+    def __str__(self):
+        return self.name
 class Image(models.Model):
     """Image that will be stored in fileserver and referenced in map view
 

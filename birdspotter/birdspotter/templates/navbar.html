@@ -25,6 +25,7 @@
 				<div class="dropdown-menu dropdown-menu-right" style="padding-bottom: 10px; width: 20em">
 						<a class="dropdown-item" style="padding-bottom: 10px;" href="/accounts/profile/">Profile</a>
 						{%if request.user.is_staff %}
+						<a class="dropdown-item" style="padding-bottom: 10px;" href="/queue/">Job Queue</a>
 						<a class="dropdown-item" style="padding-bottom: 10px;" href="/admin">Admin Panel</a>
 						{% endif %}
 						<div style="padding-left: 20px; padding-top: 10px;"><button type="submit" class="btn btn-danger" onclick="location.href='/accounts/logout/'">Logout</button></div>

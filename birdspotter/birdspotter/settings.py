@@ -34,7 +34,9 @@ if(not SECRET_KEY):
 DEBUG = os.getenv('DEBUG')
 CRISPY_FAIL_SILENTLY = not DEBUG
 PROD_DB = os.getenv('PROD_DB')
-PROD_EMAIL = os.getenv('PROD_EMAIL')
+PROD_FS = os.getenv('PROD_FS', 'False')
+PROD_EMAIL = os.getenv('PROD_EMAIL', 'False')
+DO_CONDA = os.getenv('DO_CONDA', 'False')
 ALLOWED_HOSTS = []
 USE_X_FORWARDED_HOST = os.getenv('USE_X_FORWARDED_HOST', 'False')
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost').split(',')
@@ -191,8 +193,17 @@ if not DEBUG :
 LOGIN_REDIRECT_URL = '/'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
-
-PRIVATE_STORAGE_ROOT = '/media/protected/'
 PRIVATE_STORAGE_AUTH_FUNCTION = 'private_storage.permissions.allow_authenticated'
-PRIVATE_STORAGE_SERVER = 'nginx'
+PRIVATE_STORAGE_ROOT = os.path.join(BASE_DIR, 'media/protected/')
 PRIVATE_STORAGE_INTERNAL_URL = '/media/protected/'
+if PROD_FS : 
+    PRIVATE_STORAGE_ROOT = '/media/protected/'
+    PRIVATE_STORAGE_SERVER = 'nginx'
+    PRIVATE_STORAGE_INTERNAL_URL = '/media/protected/'
+
+
+SLURM_HOST=os.getenv('SLURM_HOST')
+SLURM_USER=os.getenv('SLURM_USER', 'root')
+SLURM_PASSWD=os.getenv('SLURM_PASSWD', 'testing')
+SLURM_OPTS=os.getenv('SLURM_OPTS', "") #note: likely will need opts for PROD use
+IMAP_URI="imap://debug%40example.org:debug@mail"

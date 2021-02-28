@@ -5,7 +5,7 @@ from .scripts.start_job import start_job
 from .models import AnalysisJob
 @login_required
 def index(request):
-    jobs = AnalysisJob.objects.filter(owner=request.user.id).values()
+    jobs = AnalysisJob.objects.filter(owner=request.user.id).all()
     return render(request, "queue.html", {'jobs': jobs})
 @login_required
 def queue_job(request, uuid):
@@ -16,7 +16,7 @@ def queue_job(request, uuid):
     if request.method == "POST":
         form = QueueJobForm(data=request.POST, files=request.FILES)
         if form.is_valid():
-            success = start_job(request, form.cleaned_data['algorithm'], uuid)
+            success = start_job(request, form.cleaned_data.get('algorithm'), uuid)
             if success:
                 args['statusDiv'] = "File upload successful"
                 args['result'] = "success"
