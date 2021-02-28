@@ -10,7 +10,7 @@ from birdspotter.dataio.models import Dataset, Shapefile
 
 
 def import_shapefile(request, shapefile, date_created):
-    """Takes InMemoryFile and form data (date_created) as imports data into Shapefile model and 
+    """Takes InMemoryFile and form data (date_created) as imports data into Shapefile model and
     creates a Dataset for each file
 
     Args:
@@ -48,5 +48,5 @@ def import_shapefile(request, shapefile, date_created):
                 return True
             return False
     except zipfile.BadZipfile:
+        #failed to upload
         return False
-        #print("Failed to upload")
