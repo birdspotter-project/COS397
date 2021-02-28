@@ -31,6 +31,10 @@ class User(AbstractUser):
         self.is_active = True
         self.save()
 
+    def make_admin(self):
+        self.is_staff = True
+        self.save()
+
 
 class GroupRequest(models.Model):
     """
@@ -60,6 +64,8 @@ class GroupRequest(models.Model):
             if self.group == 'Registered':
                 user = User.objects.get(username=self.user.username)
                 user.make_active()
+            elif self.group == 'Admin':
+                user.make_admin()
             messages.success(request, f'User {self.user} successfully added to {self.group}')
         except Group.DoesNotExist:
             messages.error(request, f'Permission group {self.group} does not exist')

@@ -28,7 +28,7 @@
                         <td>
                             <div>
                                 <!-- Button trigger modal -->
-                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#notesModel{{ group_request.request_id }}">
+                                <button type="button" class="btn btn-link" data-toggle="modal" data-target="#notesModel{{ group_request.request_id }}">
                                   Notes
                                 </button>
 
@@ -89,7 +89,6 @@
         };
 
         $('.action-button').click(function() {
-            alert('Action-button pressed')
             const data = $.parseJSON($(this).attr('data-button'));
             funcs[data.func](data.request_id)
         });

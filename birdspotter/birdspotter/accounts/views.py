@@ -62,7 +62,7 @@ def account_view(request):
 
 def register_view(request):
     if request.method == 'POST':
-        form = RegisterForm(request.POST, user=request.user)
+        form = RegisterForm(request.POST)
         if form.is_valid():
             args = {}
             user = form.save()
