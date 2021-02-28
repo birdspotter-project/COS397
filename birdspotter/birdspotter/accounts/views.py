@@ -7,9 +7,15 @@ from django.shortcuts import render, redirect
 
 from .forms import (AccountForm,
                     RegisterForm,
-                    RequestPrivilegedAccessForm,
+                    GroupRequestForm,
                     )
 from .models import GroupRequest
+
+
+REQUESTS = {
+    'success': 'Request created successfully. Please wait for an admin to approve your request',
+    'error': 'Error creating request, please try again later.'
+}
 
 
 def login_view(request):
@@ -56,17 +62,16 @@ def account_view(request):
 
 def register_view(request):
     if request.method == 'POST':
-        form = RegisterForm(request.POST)
+        form = RegisterForm(request.POST, user=request.user)
         if form.is_valid():
             args = {}
             user = form.save()
             if user:
                 group_request = GroupRequest(user=user)
                 group_request.save()
-                messages.success(request,
-                                 'Request created successfully. Please wait for an admin to approve your request')
+                messages.success(request, REQUESTS['success'])
             else:
-                messages.error(request, 'Error creating request, please try again later.')
+                messages.error(request, REQUESTS['error'])
             return render(request, 'result.html', args)
     form = RegisterForm()
     return render(request, 'registration/register_user.html', {'form': form})
@@ -75,8 +80,16 @@ def register_view(request):
 @login_required
 def request_privileged_view(request):
     if request.method == 'POST':
-        form = RequestPrivilegedAccessForm(request.POST)
-    form = RequestPrivilegedAccessForm()
+        form = GroupRequestForm(request.POST)
+        if form.is_valid():
+            group_request = form.save(commit=False)
+            group_request.user = request.user
+            group_request.save()
+            if group_request:
+                messages.success(request, REQUESTS['success'])
+            else:
+                messages.error(request, REQUESTS['error'])
+    form = GroupRequestForm(initial={'user': request.user})
     return render(request, 'request_group.html', {'form': form})
 
 

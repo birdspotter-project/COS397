@@ -12,6 +12,7 @@
                         <th>Lastname</th>
                         <th>Group Requested</th>
                         <th>Date Requested</th>
+                        <th>Notes</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -26,8 +27,31 @@
                         <td>{{ group_request.submitted_date }}</td>
                         <td>
                             <div>
-                                <button type="button" data-button='{"func":"approve", "request_id":"{{ group_request.request_id }}"}' class="btn btn-success">Approve</button>
-                                <button type="button" data-button='{"func":"deny", "request_id":"{{ group_request.request_id }}"}' class="btn btn-danger">Deny</button>
+                                <!-- Button trigger modal -->
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#notesModel{{ group_request.request_id }}">
+                                  Notes
+                                </button>
+
+                                <!-- Modal -->
+                                <div class="modal fade" id="notesModel{{ group_request.request_id }}" tabindex="-1" aria-hidden="true">
+                                  <div class="modal-dialog">
+                                    <div class="modal-content">
+                                      <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Request notes</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                      </div>
+                                      <div class="modal-body">
+                                        <p>This is some temp text</p>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div>
+                                <button type="button" id="action-button" data-button='{"func":"approve", "request_id":"{{ group_request.request_id }}"}' class="btn btn-success">Approve</button>
+                                <button type="button" id="action-button" data-button='{"func":"deny", "request_id":"{{ group_request.request_id }}"}' class="btn btn-danger">Deny</button>
                             </div>
                         </td>
                     </tr>
@@ -64,7 +88,8 @@
             },
         };
 
-        $('button').click(function() {
+        $('#action-button').click(function() {
+            alert('Action-button pressed')
             const data = $.parseJSON($(this).attr('data-button'));
             funcs[data.func](data.request_id)
         });

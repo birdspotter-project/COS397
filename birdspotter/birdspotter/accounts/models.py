@@ -48,6 +48,7 @@ class GroupRequest(models.Model):
     reviewed_by = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True,
                                     related_name='approving_user')
     reviewed_date = models.DateTimeField(blank=True, null=True)
+    notes = models.CharField(max_length=2000, blank=True, null=True)
 
     def approve_request(self, request):
         self.approved = True
@@ -57,8 +58,7 @@ class GroupRequest(models.Model):
             permission_group = Group.objects.get(name=self.group)
             self.user.groups.add(permission_group)
             if self.group == 'Registered':
-                breakpoint()
-                user = User.objects.get(username=request.user.username)
+                user = User.objects.get(username=self.user.username)
                 user.make_active()
             messages.success(request, f'User {self.user} successfully added to {self.group}')
         except Group.DoesNotExist:

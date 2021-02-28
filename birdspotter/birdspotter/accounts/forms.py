@@ -1,9 +1,9 @@
-from django.forms import ModelForm
+from django.forms import ModelForm, Textarea
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 
 
-from .models import User
+from .models import User, GroupRequest
 
 
 class AccountForm(ModelForm):
@@ -28,7 +28,14 @@ class RegisterForm(UserCreationForm):
     last_name = forms.CharField()
 
 
-class RequestPrivilegedAccessForm(forms.Form):
-    # TODO: redo this
-    organization = forms.CharField(required=False)
-    reason = forms.CharField(max_length=1000, required=True, label='Reason for elevated permissions', widget=forms.Textarea)
+class GroupRequestForm(forms.ModelForm):
+    class Meta:
+        model = GroupRequest
+        fields = ('group', 'notes')
+        exclude = ('user',)
+        widgets = {
+            'notes': Textarea(attrs={'cols': 80, 'rows': 10}),
+        }
+        labels = {
+            'notes': 'More details pertaining to the request'
+        }
