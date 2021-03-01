@@ -28,13 +28,18 @@
 </html>
 <body>
     <div class="container">
+        <div>
+            {% for item in all %}
+            <strong>{{ item.name }}</strong>
+            {% endfor %}
+        </div>
         <div class="flex-container">
             <div>{{ total_graph|safe }}</div>
             <div>{{ nesting_graph|safe }}</div>
         </div>
         <div class="flex-container">
             <div>{{ table|safe }}</div>
-            <div>{{ line_graph|safe }}</div>
+            <div>{{ dist_plot|safe }}</div>
         </div>
     </div>
 </body>
