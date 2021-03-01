@@ -28,6 +28,10 @@ class Dataset(models.Model):
         owner (User): User who uploaded and is responsible for the dataset
         raw_data (RawData): ForeignKey to dataio.RawData
     """
+    class Meta:
+        permissions = [
+            ("export_dataset", "Can export dataset")
+        ]
 
     name = models.CharField(max_length=50)
     dataset_id = models.UUIDField(primary_key=False,

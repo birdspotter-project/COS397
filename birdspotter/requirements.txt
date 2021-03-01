@@ -11,7 +11,6 @@ django-mailbox==4.8.2
 django-private-storage==2.2.2
 django-widget-tweaks==1.4.8
 Fiona==1.8.17
-GDAL==3.2.1
 geopandas==0.8.1
 gevent==21.1.2
 greenlet==1.0.0

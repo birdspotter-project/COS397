@@ -37,6 +37,10 @@ PROD_DB = os.getenv('PROD_DB')
 PROD_FS = os.getenv('PROD_FS', 'False')
 PROD_EMAIL = os.getenv('PROD_EMAIL', 'False')
 DO_CONDA = os.getenv('DO_CONDA', 'False')
+
+TESTING = False
+TEST_RUNNER = 'birdspotter.TestRunner.TestRunner'
+
 ALLOWED_HOSTS = []
 USE_X_FORWARDED_HOST = os.getenv('USE_X_FORWARDED_HOST', 'False')
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost').split(',')
