@@ -30,6 +30,7 @@ def create_testuser():
     user = User.objects.create(username=CREDS['username'])
     user.set_password(CREDS['password'])
     user.save()
+    user.make_active()
     return (user, CREDS)
 
 class AccountEditingTests(TestCase):
@@ -198,3 +199,6 @@ class ChangePasswordTests(TestCase):
         form = PasswordChangeForm(user, content)
         form.is_valid()
         self.assertTrue(form.errors['new_password2'][0] == self.ERROR_MESSAGES['numeric'])
+
+# class RegisterUserTests(TestCase):
+    

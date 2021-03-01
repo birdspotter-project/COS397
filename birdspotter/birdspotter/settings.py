@@ -34,6 +34,11 @@ if(not SECRET_KEY):
 DEBUG = os.getenv('DEBUG')
 CRISPY_FAIL_SILENTLY = not DEBUG
 PROD_DB = os.getenv('PROD_DB')
+
+
+TESTING = False
+TEST_RUNNER = 'birdspotter.TestRunner.TestRunner'
+
 PROD_EMAIL = os.getenv('PROD_EMAIL')
 ALLOWED_HOSTS = []
 USE_X_FORWARDED_HOST = os.getenv('USE_X_FORWARDED_HOST', 'False')
