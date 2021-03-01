@@ -35,8 +35,14 @@ DEBUG = os.getenv('DEBUG')
 CRISPY_FAIL_SILENTLY = not DEBUG
 PROD_DB = os.getenv('PROD_DB')
 
-ALLOWED_HOSTS = []
 
+TESTING = False
+TEST_RUNNER = 'birdspotter.TestRunner.TestRunner'
+
+PROD_EMAIL = os.getenv('PROD_EMAIL')
+ALLOWED_HOSTS = []
+USE_X_FORWARDED_HOST = os.getenv('USE_X_FORWARDED_HOST', 'False')
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost').split(',')
 
 HEALTH_CHECK = {
     'DISK_USAGE_MAX': 90,  # percent
@@ -59,12 +65,14 @@ INSTALLED_APPS = [
     'health_check',
     'health_check.db',
     'health_check.storage',
-    'crispy_forms'
+    'crispy_forms',
+    'private_storage'
 ]
 AUTH_USER_MODEL = 'accounts.User'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -118,8 +126,21 @@ elif PROD_DB.lower() == 'true':
             'PORT': '5432',
         }   
     }
-
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_HOST = ''
+EMAIL_PORT = ''
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = ''
+EMAIL_USE_TLS = ''
+EMAIL_TIMEOUT = ''
+if not PROD_EMAIL or PROD_EMAIL.lower() == 'false' :
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+elif PROD_EMAIL.lower() == 'true' :
+    EMAIL_HOST = os.getenv('EMAIL_HOST', 'email')
+    EMAIL_PORT = os.getenv('EMAIL_PORT', '25')
+    EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+    EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+    EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS')
+    EMAIL_TIMEOUT = 5
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
@@ -156,11 +177,24 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
-
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'),] 
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'birdspotter/staticfiles')] 
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+if not DEBUG :
+    STATIC_URL = '/static/'
+    MEDIA_URL = '/media/'
+    MEDIA_ROOT = '/media'
+    STATIC_ROOT = '/static'
 # Redirect to home page after login
 LOGIN_REDIRECT_URL = '/'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+PRIVATE_STORAGE_ROOT = '/media/protected/'
+PRIVATE_STORAGE_AUTH_FUNCTION = 'private_storage.permissions.allow_authenticated'
+PRIVATE_STORAGE_SERVER = 'nginx'
+PRIVATE_STORAGE_INTERNAL_URL = '/media/protected/'

@@ -1,5 +1,4 @@
 from django.shortcuts import render
-from django.http import HttpResponse
 import plotly
 import plotly.express as px
 import plotly.graph_objects as go

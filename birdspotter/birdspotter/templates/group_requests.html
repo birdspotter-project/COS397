@@ -1,0 +1,133 @@
+{% include 'base.html' %}
+{% block content %}
+{% load template_utilities %}
+<body>
+    <div class="container mt-4">
+        <table id="group-requests" class="table table-bordered dt-responsive nowrap" style="width:100%">
+            <thead>
+                <tr>
+                    <!-- <th class="details-control sorting_disabled"></th"> -->
+                        <th>Username</th>
+                        <th>Firstname</th>
+                        <th>Lastname</th>
+                        <th>Group Requested</th>
+                        <th>Date Requested</th>
+                        <th>Notes</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for group_request in group_requests %}
+                    <tr>
+                        <!-- <td class="details-control sorting_disabled"></td> -->
+                        <td>{{ group_request.user.username }}</td>
+                        <td>{{ group_request.user.firstname }}</td>
+                        <td>{{ group_request.user.lastname }}</td>
+                        <td>{{ group_request.group }}</td>
+                        <td>{{ group_request.submitted_date }}</td>
+                        <td>
+                            <div>
+                                <!-- Button trigger modal -->
+                                <button type="button" class="btn btn-link" data-toggle="modal" data-target="#notesModel{{ group_request.request_id }}">
+                                  Notes
+                                </button>
+
+                                <!-- Modal -->
+                                <div class="modal fade" id="notesModel{{ group_request.request_id }}" tabindex="-1" aria-hidden="true">
+                                  <div class="modal-dialog">
+                                    <div class="modal-content">
+                                      <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Request notes</h5>
+                                        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+                                      </div>
+                                      <div class="modal-body">
+                                        {{ group_request.notes }}
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div>
+                                <button type="button" data-button='{"func":"approve", "request_id":"{{ group_request.request_id }}"}' class="btn btn-success action-button">Approve</button>
+                                <button type="button" data-button='{"func":"deny", "request_id":"{{ group_request.request_id }}"}' class="btn btn-danger action-button">Deny</button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+
+            </table>
+        </div>
+        <script type="text/javascript" charset="utf8"
+        src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.js"></script>
+        <script type="text/javascript">
+        var funcs = {
+            approve: function(request_id) {
+                const url = `/accounts/group_requests/${request_id}/approve`
+                $.post({
+                   "url": url, 
+                   "data": {}, 
+                   "headers": {'X-CSRFToken': '{{csrf_token}}'}
+               },
+               function() {
+                console.log(`${request_id} processed successfully`);
+            });
+            },
+            deny: function(request_id) {
+                const url = `/accounts/group_requests/${request_id}/deny`;
+                $.post({
+                   "url": url, 
+                   "data": {}, 
+                   "headers": {'X-CSRFToken': '{{csrf_token}}'}
+               },
+               function() {
+                console.log(`${request_id} processed successfully`);
+            });
+            },
+        };
+
+        $('.action-button').click(function() {
+            const data = $.parseJSON($(this).attr('data-button'));
+            funcs[data.func](data.request_id)
+        });
+
+        </script>
+        <script>
+        $(document).ready(function () {
+            var table = $('#group-requests').DataTable({
+                "language": {"emptyTable": "No outstanding group requests"}
+            });
+            $('#group-requests tbody').on('click', 'td', function () {
+                var tr = $(this).closest('tr');
+                if (!(tr.hasClass('childRowData') || $(this).hasClass('details-control'))) {
+                    if (tr.hasClass('selected')) {
+                        tr.removeClass('selected');
+                        $(".dataset-action").addClass('disabled')
+                    } else {
+                        table.$('tr.selected').removeClass('selected');
+                        tr.addClass('selected');
+                        $(".dataset-action").removeClass('disabled')
+                    }
+                }
+            });
+        // Add event listener for opening and closing details
+        $('#group-requests tbody').on('click', 'td.details-control', function () {
+            var tr = $(this).closest('tr');
+            var row = table.row(tr);
+
+            if (row.child.isShown()) {
+                // This row is already open - close it
+                row.child.hide();
+                tr.removeClass('shown');
+            } else {
+                // Open this row
+                row.child("<label for='metadata'>Metadata:<label><textarea id='metadata'>default value</textarea>", "childRowData").show();
+                tr.addClass('shown');
+            }
+        });
+    });
+        </script>
+    </body>
+    {% endblock %}

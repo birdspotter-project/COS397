@@ -1,5 +1,4 @@
 from birdspotter.dataio.models import Dataset
-
 from birdspotter.dataio.models import Shapefile
 from birdspotter.accounts.models import User
 

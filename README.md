@@ -18,7 +18,8 @@ BirdSpotter is a graphical interface for integrating and viewing machine learnin
 5. Correct dependencies: `conda update numpy`
 6. Once in the desired environment install required packages by running `pip install -r requirements.txt`
 7. To start the web server run `python manage.py runserver`
-	- Note: you may be asked to perform migrations, run `python manage.py makemigrations && python manage.py migrate
+	- Note: you may be asked to perform migrations, run `python manage.py makemigrations && python manage.py migrate`
+	- The first time the application is run, run `./manage.py create_groups` to create permissions groups
 8. Install the needed packages with `pip install 'prospector==1.3.1' 'bandit==1.7.0'`
 
 ### VSCode Remote Container instructions
