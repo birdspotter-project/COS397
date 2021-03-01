@@ -32,7 +32,6 @@ class GroupRequestForm(forms.ModelForm):
     class Meta:
         model = GroupRequest
         fields = ('group', 'notes')
-        exclude = ('user',)
         widgets = {
             'notes': Textarea(attrs={'cols': 80, 'rows': 10}),
         }
