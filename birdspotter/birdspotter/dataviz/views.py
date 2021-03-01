@@ -59,15 +59,16 @@ def index(request):
 
     args['nesting_graph'] = plotly.offline.plot(fig_bird_nesting, auto_open = False, output_type="div")
 
-    # Table data
     # Table Figure
     fig_table = go.Figure(data=[go.Table(header=dict(values=list(combined.columns)),
                                          cells=dict(values=[combined['species'], combined['Nesting'], combined['Non-Nesting'], combined['Flying']]))])
 
     args['table'] = plotly.offline.plot(fig_table, auto_open = False, output_type="div")
 
-    # Line Graph Fig
+    # Certainty Table Fig
+    fig_certainty = go.Figure(data=[go.Table(header=dict(values=['species', 'certain_p1']),
+                                             cells=dict(values=[bird_data_total.species, bird_data_total.certain_p1]))])
 
-    #args['dist_plot'] = plotly.offline.plot(fig_dist_plot, auto_open = False, output_type="div")
+    args['certainty_table'] = plotly.offline.plot(fig_certainty, auto_open = False, output_type="div")
 
     return render(request, "dataviz.html", args)
