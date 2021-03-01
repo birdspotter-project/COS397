@@ -30,4 +30,3 @@ def get_dataset_data(user):
                           "island_name" : [i.island_name for i in shapefile_lines]}
         #return [l for l in shapefile_lines]
         return shapefile_data
-    #return Shapefile.objects.filter(data_set=1).only("latitude", "longitude", "species")
