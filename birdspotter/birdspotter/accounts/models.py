@@ -25,7 +25,7 @@ class User(AbstractUser):
         }
 
     def is_admin(self):
-        return self.groups.filter(name='Admin').exists()
+        return self.groups.filter(name='Admin').exists() or self.is_superuser
 
     def make_active(self):
         self.is_active = True
