@@ -1,0 +1,22 @@
+{% include 'base.html'%}
+{% load template_utilities %}
+{% block content %}
+<div class='container mt-2'>
+<h2>Queue</h2>
+{% for job in jobs %}
+    {% if job.status == 'end' %}
+        <div class="alert alert-success text-center" role="alert">
+            <b>{{ job.status }}:</b> {{ job }}
+        </div>
+    {% elif job.status == "fail" or job.status == "time_limit" %}
+        <div class="alert alert-danger text-center" role="alert">
+            <b>{{ job.status }}:</b> {{ job }}
+        </div>
+    {% else %}
+        <div class="alert alert-warning text-center" role="alert">
+            <b>{{ job.status }}:</b> {{ job }}
+        </div>
+    {%endif%}
+{% endfor%}
+</div>
+{% endblock %}
