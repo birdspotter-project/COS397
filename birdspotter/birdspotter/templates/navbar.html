@@ -18,12 +18,23 @@
 			<li class="nav-item">
 				<a class="nav-link" href="/import">Import</a>
 			</li>
+            {% if request.user.is_admin %}
+                <li class="nav-item"><a class="nav-link" href="/accounts/group_requests">Group Requests</a></li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin">Admin</a>
+                </li>
+                
+            {% endif %}
 			{% if request.user.is_authenticated %}
 			<li class="nav-item dropdown">
 				<a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 				{{ request.user }}</a>
 				<div class="dropdown-menu dropdown-menu-right" style="padding-bottom: 10px; width: 20em">
 						<a class="dropdown-item" style="padding-bottom: 10px;" href="/accounts/profile/">Profile</a>
+						{%if request.user.is_staff %}
+						<a class="dropdown-item" style="padding-bottom: 10px;" href="/queue/">Job Queue</a>
+						<a class="dropdown-item" style="padding-bottom: 10px;" href="/admin">Admin Panel</a>
+						{% endif %}
 						<div style="padding-left: 20px; padding-top: 10px;"><button type="submit" class="btn btn-danger" onclick="location.href='/accounts/logout/'">Logout</button></div>
 				</div>
 			</li>
@@ -38,16 +49,11 @@
                 		<button type="button" class="btn btn-link" onclick="location.href='/accounts/password_reset/'">Forgot Password</button>
                 		<div>
                   			<button class="btn btn-primary" type="submit" name="submit" value="Login">Login</button>
-                  			<button type="button" class="btn btn-secondary ml-2" value=register>Request Access</button>
+                  			<button type="button" class="btn btn-secondary ml-2" onclick="location.href='/accounts/request_access/'">Request Access</button>
                 		</div>
                 	</form>
         		</div>
       		</li>
-			{% endif %}
-			{% if isAdmin %}
-			<li class="nav-item">
-				<a class="nav-link" href="/admin">Admin</a>
-			</li>
 			{% endif %}
 		</ul>
 	</div>

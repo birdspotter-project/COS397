@@ -30,20 +30,14 @@
                             <div class="dropdown-menu dropdown-menu-right">
                                 <a class="nav-link" href="/map">Map View</a>
                                 <a class="nav-link" href="/data">Data View</a>
+                                <a class="nav-link" href="/queue/{{ dataset|get_item:'dataset_id' }}">Queue Analysis</a>
                                 <!--should only be available to superusers and the owner(s)-->
                                 <a class="nav-link" href="/edit">Edit Dataset</a>
                                 <!--should only be available to registered users-->
                                 <a class="nav-link" href="/Export">Export</a>                                
 
                             </div>
-                            <!--
-                            <a class="nav-link" href="/accounts">Account</a>
-                            -->
                         </div>
-                        <!--
-                        <button>Actions</button>
-                        -->
-                        
                     </td>
                 </tr>
             {% endfor %}
@@ -55,7 +49,9 @@
         src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.js"></script>
     <script>
     $(document).ready(function () {
-        var table = $('#datasets').DataTable();
+        var table = $('#datasets').DataTable({
+            "language": {"emptyTable": "No datasets to display"}
+        });
         $('#datasets tbody').on('click', 'td', function () {
             var tr = $(this).closest('tr');
             if (!(tr.hasClass('childRowData') || $(this).hasClass('details-control'))) {
