@@ -67,6 +67,8 @@ def register_view(request):
             args = {}
             user = form.save()
             if user:
+                user.is_active = False
+                user.save()
                 group_request = GroupRequest(user=user)
                 group_request.save()
                 messages.success(request, REQUESTS['success'])

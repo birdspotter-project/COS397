@@ -8,11 +8,13 @@ import string
 from .models import User
 from .forms import AccountForm
 
+
 def gen_name():
     """
     Create a username based off of current time
     """
     return 'testUser' + str(time.time()).replace('.', '')
+
 
 def gen_password():
     """
@@ -20,18 +22,24 @@ def gen_password():
     """
     return ''.join(random.choice(string.ascii_letters) for _ in range(9)) # nosec
 
-def create_testuser():
-    usrname = gen_name()
+def gen_creds():
+    username = gen_name()
     CREDS = {
-            'username': usrname,
-            'email': '%s@test.com' % usrname,
+            'username': username,
+            'email': '%s@test.com' % username,
             'password': gen_password()
         }
+    return CREDS
+
+
+def create_testuser():
+    CREDS = gen_creds()
     user = User.objects.create(username=CREDS['username'])
     user.set_password(CREDS['password'])
     user.save()
     user.make_active()
     return (user, CREDS)
+
 
 class AccountEditingTests(TestCase):
 
@@ -97,6 +105,7 @@ class AccountEditingTests(TestCase):
             if success := form.is_valid():
                 form.save()
             self.assertFalse(success)
+
 
 class ChangePasswordTests(TestCase):
     base_url = '/accounts/password_change/'
@@ -200,5 +209,14 @@ class ChangePasswordTests(TestCase):
         form.is_valid()
         self.assertTrue(form.errors['new_password2'][0] == self.ERROR_MESSAGES['numeric'])
 
-# class RegisterUserTests(TestCase):
+class RegisterUserTests(TestCase):
+
+    @classmethod
+    def setup():
+        self.client = Client()
+
+    def test_reguster_user(self):
+        creds = gen_creds()
+        
+
     
