@@ -21,11 +21,14 @@ COPY --from=prod-deps /usr/lib/python3.8/ /usr/lib/python3.8/
 COPY --from=prod-deps /usr/lib/x86_64-linux-gnu/ /usr/lib/x86_64-linux-gnu/
 COPY --from=prod-deps /usr/bin/python3 /usr/bin/python3
 WORKDIR /app
-RUN mkdir /static
 COPY ./birdspotter ./birdspotter
 COPY ./manage.py .
 ENV PROD_DB=true
 ENV PROD_EMAIL=true
 EXPOSE 8000
-RUN python3 manage.py collectstatic
+RUN mkdir -p /share/static \
+    && mkdir -p /share/media/tmp \
+    && mkdir -p /share/media/protected/raw_files \
+    && python3 manage.py collectstatic
+VOLUME /share/media
 CMD ["python3", "manage.py", "runserver", "0.0.0.0:8000"]

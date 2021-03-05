@@ -48,6 +48,8 @@ RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \
 		--with-compat \
 		--with-file-aio \
 		--with-http_v2_module \
+		--add-module=/usr/src/nginx-upload-module-2.3.0 \
+		--add-module=/usr/src/nginx-upload-progress-module-0.9.2 \
 	" \
 	&& addgroup -S nginx \
 	&& adduser -D -S -h /var/cache/nginx -s /sbin/nologin -G nginx nginx \
@@ -84,13 +86,11 @@ RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \
 	&& tar -zxC /usr/src -f nginx.tar.gz \
 	&& rm nginx.tar.gz \
 	&& mkdir /usr/src/upload \
-	&& cd /usr/src/upload \
+	&& cd /usr/src/ \
 	&& curl -fSLO https://github.com/fdintino/nginx-upload-module/archive/2.3.0.zip \
 	&& unzip 2.3.0.zip \
-    && mkdir /usr/src/upload-progress \
-	&& cd /usr/src/upload-progress \
     && curl -fSLO https://github.com/masterzen/nginx-upload-progress-module/archive/v0.9.2.zip \
-	&& unzip v0.9.2.zip \
+	&& unzip v0.9.2.zip	\
 	&& cd /usr/src/nginx-$NGINX_VERSION \
 	&& ./configure $CONFIG --with-debug \
 	&& make -j$(getconf _NPROCESSORS_ONLN) \
