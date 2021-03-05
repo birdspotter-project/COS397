@@ -217,6 +217,6 @@ class RegisterUserTests(TestCase):
 
     def test_reguster_user(self):
         creds = gen_creds()
-        
+        self.client.post()
 
     
