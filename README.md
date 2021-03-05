@@ -10,6 +10,7 @@ BirdSpotter is a graphical interface for integrating and viewing machine learnin
 
 ### Manual Development 
 #### Setup Instructions
+Note that for most purposes, any real testing should be done within the docker-compose dev stack.
 1. Clone the repository
 2. It is recommended to create a virtual environment for development
 	- For installation instructions view this [page](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/)
@@ -21,7 +22,18 @@ BirdSpotter is a graphical interface for integrating and viewing machine learnin
 	- Note: you may be asked to perform migrations, run `python manage.py makemigrations && python manage.py migrate`
 	- The first time the application is run, run `./manage.py create_groups` to create permissions groups
 8. Install the needed packages with `pip install 'prospector==1.3.1' 'bandit==1.7.0'`
-
+### docker-compose dev stack
+1. Pre-reqs: 
+	- Install docker: https://docs.docker.com/get-docker/
+	- Install docker-compose: https://docs.docker.com/compose/install/
+	- Clone the repository
+2. Switch to docker-compose directory `cd docker-compose`
+3. Create environment file:
+	- Use template `cp .env.example .env`
+	- Fill in all variables in the .env file that don't have a value
+4. Build and bring up stack: `docker-compose up --build`
+5. Once everything is running, initialize the stack with `./initial_setup.sh`
+6. 
 ### VSCode Remote Container instructions
 This method requires that you already have VSCode set up with the VSCode Remote Container extension with a local Docker installation
 1. Open repository in VSCode

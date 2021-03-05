@@ -29,7 +29,7 @@ def index(request):
         if (settings.DEBUG.lower == "true" or request.user.is_admin()):
             messages.error(request, f"Errors: {form.errors}", extra_tags='safe')
         else:
-            messages.success(request, "File upload failed, please contact your administrator.")
+            messages.error(request, "File upload failed, please contact your administrator.")
         logging.error(form.errors)
         logging.error(dict(form.data))
         form = ImportForm()
