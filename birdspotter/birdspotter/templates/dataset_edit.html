@@ -4,7 +4,7 @@
 <div class="container"><h1>Edit Dataset Metadata</h1></div>
 <div class="container"><form method="post">
     {% csrf_token %}
-    {{ form|crispy }}
+    {% crispy form %}
 </form></div>
     
 {% endblock content %}

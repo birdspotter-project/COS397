@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
 from birdspotter.dataio.scripts.get_user_datasets import get_datasets_for_user
 from birdspotter.accounts.models import User
 from birdspotter.dataio.models import Dataset
@@ -27,7 +28,7 @@ def index(request):
 @login_required
 def edit_dataset(request, uuid):
     """
-    Editing dataset metadata.
+    Editing dataset metadata, such as dataset name, comments, and whether the dataset is public
     """
     user = request.user
     dataset = Dataset.objects.filter(owner_id=user.id).get(dataset_id=uuid)
@@ -35,8 +36,8 @@ def edit_dataset(request, uuid):
         form = DatasetEditForm(request.POST or None, instance=dataset)
         if form.is_valid():
             form.save()
+            messages.success(request, "Data set edit complete")
             return redirect("/")
-        messages.error(request, "Failed to edit dataset metadata")
     form = DatasetEditForm()
     context = {
         'form': form,
