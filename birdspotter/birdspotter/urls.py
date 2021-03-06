@@ -31,4 +31,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('health/', include('health_check.urls')),
     path('private-media/', include(private_storage.urls)),
+    path('auth/', views.auth, name='auth')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) # only works in dev mode

@@ -188,11 +188,6 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-if not DEBUG :
-    STATIC_URL = '/static/'
-    MEDIA_URL = '/media/'
-    MEDIA_ROOT = '/media'
-    STATIC_ROOT = '/static'
 # Redirect to home page after login
 LOGIN_REDIRECT_URL = '/'
 
@@ -201,9 +196,13 @@ PRIVATE_STORAGE_AUTH_FUNCTION = 'private_storage.permissions.allow_authenticated
 PRIVATE_STORAGE_ROOT = os.path.join(BASE_DIR, 'media/protected/')
 PRIVATE_STORAGE_INTERNAL_URL = '/media/protected/'
 if PROD_FS : 
-    PRIVATE_STORAGE_ROOT = '/media/protected/'
+    PRIVATE_STORAGE_ROOT = '/share/media/protected/'
     PRIVATE_STORAGE_SERVER = 'nginx'
     PRIVATE_STORAGE_INTERNAL_URL = '/media/protected/'
+    STATIC_URL = '/static/'
+    MEDIA_URL = '/share/media/'
+    MEDIA_ROOT = '/media/'
+    STATIC_ROOT = '/share/static/'
 
 
 SLURM_HOST=os.getenv('SLURM_HOST')
