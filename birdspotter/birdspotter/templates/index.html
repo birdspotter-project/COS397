@@ -1,4 +1,5 @@
 {% include 'base.html' %}
+{% load static %}
 {% block content %}
 {% load template_utilities %}
 <body>
@@ -12,6 +13,7 @@
                 <th>Public</th>
                 <th>Date Uploaded</th>
                 <th>Date Collected</th>
+                <th>View</th>
                 <th>Actions</th>
             </tr>
             </thead>
@@ -25,11 +27,15 @@
                     <td>{{ dataset|get_date:'date_created' }}</td>
                     <td>{{ dataset|get_item:'date_collected' }}</td>
                     <td>
+                        <div style="display: block; width:80%; height: 50%; margin-left: auto; margin-right: auto;">
+                            <a href="/map" style="width: 45%; float: left;"><img src="{% static 'map.svg' %}" alt="Map View" style="object-fit: contain;" title="Map View"></a>
+                            <a href="/data" style="width: 45%; float: right;"><img src="{% static 'graph.svg' %}" alt="Graph View" style="object-fit: contain;" title="Graph View"></a>
+                        </div>
+                    </td>
+                    <td>
                         <div class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle " href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Actions</a>
                             <div class="dropdown-menu dropdown-menu-right">
-                                <a class="nav-link" href="/map">Map View</a>
-                                <a class="nav-link" href="/data">Data View</a>
                                 <a class="nav-link" href="/queue/{{ dataset|get_item:'dataset_id' }}">Queue Analysis</a>
                                 <!--should only be available to superusers and the owner(s)-->
                                 <a class="nav-link" href="/edit">Edit Dataset</a>
@@ -51,34 +57,6 @@
     $(document).ready(function () {
         var table = $('#datasets').DataTable({
             "language": {"emptyTable": "No datasets to display"}
-        });
-        $('#datasets tbody').on('click', 'td', function () {
-            var tr = $(this).closest('tr');
-            if (!(tr.hasClass('childRowData') || $(this).hasClass('details-control'))) {
-                if (tr.hasClass('selected')) {
-                    tr.removeClass('selected');
-                    $(".dataset-action").addClass('disabled')
-                } else {
-                    table.$('tr.selected').removeClass('selected');
-                    tr.addClass('selected');
-                    $(".dataset-action").removeClass('disabled')
-                }
-            }
-        });
-        // Add event listener for opening and closing details
-        $('#datasets tbody').on('click', 'td.details-control', function () {
-            var tr = $(this).closest('tr');
-            var row = table.row(tr);
-    
-            if (row.child.isShown()) {
-                // This row is already open - close it
-                row.child.hide();
-                tr.removeClass('shown');
-            } else {
-                // Open this row
-                row.child("<label for='metadata'>Metadata:<label><textarea id='metadata'>default value</textarea>", "childRowData").show();
-                tr.addClass('shown');
-            }
         });
     });
     </script>
