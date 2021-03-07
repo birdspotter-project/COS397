@@ -38,7 +38,10 @@ def edit_dataset(request, uuid):
             form.save()
             messages.success(request, "Data set edit complete")
             return redirect("/")
-    form = DatasetEditForm()
+    form = DatasetEditForm(initial={
+    'name': dataset.name,
+    'is_public': dataset.is_public,
+    })
     context = {
         'form': form,
         'isAdmin': False
