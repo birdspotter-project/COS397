@@ -7,6 +7,12 @@ def get_datasets_for_user(user):
     return Dataset.objects.filter(owner_id=user.id).values()
 
 
+def get_public_datasets():
+    """Gets all public datasets
+    """
+    return Dataset.objects.filter(is_public=True).values()
+
+
 def get_dataset_data(user):
     print("ISADMIN:",user)
     shapefile_lines = Shapefile.objects.filter(data_set=1)

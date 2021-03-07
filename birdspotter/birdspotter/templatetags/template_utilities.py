@@ -46,3 +46,16 @@ def get_username(dictionary, key):
         User: User model for supplied user_id
     """
     return User.objects.get(pk=dictionary[key])
+
+
+@register.simple_tag
+def is_dataset_owner(user, dataset):
+    """Check if user is the owner for a dataset.
+    
+    Args:
+        User user
+        Dataset dataset
+    Returns:
+        Boolean: true if the user is the dataset owner, false if not
+    """
+    return dataset['owner_id'] is user.id

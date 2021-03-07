@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from birdspotter.dataio.scripts.get_user_datasets import get_datasets_for_user
+from birdspotter.dataio.scripts.get_user_datasets import get_datasets_for_user, get_public_datasets
 from birdspotter.accounts.models import User
 
 
@@ -16,5 +16,5 @@ def index(request):
     if current_user:
         datasets = get_datasets_for_user(current_user).values()
     else:
-        datasets = None
+        datasets = get_public_datasets()
     return render(request, 'index.html', {'datasets': datasets})

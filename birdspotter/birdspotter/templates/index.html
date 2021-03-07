@@ -10,11 +10,15 @@
                 <!-- <th class="details-control sorting_disabled"></th"> -->
                 <th>Name</th>
                 <th>Owner</th>
+                {% if request.user.is_authenticated %}
                 <th>Public</th>
+                {% endif %}
                 <th>Date Uploaded</th>
                 <th>Date Collected</th>
                 <th>View</th>
+                {% if request.user.is_authenticated %}
                 <th>Actions</th>
+                {% endif %}
             </tr>
             </thead>
             <tbody>
@@ -23,7 +27,9 @@
                     <!-- <td class="details-control sorting_disabled"></td> -->
                     <td>{{ dataset|get_item:'name' }}</td>
                     <td>{{ dataset|get_username:'owner_id' }}</td>
+                    {% if request.user.is_authenticated %}
                     <td>{{ dataset|get_item:'is_public' }}</td>
+                    {% endif %}
                     <td>{{ dataset|get_date:'date_created' }}</td>
                     <td>{{ dataset|get_item:'date_collected' }}</td>
                     <td>
@@ -32,19 +38,23 @@
                             <a href="/data" style="width: 45%; float: right;"><img src="{% static 'graph.svg' %}" alt="Graph View" style="object-fit: contain;" title="Graph View"></a>
                         </div>
                     </td>
+                    {% if request.user.is_authenticated %}
                     <td>
                         <div class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle " href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Actions</a>
                             <div class="dropdown-menu dropdown-menu-right">
                                 <a class="nav-link" href="/queue/{{ dataset|get_item:'dataset_id' }}">Queue Analysis</a>
-                                <!--should only be available to superusers and the owner(s)-->
+                                {% is_dataset_owner request.user dataset as is_owner %}
+                                {% if is_owner %}
                                 <a class="nav-link" href="/edit">Edit Dataset</a>
-                                <!--should only be available to registered users-->
+                                {% endif %}
+                                {% if request.user.is_authenticated %}
                                 <a class="nav-link" href="/Export">Export</a>                                
-
+                                {% endif %}
                             </div>
                         </div>
                     </td>
+                    {% endif %}
                 </tr>
             {% endfor %}
             </tbody>
