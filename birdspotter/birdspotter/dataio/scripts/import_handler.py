@@ -5,7 +5,7 @@ import zipfile
 import geopandas as gp
 from fiona.io import ZipMemoryFile
 
-from birdspotter.accounts.models import User
+from django.conf import settings
 from birdspotter.dataio.models import Dataset, Shapefile, RawData, Image
 
 
@@ -27,27 +27,29 @@ def import_data(user, user_file, date_created):
             with ZipMemoryFile(binary) as zip_mem:
                 zf = zipfile.ZipFile(io.BytesIO(binary))
                 shapefile_locs = list(filter(lambda v: v.endswith('.shp'), zf.namelist()))
-                return import_shapefile(shapefile_locs, zip_mem, user, date_created, zip=zf)
+                return __import_shapefile(shapefile_locs, zip_mem, user, date_created, zip=zf)
         except zipfile.BadZipfile:
             return False
     else :
-        dataset = import_tiff(user_file, user, date_created)
+        dataset = __import_tiff(user_file, user, date_created)
         return dataset is not None
-        #print("Failed to upload")
-def import_tiff(tiff_file, user, date_created):
+
+def __import_tiff(tiff_file, user, date_created):
     tiff = RawData.objects.create(path=tiff_file)
     name = re.findall(r"(\w+).tif", tiff_file.name)[0]
-    dataset = Dataset(name=name, is_public=True, owner=User.objects.get_by_natural_key(user.username),
+    dataset = Dataset(name=name, is_public=True, owner=settings.AUTH_USER_MODEL.objects.get_by_natural_key(user.username),
                               date_collected=date_created, geotiff=tiff)
     dataset.save()
     return dataset
-def import_shapefile(file_loc, zip_mem, user, date_created, **kwargs):
+
+
+def __import_shapefile(file_loc, zip_mem, user, date_created, **kwargs):
     if len(file_loc) > 0:
         file_name = re.findall(r"(\w+).shp", file_loc[0])[0]
         print(file_name)
         dataset = kwargs.get('dataset', None)
         if dataset is None : 
-            dataset = Dataset(name=file_name, is_public=True, owner=User.objects.get_by_natural_key(user.username),
+            dataset = Dataset(name=file_name, is_public=True, owner=settings.AUTH_USER_MODEL.objects.get_by_natural_key(user.username),
                               date_collected=date_created)
         dataset.save()
         zf=kwargs.get('zip', None)

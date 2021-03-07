@@ -1,9 +1,11 @@
 from birdspotter.dataio.models import Dataset
 from birdspotter.dataio.models import Shapefile
-from birdspotter.accounts.models import User
 
 def get_datasets_for_user(user):
+    """Gets all datasets owned by user
+    """
     return Dataset.objects.filter(owner_id=user.id).values()
+
 
 def get_dataset_data(user):
     print("ISADMIN:",user)
@@ -24,9 +26,8 @@ def get_dataset_data(user):
                           }
         #return [l for l in shapefile_lines]
         return shapefile_data
-    else:
-        shapefile_data = {"longitude"   : [i.longitude for i in shapefile_lines],
-                          "latitude"    : [i.latitude for i in shapefile_lines],
-                          "island_name" : [i.island_name for i in shapefile_lines]}
-        #return [l for l in shapefile_lines]
-        return shapefile_data
+    shapefile_data = {"longitude"   : [i.longitude for i in shapefile_lines],
+                      "latitude"    : [i.latitude for i in shapefile_lines],
+                      "island_name" : [i.island_name for i in shapefile_lines]}
+    #return [l for l in shapefile_lines]
+    return shapefile_data

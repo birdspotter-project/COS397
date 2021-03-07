@@ -34,6 +34,9 @@ def login_view(request):
                                 username=request.POST['username'],
                                 password=request.POST['password']):
             login(request, user)
+            messages.success(request, f"Welcome, {user.username}!")
+        else:
+            messages.error(request, "Login failed.")
     return redirect('/')
 
 

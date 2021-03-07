@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
-
+from django.shortcuts import render, redirect
+from django.contrib import messages
 from .forms import ImportShapefileForm
 from .scripts.import_handler import import_data
 
@@ -14,21 +14,15 @@ def index(request):
     Returns:
         Attempts to import the uploaded shapefile and notifies the user if the import was sucessful
     """
-    args = {}
-
     if request.method == "POST":
         form = ImportShapefileForm(data=request.POST, files=request.FILES)
         if form.is_valid():
             success = import_data(request.user, form.cleaned_data['file_to_import'], form.cleaned_data['created_date'])
             if success:
-                args['statusDiv'] = "File upload successful"
-                args['result'] = "success"
-                args['redirect'] = "/"
-            else:
-                args['statusDiv'] = "File upload fail, please upload a valid zipfile"
-                args['result'] = "danger"
-                args['redirect'] = "/import/"
-            return render(request, 'result.html', args)
+                messages.success(request, "File upload succeeded")
+                return redirect("/")
+            messages.error(request, "File upload succeeded, please try again or contact your administrator")
+            return redirect("/import/")
     form = ImportShapefileForm()
     context = {
         'form': form,

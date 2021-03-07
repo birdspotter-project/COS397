@@ -6,6 +6,7 @@ from django.db import models
 from private_storage.storage.files import PrivateFileSystemStorage
 import uuid
 
+
 class RawData(models.Model):
     """Raw data that is stored in the system, can be Zip files,
     Shapefiles, or Geotiffs that will
@@ -16,6 +17,7 @@ class RawData(models.Model):
     """
 
     path = models.FileField(storage=PrivateFileSystemStorage, upload_to="raw_files/")
+
 
 class Dataset(models.Model):
     """Dataset object that is created either by importing a shapefile,
@@ -33,6 +35,7 @@ class Dataset(models.Model):
             ("export_dataset", "Can export dataset")
         ]
 
+
     name = models.CharField(max_length=50)
     dataset_id = models.UUIDField(primary_key=False,
                                   default=uuid.uuid4,
@@ -46,6 +49,8 @@ class Dataset(models.Model):
                                  null=True, blank=True)
     def __str__(self):
         return self.name
+
+
 class Image(models.Model):
     """Image that will be stored in fileserver and referenced in map view
 
@@ -58,6 +63,8 @@ class Image(models.Model):
                                 default=uuid.uuid4,
                                 editable=False, unique=True)
     dataset = models.ForeignKey(Dataset, on_delete=models.CASCADE)
+
+
 class RawShapefile(models.Model):
     """Raw Shapefile that has a dataset and raw data
         rawshp (RawData): RawData containing shapefile
@@ -68,6 +75,8 @@ class RawShapefile(models.Model):
     image_id = models.UUIDField(primary_key=False,
                                 default=uuid.uuid4,
                                 editable=False, unique=True)
+
+
 class Shapefile(models.Model):
     """Database implementation of a Shapefile row
 
