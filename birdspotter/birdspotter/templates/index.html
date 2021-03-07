@@ -30,9 +30,9 @@
                             <div class="dropdown-menu dropdown-menu-right">
                                 <a class="nav-link" href="/map">Map View</a>
                                 <a class="nav-link" href="/data">Data View</a>
-                                <a class="nav-link" href="/queue/{{ dataset|get_item:'dataset_id' }}">Queue Analysis</a>
                                 <!--should only be available to superusers and the owner(s)-->
-                                <a class="nav-link" href="/edit">Edit Dataset</a>
+                                <a class="nav-link" href="/queue/{{ dataset|get_item:'dataset_id' }}">Queue Analysis</a>
+                                <a class="nav-link" href="/edit/{{ dataset|get_item:'dataset_id' }}">Edit Dataset</a>
                                 <!--should only be available to registered users-->
                                 <a class="nav-link" href="/Export">Export</a>                                
 

@@ -3,6 +3,7 @@
 {% block content %}
 <div class='container mt-2'>
 <h2>Queue Analysis</h2>
+{% csrf_token %}
 {% crispy form %}
 </div>
 {% endblock %}

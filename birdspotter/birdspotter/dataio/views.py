@@ -1,9 +1,11 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
-
-from .forms import ImportShapefileForm
+from django.contrib import messages
+import logging
+from django.conf import settings
+from .forms import ImportForm
 from .scripts.import_handler import import_data
-
+from django.shortcuts import redirect
 @login_required
 def index(request):
     """Landing page for dataio path
@@ -14,22 +16,29 @@ def index(request):
     Returns:
         Attempts to import the uploaded shapefile and notifies the user if the import was sucessful
     """
-    args = {}
-
     if request.method == "POST":
-        form = ImportShapefileForm(data=request.POST, files=request.FILES)
+        form = ImportForm(data=request.POST)
         if form.is_valid():
-            success = import_data(request.user, form.cleaned_data['file_to_import'], form.cleaned_data['created_date'])
+            messages.success(request, "File uploaded, starting processing")
+            success = import_data(request.user, form.cleaned_data['file_path'], form.cleaned_data['file_name'], form.cleaned_data['created_date'])
             if success:
-                args['statusDiv'] = "File upload successful"
-                args['result'] = "success"
-                args['redirect'] = "/"
+                messages.success(request, "File processing successful")
             else:
-                args['statusDiv'] = "File upload fail, please upload a valid zipfile"
-                args['result'] = "danger"
-                args['redirect'] = "/import/"
-            return render(request, 'result.html', args)
-    form = ImportShapefileForm()
+                messages.error(request, "File processing failed, please upload a valid zipfile or GeoTiff")
+            return redirect('/')
+        if (settings.DEBUG.lower == "true" or request.user.is_admin()):
+            messages.error(request, f"Errors: {form.errors}", extra_tags='safe')
+        else:
+            messages.error(request, "File upload failed, please contact your administrator.")
+        logging.error(form.errors)
+        logging.error(dict(form.data))
+        form = ImportForm()
+        context = {
+            'form': form,
+            'isAdmin': False
+        }
+        return render(request, 'upload.html', context, status=400)
+    form = ImportForm()
     context = {
         'form': form,
         'isAdmin': False

@@ -39,9 +39,17 @@
 
 
     {% for message in messages %}
-    <script>
-        toastr.{{ message.tags }}("{{ message }}")
-    </script>
+    {% if 'safe' in message.tags %}
+        <script>
+            toastr.options.escapeHtml = false;
+            toastr.{{ message.level_tag }}('{{message|safe}}')
+        </script>
+    {% else %}
+        <script>
+            toastr.options.escapeHtml = true;
+            toastr.{{ message.level_tag }}('{{message}}')
+        </script>
+    {% endif %}
     {% endfor %}
     {% endblock %}
     
