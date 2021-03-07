@@ -40,7 +40,7 @@ def import_tiff(tiff_file, file_name, user, date_created):
     shutil.move(tiff_file, new_path)
     tiff = RawData.objects.create(path=new_path)
     name = re.findall(r"(\w+).tif", file_name)[0]
-    dataset = Dataset(name=name, is_public=True, owner=User.objects.get_by_natural_key(user.username),
+    dataset = Dataset(name=name, owner=User.objects.get_by_natural_key(user.username),
                               date_collected=date_created, geotiff=tiff)
     dataset.save()
     return dataset
@@ -50,7 +50,7 @@ def import_shapefile(file_loc, zip_mem, user, date_created, **kwargs):
         print(file_name)
         dataset = kwargs.get('dataset', None)
         if dataset is None : 
-            dataset = Dataset(name=file_name, is_public=True, owner=User.objects.get_by_natural_key(user.username),
+            dataset = Dataset(name=file_name, owner=User.objects.get_by_natural_key(user.username),
                               date_collected=date_created)
         dataset.save()
         zf=kwargs.get('zip', None)
