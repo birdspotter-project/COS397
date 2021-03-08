@@ -6,19 +6,15 @@ import numpy as np
 import pandas as pd
 from birdspotter.dataio.scripts.get_user_datasets import get_dataset_data
 
-def index(request):
+def index(request, uuid):
     """
     base function for the Map View handling, checks permissions of the user and dispatches to other functions
     """
 
     args = {}
 
-    if request.user.is_authenticated:
-        args['isAdmin'] = True
-    else:
-        args['isAdmin'] = False
+    shapefile_lines = get_dataset_data(request.user.is_authenticated, uuid)
 
-    shapefile_lines = get_dataset_data(args['isAdmin'])
 
     df = pd.DataFrame({})
     #populate DataFrame
@@ -27,7 +23,7 @@ def index(request):
     #create corresponding GeoDataFrame
     gdf = gpd.GeoDataFrame(df, geometry=gpd.points_from_xy(df.longitude, df.latitude))
     
-    plot = create_map(args['isAdmin'], gdf)
+    plot = create_map(request.user.is_authenticated, gdf)
     args['graph_div'] = plot
     
     return render(request, 'map.html', args)

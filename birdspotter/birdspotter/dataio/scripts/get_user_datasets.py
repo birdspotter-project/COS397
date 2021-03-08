@@ -13,12 +13,12 @@ def get_public_datasets():
     return Dataset.objects.filter(is_public=True).values()
 
 
-def get_dataset_data(user):
-    print("ISADMIN:",user)
-    shapefile_lines = Shapefile.objects.filter(data_set=1)
+def get_dataset_data(is_authed, uuid):
+    dataset = Dataset.objects.get(dataset_id=uuid)
+    shapefile_lines = Shapefile.objects.filter(data_set=dataset.id)
     #Shapefile.objects.defer("species")
 
-    if user:
+    if is_authed:
         shapefile_data = {"longitude"   : [i.longitude for i in shapefile_lines],
                           "latitude"    : [i.latitude for i in shapefile_lines],
                           "island_name" : [i.island_name for i in shapefile_lines],

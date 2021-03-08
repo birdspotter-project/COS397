@@ -2,29 +2,23 @@ from django.shortcuts import render
 import plotly
 import plotly.express as px
 import plotly.graph_objects as go
-import random
 import pandas as pd
 from birdspotter.dataio.scripts.get_user_datasets import get_dataset_data
 
 # Create your views here.
 
 # Data view
-def index(request):
+def index(request, uuid):
     args = {}
 
-    if request.user.is_authenticated:
-        args['isAdmin'] = True
-    else:
-        args['isAdmin'] = False
-
-    data_table = get_dataset_data(args['isAdmin'])
+    data_table = get_dataset_data(request.user.is_authenticated, uuid)
 
     bird_data_total = pd.DataFrame({})
 
     for key in data_table:
         bird_data_total[key] = data_table[key]
 
- # Nesting bird count graph fig
+    # Nesting bird count graph fig
     grouped = bird_data_total[['species', 'behavior']].copy()
     grouped = grouped.reset_index()
 

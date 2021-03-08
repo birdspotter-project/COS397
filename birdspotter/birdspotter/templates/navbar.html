@@ -1,4 +1,8 @@
+{% load static %}
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
+	{% if not no_back_button %}
+	<a href='{{ back_view|default:"/" }}' class="pr-2"><img src="{% static 'back.svg' %}" alt="Map View" style="object-fit: contain;" title="Map View"></a>
+	{% endif %}
 	<a class="navbar-brand" href="/">Birdspotter</a>
 	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 		<span class="navbar-toggler-icon"></span>
