@@ -5,8 +5,8 @@ import time
 import random
 import string
 
-from .models import User
-from .forms import AccountForm
+from .models import User, GroupRequest
+from .forms import AccountForm, RegisterForm
 
 
 def gen_name():
@@ -215,8 +215,59 @@ class RegisterUserTests(TestCase):
     def setup():
         self.client = Client()
 
-    def test_reguster_user(self):
-        creds = gen_creds()
-        self.client.post()
+    def gen_content(self, creds):
+        content = {
+            'username': creds['username'],
+            'email': creds['email'],
+            'password1': creds['password'],
+            'password2': creds['password'],
+            'first_name': creds['username'][:8],
+            'last_name': creds['username'][8:],
+        }
+        return content
 
-    
+    def create_registration_request(self, creds):
+        content = self.gen_content(creds)
+        resp = self.client.post('/accounts/request_access/', content)
+        return resp
+
+    def test_register_user(self):
+        """
+        Create a registraton request
+        """
+        creds = gen_creds()
+        self.create_registration_request(creds)
+        # check if the group reguest is generated
+        self.assertTrue(GroupRequest.objects.get(pk=1))
+        # check that the user was created and set to inactive
+        user = User.objects.get(username=creds['username'])
+        self.assertFalse(user.is_active)
+
+    def test_username_in_use(self):
+        """
+        Attempts to register user with username already in use
+        """
+        creds = gen_creds()
+        self.create_registration_request(creds)
+        user = User.objects.get(username=creds['username'])
+        self.assertTrue(user is not None)
+        # get the GroupRequest for the above registration request
+        gr = GroupRequest.objects.get(user=user)
+        resp = self.create_registration_request(creds)
+        # check to see that there is only 1 registration request and that the second one was denied
+        self.assertTrue(len(GroupRequest.objects.filter(user=gr.user)) == 1)
+
+    def test_form_username_in_use(self):
+        """
+        Test if form validation passed with username that already exits
+        in the application
+        """
+        creds = self.gen_content(gen_creds())
+        username = creds['username']
+        form1 = RegisterForm(data=creds)
+        form1.save()
+        form2 = RegisterForm(data=creds)
+        form2.is_valid()
+        username_errors = form2.errors['username']
+        self.assertTrue(username_errors)
+        self.assertTrue(f'Username {username} is already in use' in username_errors[0])

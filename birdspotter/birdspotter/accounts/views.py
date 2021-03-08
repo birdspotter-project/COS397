@@ -61,10 +61,10 @@ def account_view(request):
 
 
 def register_view(request):
+    form = RegisterForm()
     if request.method == 'POST':
         form = RegisterForm(request.POST)
         if form.is_valid():
-            args = {}
             user = form.save()
             if user:
                 user.is_active = False
@@ -74,8 +74,7 @@ def register_view(request):
                 messages.success(request, REQUESTS['success'])
             else:
                 messages.error(request, REQUESTS['error'])
-            return render(request, 'result.html', args)
-    form = RegisterForm()
+            return redirect('/')
     return render(request, 'registration/register_user.html', {'form': form})
 
 
