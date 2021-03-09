@@ -34,6 +34,7 @@ class User(AbstractUser):
 
     def make_admin(self):
         self.is_staff = True
+        self.groups.add(Group.objects.get(name=GROUPS['admin']))
         self.save()
 
 

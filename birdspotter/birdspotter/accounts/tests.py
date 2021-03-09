@@ -1,5 +1,7 @@
 from django.test import TestCase, Client
 from django.contrib.auth.forms import PasswordChangeForm
+from django.core.management import call_command
+
 
 import time
 import random
@@ -7,6 +9,8 @@ import string
 
 from .models import User, GroupRequest
 from .forms import AccountForm, RegisterForm
+from birdspotter.utils import GROUPS
+
 
 
 def gen_name():
@@ -210,6 +214,9 @@ class ChangePasswordTests(TestCase):
         self.assertTrue(form.errors['new_password2'][0] == self.ERROR_MESSAGES['numeric'])
 
 class RegisterUserTests(TestCase):
+    """
+    Tests for the registration endpoint and form validation
+    """
 
     @classmethod
     def setup():
@@ -227,13 +234,16 @@ class RegisterUserTests(TestCase):
         return content
 
     def create_registration_request(self, creds):
+        """
+        Create a registration request via the api
+        """
         content = self.gen_content(creds)
         resp = self.client.post('/accounts/request_access/', content)
         return resp
 
     def test_register_user(self):
         """
-        Create a registraton request
+        Create a registraton request and ensure that the user is inactive
         """
         creds = gen_creds()
         self.create_registration_request(creds)
@@ -264,10 +274,109 @@ class RegisterUserTests(TestCase):
         """
         creds = self.gen_content(gen_creds())
         username = creds['username']
+        # create the first user
         form1 = RegisterForm(data=creds)
         form1.save()
+        # validate the Register form for the second user
         form2 = RegisterForm(data=creds)
         form2.is_valid()
         username_errors = form2.errors['username']
         self.assertTrue(username_errors)
         self.assertTrue(f'Username {username} is already in use' in username_errors[0])
+
+
+class PermissionsTests(TestCase):
+    """
+    Check the the correct groups are assigned and fields are set on registration 
+    and making a user an admin
+    """
+    @classmethod
+    def setUp(cls):
+        """
+        Called once when the class is called to ensure groups are initialized
+        """
+        call_command('create_groups')
+
+    def create_admin_context(self):
+        """
+        Create an admin user and log it into the client
+        """
+        user, creds = create_testuser()
+        user.make_admin()
+        self.client = Client()
+        self.client.login(username=creds['username'], password=creds['password'])
+        return user
+
+    def test_registered_on_register(self):
+        """
+        Test that user is given the Registered group upon registering
+        """
+        creds = gen_creds()
+        self.create_admin_context()
+        # create registration request
+        resp = self.client.post('/accounts/request_access/', {
+                'username': creds['username'],
+                'email': creds['email'],
+                'password1': creds['password'],
+                'password2': creds['password'],
+                'first_name': creds['username'][:8],
+                'last_name': creds['username'][8:],
+            })
+        user = User.objects.get(username=creds['username'])
+        self.assertTrue(user is not None)
+        # get GroupRequest for user and approve it
+        group_request = GroupRequest.objects.get(user=user)
+        group_request.approve_request(resp.wsgi_request)
+        # check that the user now has the 'Registered' group
+        self.assertTrue(user.groups.filter(name=GROUPS['default']).exists())
+
+    def test_make_admin(self):
+        """
+        Test that make_admin() function adds user to Admin group and sets is_staff flag
+        """
+        self.create_admin_context()
+        user, creds = create_testuser()
+        user.make_admin()
+        self.assertTrue(user.is_staff)
+        self.assertTrue(user.is_admin)
+
+
+class GroupRequestTests(TestCase):
+    """
+    approve_request
+        Registered (covered in test_registered_on_register)
+        Admin (covered in test_make_admin)
+    deny_request
+    """
+
+    @classmethod
+    def setUp(cls):
+        """
+        Called once when the class is called to ensure groups are initialized
+        """
+        call_command('create_groups')
+
+    def create_admin_context(self):
+        """
+        Create an admin user and log it into the client
+        """
+        user, creds = create_testuser()
+        user.make_admin()
+        self.client = Client()
+        self.client.login(username=creds['username'], password=creds['password'])
+        return user
+
+    def test_deny_request(self):
+        """
+        Test that the correct fields are set when denying a GroupRequest
+        """
+        self.create_admin_context()
+        test_user, _ = create_testuser()
+        gr = GroupRequest.objects.create(user=test_user)
+        # generate a request object to pass to deny_request()
+        resp = self.client.get('/')
+        gr.deny_request(resp.wsgi_request)
+        # check that the request is not approved and was reviewed as the defualt is False
+        self.assertFalse(gr.approved)
+        self.assertTrue(gr.reviewed_by)
+
