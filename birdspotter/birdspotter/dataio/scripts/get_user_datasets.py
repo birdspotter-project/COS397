@@ -1,9 +1,14 @@
+from django.db.models import Q
+
 from birdspotter.dataio.models import Dataset
 from birdspotter.dataio.models import Shapefile
 from birdspotter.accounts.models import User
 
 def get_datasets_for_user(user):
-    return Dataset.objects.filter(owner_id=user.id).values()
+  """
+  Return datasets that the user has access to, including public datasets
+  """
+  return Dataset.objects.filter(Q(owner_id=user.id)|Q(is_public=True)).values()
 
 def get_dataset_data(user):
     print("ISADMIN:",user)
