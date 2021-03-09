@@ -38,6 +38,7 @@ class ImportForm(forms.Form):
             attrs={'type': 'date'} 
         )
     )
+    public = forms.BooleanField(required=False, initial=False, label='Make dataset public')
     file_path = forms.CharField(
         label=".zip or .tif file to import", 
         widget=UploadedFileInput)

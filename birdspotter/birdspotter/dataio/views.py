@@ -20,7 +20,7 @@ def index(request):
         form = ImportForm(data=request.POST)
         if form.is_valid():
             messages.success(request, "File uploaded, starting processing")
-            success = import_data(request.user, form.cleaned_data['file_path'], form.cleaned_data['file_name'], form.cleaned_data['created_date'])
+            success = import_data(request.user, form.cleaned_data['file_path'], form.cleaned_data['file_name'], form.cleaned_data['created_date'], form.cleaned_data['public'])
             if success:
                 messages.success(request, "File processing successful")
             else:

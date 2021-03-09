@@ -11,7 +11,7 @@ from birdspotter.accounts.models import User
 from birdspotter.dataio.models import Dataset, Shapefile, RawData, Image
 
 
-def import_data(user, file_path, file_name, date_created):
+def import_data(user, file_path, file_name, date_created, is_public):
     """Takes InMemoryFile user, and dat_created and imports data into the database accordingly (creates GeoTiff or Shapefile model and 
     creates a Dataset for each file)
     Args:
@@ -29,7 +29,7 @@ def import_data(user, file_path, file_name, date_created):
             with ZipMemoryFile(binary) as zip_mem:
                 zf = zipfile.ZipFile(io.BytesIO(binary))
                 shapefile_locs = list(filter(lambda v: v.endswith('.shp'), zf.namelist()))
-                return import_shapefile(shapefile_locs, zip_mem, user, date_created, zip=zf)
+                return import_shapefile(shapefile_locs, zip_mem, user, date_created, is_public, zip=zf)
         except zipfile.BadZipfile:
             return False
     else :
@@ -44,14 +44,14 @@ def import_tiff(tiff_file, file_name, user, date_created):
                               date_collected=date_created, geotiff=tiff)
     dataset.save()
     return dataset
-def import_shapefile(file_loc, zip_mem, user, date_created, **kwargs):
+def import_shapefile(file_loc, zip_mem, user, date_created, is_public, **kwargs):
     if len(file_loc) > 0:
         file_name = re.findall(r"(\w+).shp", file_loc[0])[0]
         print(file_name)
         dataset = kwargs.get('dataset', None)
         if dataset is None : 
             dataset = Dataset(name=file_name, owner=User.objects.get_by_natural_key(user.username),
-                              date_collected=date_created)
+                              date_collected=date_created, is_public=is_public)
         dataset.save()
         zf=kwargs.get('zip', None)
         with zip_mem.open(file_loc[0]) as open_file:
