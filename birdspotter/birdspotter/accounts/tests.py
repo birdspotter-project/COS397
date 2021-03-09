@@ -219,8 +219,8 @@ class RegisterUserTests(TestCase):
     """
 
     @classmethod
-    def setup():
-        self.client = Client()
+    def setUp(cls):
+        cls.client = Client()
 
     def gen_content(self, creds):
         content = {
@@ -263,7 +263,7 @@ class RegisterUserTests(TestCase):
         self.assertTrue(user is not None)
         # get the GroupRequest for the above registration request
         gr = GroupRequest.objects.get(user=user)
-        resp = self.create_registration_request(creds)
+        self.create_registration_request(creds)
         # check to see that there is only 1 registration request and that the second one was denied
         self.assertTrue(len(GroupRequest.objects.filter(user=gr.user)) == 1)
 
@@ -335,7 +335,7 @@ class PermissionsTests(TestCase):
         Test that make_admin() function adds user to Admin group and sets is_staff flag
         """
         self.create_admin_context()
-        user, creds = create_testuser()
+        user, _ = create_testuser()
         user.make_admin()
         self.assertTrue(user.is_staff)
         self.assertTrue(user.is_admin)
@@ -379,4 +379,3 @@ class GroupRequestTests(TestCase):
         # check that the request is not approved and was reviewed as the defualt is False
         self.assertFalse(gr.approved)
         self.assertTrue(gr.reviewed_by)
-
