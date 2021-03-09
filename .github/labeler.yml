@@ -8,6 +8,9 @@ dev:
 docs:
   - Documentation/**/*
   - Documentation/*
+  - docs/**/*
+  - docs/*
+  - .readthedocs.yaml
 cicd:
   - .github/**/*
   - .github/*
