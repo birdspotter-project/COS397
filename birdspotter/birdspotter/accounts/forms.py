@@ -23,6 +23,15 @@ class RegisterForm(UserCreationForm):
     class Meta:
         model = User
         fields = ['username', 'email', 'password1', 'password2']
+        
+    def clean_username(self):
+        username = self.cleaned_data['username']
+        try:
+            User.objects.get(username=username)
+        except User.DoesNotExist:
+            return username
+        raise forms.ValidationError(f"Username {username} is already in use.")
+
     email = forms.EmailField()
     first_name = forms.CharField()
     last_name = forms.CharField()
