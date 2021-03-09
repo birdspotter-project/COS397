@@ -13,15 +13,10 @@ def index(request):
     Application index which is also the landing page. This view displays a table with all datasets available to the
     currently authenticated user, otherwise, display only public facing datasets.
     """
-    current_user = None
-    try:
-        current_user = User.objects.get_by_natural_key(request.user)
-    except Exception:
-        print('Could not find user: %s' % request.user.username)
-    if current_user:
-        datasets = get_datasets_for_user(current_user).values()
+    if request.user.is_authenticated:
+        datasets = get_datasets_for_user(request.user).values()
     else:
-        datasets = None
+        datasets = get_public_datasets().values()
     return render(request, 'index.html', {'datasets': datasets})
 
 

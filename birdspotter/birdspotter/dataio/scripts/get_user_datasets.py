@@ -10,6 +10,12 @@ def get_datasets_for_user(user):
   """
   return Dataset.objects.filter(Q(owner_id=user.id)|Q(is_public=True)).values()
 
+def get_public_datasets():
+  """
+  Return public datasets for unregistered users
+  """
+  return Dataset.objects.filter(is_public=True).values()
+
 def get_dataset_data(user):
     print("ISADMIN:",user)
     shapefile_lines = Shapefile.objects.filter(data_set=1)
