@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from birdspotter.dataio.scripts.get_user_datasets import get_datasets_for_user
+from birdspotter.dataio.scripts.get_user_datasets import get_datasets_for_user, get_public_datasets
 from birdspotter.accounts.models import User
 from birdspotter.dataio.models import Dataset
 from .forms import DatasetEditForm
@@ -14,9 +14,9 @@ def index(request):
     currently authenticated user, otherwise, display only public facing datasets.
     """
     if request.user.is_authenticated:
-        datasets = get_datasets_for_user(request.user).values()
+        datasets = get_datasets_for_user(request.user)
     else:
-        datasets = get_public_datasets().values()
+        datasets = get_public_datasets()
     return render(request, 'index.html', {'datasets': datasets})
 
 

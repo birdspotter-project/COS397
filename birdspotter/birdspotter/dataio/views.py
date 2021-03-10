@@ -3,8 +3,9 @@ from django.shortcuts import render
 from django.contrib import messages
 import logging
 from django.conf import settings
-from .forms import ImportForm
+from .forms import ImportForm, ShareDatasetForm
 from .scripts.import_handler import import_data
+from .models import Dataset
 from django.shortcuts import redirect
 @login_required
 def index(request):
@@ -44,3 +45,11 @@ def index(request):
         'isAdmin': False
     }
     return render(request, 'upload.html', context)
+
+
+def share_dataset(request, dataset_id):
+    if request.method == "POST":
+        pass
+    dataset = Dataset.objects.get(dataset_id=dataset_id)
+    form = ShareDatasetForm(instance=dataset)
+    return render(request, 'share.html', {'form': form})

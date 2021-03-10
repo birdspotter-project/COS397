@@ -1,6 +1,7 @@
 {% include 'base.html' %}
 {% block content %}
 {% load template_utilities %}
+{% load crispy_forms_tags %}
 <body>
     <div class="container mt-4">
         <table id="datasets" class="table table-bordered dt-responsive nowrap" style="width:100%">
@@ -19,9 +20,9 @@
             {% for dataset in datasets %}
                 <tr>
                     <!-- <td class="details-control sorting_disabled"></td> -->
-                    <td>{{ dataset|get_item:'name' }}</td>
+                    <td>{{ dataset.name }}</td>
                     <td>{{ dataset|get_username:'owner_id' }}</td>
-                    <td>{{ dataset|get_item:'is_public' }}</td>
+                    <td>{{ dataset.is_public }}</td>
                     <td>{{ dataset|get_date:'date_created' }}</td>
                     <td>{{ dataset|get_item:'date_collected' }}</td>
                     <td>
@@ -30,9 +31,10 @@
                             <div class="dropdown-menu dropdown-menu-right">
                                 <a class="nav-link" href="/map">Map View</a>
                                 <a class="nav-link" href="/data">Data View</a>
+                                <a class="nav-link" href="/import/share/{{dataset.dataset_id}}" data-toggle="modal" data-target="#share-modal" data-button='{"dataset_id": "{{ dataset.dataset_id }}","dataset_name": "{{ dataset.name }}"}'>Share</a>
                                 <!--should only be available to superusers and the owner(s)-->
-                                <a class="nav-link" href="/queue/{{ dataset|get_item:'dataset_id' }}">Queue Analysis</a>
-                                <a class="nav-link" href="/edit/{{ dataset|get_item:'dataset_id' }}">Edit Dataset</a>
+                                <a class="nav-link" href="/queue/{{ dataset.dataset_id }}">Queue Analysis</a>
+                                <a class="nav-link" href="/edit/{{ dataset.dataset_id }}">Edit Dataset</a>
                                 <!--should only be available to registered users-->
                                 <a class="nav-link" href="/Export">Export</a>                                
 
@@ -42,9 +44,42 @@
                 </tr>
             {% endfor %}
             </tbody>
-
         </table>
+        <!-- Modal -->
+        <div class="modal fade" id="share-modal" tabindex="-1" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="modal-title">Share dataset</h5>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body" id="showForm">
+              </div>
+            </div>
+          </div>
+        </div>
     </div>
+
+
+    <script type="text/javascript">
+    $('#share-modal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget)
+        const data = $.parseJSON($(button).attr('data-button'));
+        var dataset_name = data.dataset_name
+        var dataset_id = data.dataset_id
+        console.log(`Showing modal for ${dataset_id}`)
+        var modal = $(this)
+        modal.find('.modal-title').text(`Share dataset: ${dataset_name}`)
+        $.ajax({
+            type: 'GET',
+            url: `/import/share/${dataset_id}/`,
+            success: function(resp){
+                console.log(resp)
+                $('#showForm').html(resp)
+            }
+        })
+    });
+    </script>
     <script type="text/javascript" charset="utf8"
         src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.js"></script>
     <script>
@@ -83,4 +118,4 @@
     });
     </script>
 </body>
-{% endblock %}
+{% endblock content%}
