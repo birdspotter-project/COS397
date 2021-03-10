@@ -76,8 +76,6 @@ class ShareDatasetForm(forms.ModelForm):
         self.helper = FormHelper()
         self.helper.form_id = 'share-form'
         self.helper.form_method= 'POST'
-        # self.helper.label_class = 'col-sm-2 control-label'
         self.helper.field_class = 'col-sm-10'
         self.helper.form_action = f'/import/share/{self.instance.dataset_id}/'
         self.helper.add_input(Submit('submit', 'Submit'))
-

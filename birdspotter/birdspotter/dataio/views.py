@@ -49,7 +49,13 @@ def index(request):
 
 def share_dataset(request, dataset_id):
     if request.method == "POST":
-        pass
+        dataset = Dataset.objects.get(dataset_id=dataset_id)
+        form = ShareDatasetForm(request.POST, instance=dataset)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Dataset shared with users")
+            return redirect('/')
+
     dataset = Dataset.objects.get(dataset_id=dataset_id)
     form = ShareDatasetForm(instance=dataset)
     return render(request, 'share.html', {'form': form})
