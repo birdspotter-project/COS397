@@ -31,10 +31,12 @@
                             <div class="dropdown-menu dropdown-menu-right">
                                 <a class="nav-link" href="/map">Map View</a>
                                 <a class="nav-link" href="/data">Data View</a>
-                                <a class="nav-link" href="/import/share/{{dataset.dataset_id}}" data-toggle="modal" data-target="#share-modal" data-button='{"dataset_id": "{{ dataset.dataset_id }}","dataset_name": "{{ dataset.name }}"}'>Share</a>
                                 <!--should only be available to superusers and the owner(s)-->
+                                {% if dataset.owner_id == request.user.id or request.user.is_superuser %}
+                                <a class="nav-link" href="/import/share/{{dataset.dataset_id}}" data-toggle="modal" data-target="#share-modal" data-button='{"dataset_id": "{{ dataset.dataset_id }}","dataset_name": "{{ dataset.name }}"}'>Share</a>
                                 <a class="nav-link" href="/queue/{{ dataset.dataset_id }}">Queue Analysis</a>
-                                <a class="nav-link" href="/edit/{{ dataset.dataset_id }}">Edit Dataset</a>
+                                <a class="nav-link" href="/edit/{{ dataset.dataset_id }}">Edit Dataset</a> 
+                                {% endif %}
                                 <!--should only be available to registered users-->
                                 <a class="nav-link" href="/Export">Export</a>                                
 
