@@ -37,6 +37,7 @@ class Dataset(models.Model):
 
 
     name = models.CharField(max_length=50)
+    comments = models.CharField(max_length=500, blank=True)
     dataset_id = models.UUIDField(primary_key=False,
                                   default=uuid.uuid4,
                                   editable=False, unique=True)

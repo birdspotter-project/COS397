@@ -5,6 +5,7 @@ from django.contrib.auth.models import AbstractUser, Group
 from django.db import models
 
 from django.utils import timezone
+from birdspotter.utils import GROUPS
 
 
 class User(AbstractUser):
@@ -29,7 +30,7 @@ class User(AbstractUser):
     def is_admin(self):
         """ Returns whether the current user is part of the admin group, or is a superuser
         """
-        return self.groups.filter(name='Admin').exists() or self.is_superuser
+        return self.groups.filter(name=GROUPS['admin']).exists() or self.is_superuser
 
     def make_active(self):
         """ Makes the current user active within the system
@@ -42,6 +43,7 @@ class User(AbstractUser):
         This allows a user of the admin group to reach the django admin site
         """
         self.is_staff = True
+        self.groups.add(Group.objects.get(name=GROUPS['admin']))
         self.save()
 
 
@@ -63,7 +65,7 @@ class GroupRequest(models.Model):
 
     request_id = models.UUIDField(primary_key=False, default=uuid.uuid4, editable=False, unique=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, related_name='requesting_user')
-    group = models.CharField(max_length=20, choices=GROUP_CHOICES, default='Registered')
+    group = models.CharField(max_length=20, choices=GROUP_CHOICES, default=GROUPS['default'])
     submitted_date = models.DateTimeField(auto_now_add=True)
     approved = models.BooleanField(default=False)
     reviewed_by = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True,

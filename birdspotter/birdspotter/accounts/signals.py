@@ -5,6 +5,7 @@ from django.conf import settings
 from django.core.mail import send_mail
 
 from .models import GroupRequest
+from birdspotter.utils import GROUPS
 
 import logging
 
@@ -25,7 +26,7 @@ def save_user(instance, created, **kwargs): # noqa
         if not instance.is_superuser:
             instance.is_active = False
         try:
-            default_group = Group.objects.get(name='Registered')
+            default_group = Group.objects.get(name=GROUPS['default'])
             instance.groups.add(default_group)
         except Group.DoesNotExist:
             if not settings.TESTING:

@@ -46,10 +46,10 @@
                                 <a class="nav-link" href="/queue/{{ dataset|get_item:'dataset_id' }}">Queue Analysis</a>
                                 {% is_dataset_owner request.user dataset as is_owner %}
                                 {% if is_owner %}
-                                <a class="nav-link" href="/edit">Edit Dataset</a>
+                                <a class="nav-link" href="/edit/{{ dataset|get_item:'dataset_id' }}">Edit Dataset</a>
                                 {% endif %}
                                 {% if request.user.is_authenticated %}
-                                <a class="nav-link" href="/Export">Export</a>                                
+                                <a class="nav-link" href="/export">Export</a>                                
                                 {% endif %}
                             </div>
                         </div>

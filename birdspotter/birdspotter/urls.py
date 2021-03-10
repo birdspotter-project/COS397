@@ -27,7 +27,9 @@ urlpatterns = [
     path('import/', include('birdspotter.dataio.urls')),
     path('accounts/', include('birdspotter.accounts.urls')),
     path('queue/', include('birdspotter.analysis.urls')),
+    path('edit/<uuid>', views.edit_dataset),
     path('admin/', admin.site.urls),
     path('health/', include('health_check.urls')),
     path('private-media/', include(private_storage.urls)),
+    path('auth/', views.auth, name='auth')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) # only works in dev mode

@@ -75,19 +75,20 @@ def register_view(request):
     the request. The user cannot log into the system until that request is
     approved.
     """
+    form = RegisterForm()
     if request.method == 'POST':
         form = RegisterForm(request.POST)
         if form.is_valid():
-            args = {}
             user = form.save()
             if user:
+                user.is_active = False
+                user.save()
                 group_request = GroupRequest(user=user)
                 group_request.save()
                 messages.success(request, REQUESTS['success'])
             else:
                 messages.error(request, REQUESTS['error'])
-            return render(request, 'result.html', args)
-    form = RegisterForm()
+            return redirect('/')
     return render(request, 'registration/register_user.html', {'form': form})
 
 

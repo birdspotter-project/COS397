@@ -1,15 +1,19 @@
 import io
 import re
 import zipfile
-
+import os
+import shutil 
+import uuid
 import geopandas as gp
 from fiona.io import ZipMemoryFile
 
 from django.contrib.auth import get_user_model
+from django.conf import settings
+from birdspotter.accounts.models import User
 from birdspotter.dataio.models import Dataset, Shapefile, RawData, Image
 
 
-def import_data(user, user_file, date_created):
+def import_data(user, file_path, file_name, date_created):
     """Takes InMemoryFile user, and dat_created and imports data into the database accordingly (creates GeoTiff or Shapefile model and 
     creates a Dataset for each file)
     Args:
@@ -20,9 +24,9 @@ def import_data(user, user_file, date_created):
     Returns:
         True for success, False for failure
         may be worth returning other info to debug?
-        """
-    if zipfile.is_zipfile(user_file):
-        binary = user_file.read()
+    """
+    if zipfile.is_zipfile(file_path):
+        binary = open(file_path, 'rb').read()
         try:
             with ZipMemoryFile(binary) as zip_mem:
                 zf = zipfile.ZipFile(io.BytesIO(binary))
