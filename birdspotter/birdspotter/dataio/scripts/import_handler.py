@@ -5,7 +5,7 @@ import zipfile
 import geopandas as gp
 from fiona.io import ZipMemoryFile
 
-from django.conf import settings
+from django.contrib.auth import get_user_model
 from birdspotter.dataio.models import Dataset, Shapefile, RawData, Image
 
 
@@ -37,7 +37,7 @@ def import_data(user, user_file, date_created):
 def __import_tiff(tiff_file, user, date_created):
     tiff = RawData.objects.create(path=tiff_file)
     name = re.findall(r"(\w+).tif", tiff_file.name)[0]
-    dataset = Dataset(name=name, is_public=True, owner=settings.AUTH_USER_MODEL.objects.get_by_natural_key(user.username),
+    dataset = Dataset(name=name, is_public=True, owner=get_user_model().objects.get_by_natural_key(user.username),
                               date_collected=date_created, geotiff=tiff)
     dataset.save()
     return dataset
@@ -49,7 +49,7 @@ def __import_shapefile(file_loc, zip_mem, user, date_created, **kwargs):
         print(file_name)
         dataset = kwargs.get('dataset', None)
         if dataset is None : 
-            dataset = Dataset(name=file_name, is_public=True, owner=settings.AUTH_USER_MODEL.objects.get_by_natural_key(user.username),
+            dataset = Dataset(name=file_name, is_public=True, owner=get_user_model().objects.get_by_natural_key(user.username),
                               date_collected=date_created)
         dataset.save()
         zf=kwargs.get('zip', None)
