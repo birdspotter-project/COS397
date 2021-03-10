@@ -26,13 +26,8 @@ def gen_password():
     """
     return ''.join(random.choice(string.ascii_letters) for _ in range(9)) # nosec
 
-def create_testuser():
-    """ Create a test user
-    Returns:
-        user (User): unique user to be used in a test
-        CREDS (dict{username, email, password}): the credentials for the test user
-    """
-    usrname = gen_name()
+def gen_creds():
+    username = gen_name()
     CREDS = {
             'username': username,
             'email': '%s@test.com' % username,
@@ -42,6 +37,11 @@ def create_testuser():
 
 
 def create_testuser():
+    """ Create a test user
+    Returns:
+        user (User): unique user to be used in a test
+        CREDS (dict{username, email, password}): the credentials for the test user
+    """
     CREDS = gen_creds()
     user = User.objects.create(username=CREDS['username'])
     user.set_password(CREDS['password'])
