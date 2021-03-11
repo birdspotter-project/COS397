@@ -149,7 +149,6 @@ def zoom_center(lons: tuple = None, lats: tuple = None,
 
     maxlon, minlon = max(lons), min(lons)
     maxlat, minlat = max(lats), min(lats)
-    #center = 
 
     # longitudinal range by zoom level (20 to 1)
     # in degrees, if centered at equator
