@@ -16,7 +16,7 @@ def get_public_datasets():
 def get_dataset_data(is_authed, uuid):
     dataset = Dataset.objects.get(dataset_id=uuid)
     shapefile_lines = Shapefile.objects.filter(data_set=dataset.id)
-    #Shapefile.objects.defer("species")
+    shapefile_data = {}
 
     if is_authed:
         shapefile_data = {"longitude"   : [i.longitude for i in shapefile_lines],
@@ -30,10 +30,32 @@ def get_dataset_data(is_authed, uuid):
                           "certain_p1"  : [i.certain_p1 for i in shapefile_lines],
                           "comments"    : [i.comments for i in shapefile_lines],
                           }
-        #return [l for l in shapefile_lines]
-        return shapefile_data
-    shapefile_data = {"longitude"   : [i.longitude for i in shapefile_lines],
-                      "latitude"    : [i.latitude for i in shapefile_lines],
-                      "island_name" : [i.island_name for i in shapefile_lines]}
-    #return [l for l in shapefile_lines]
+    else:
+        
+        precision = 3       # aggregate data to 3 decimals points of lat/long
+        precision_mod = 1  # allows for more precise tuning, >1 reduces region size <1 increases region size
+        aggregation = {}
+        
+        for i in shapefile_lines:
+            # separate by island name and by precision, 
+            # in case there are multiple islands in one dataset
+            key = (round(i.latitude*precision_mod, precision), 
+                round(i.longitude*precision_mod, precision),
+                i.island_name)
+            if key in aggregation:
+                aggregation[key][0] += i.latitude
+                aggregation[key][1] += i.longitude
+                aggregation[key][2] += 1
+            else:
+                aggregation[key] = [i.latitude, i.longitude, 1, i.island_name]
+                
+        for key in aggregation:
+            aggregation[key][0] = round(aggregation[key][0]/aggregation[key][2], 4)
+            aggregation[key][1] = round(aggregation[key][1]/aggregation[key][2], 4)
+                          
+        shapefile_data = {"latitude"    : [aggregation[key][0] for key in aggregation],
+                          "longitude"   : [aggregation[key][1] for key in aggregation],
+                          "island_name" : [aggregation[key][3] for key in aggregation],
+                          "size"       : [aggregation[key][2] for key in aggregation]}
+
     return shapefile_data

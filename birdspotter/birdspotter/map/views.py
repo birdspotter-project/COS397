@@ -15,7 +15,6 @@ def index(request, uuid):
 
     shapefile_lines = get_dataset_data(request.user.is_authenticated, uuid)
 
-
     df = pd.DataFrame({})
     #populate DataFrame
     for key in shapefile_lines:
@@ -23,8 +22,12 @@ def index(request, uuid):
     #create corresponding GeoDataFrame
     gdf = gpd.GeoDataFrame(df, geometry=gpd.points_from_xy(df.longitude, df.latitude))
     
-    plot = create_map(request.user.is_authenticated, gdf)
-    args['graph_div'] = plot
+    if not gdf.empty:
+        #likely also needs a check for species and other fields if the user is logged in
+        plot = create_map(request.user.is_authenticated, gdf)
+        args['graph_div'] = plot
+    else:
+        pass
     
     return render(request, 'map.html', args)
 
@@ -35,14 +38,17 @@ def create_map(is_admin, gdf):
     """
 
 
-    fields = {"lon":gdf.longitude, "lat":gdf.latitude, "species":gdf.species}
+    fields = {"lon":gdf.longitude, "lat":gdf.latitude, "island_name": gdf.island_name}
 
 
     zoom, center = zoom_center(lons=fields["lon"], lats=fields["lat"]) #zoom to fit data
     if is_admin:
         #should have data retreived on backend to be consistent
+        fields["species"] = gdf.species
         fig = make_point_map(gdf, zoom, center, fields)
     else:
+        print("COUNT: ", gdf.size)
+        fields["size"] = gdf.size
         #need to hide data on backend, not client-side
         fig = make_bubble_map(gdf, zoom, center, fields)      
 
@@ -57,8 +63,9 @@ def make_point_map(gdf, zoom, center, fields):
     to be called for the registered user, displays all individual points and bird species
     """
     fig = px.scatter_mapbox(gdf, lat=fields["lat"], lon=fields["lon"], 
-                            hover_name=fields["species"], hover_data=[],
+                            hover_name=fields["island_name"], hover_data=["species"],
                             color_discrete_sequence=["red"], zoom=zoom, center=center)
+    
     fig.update_layout(mapbox_style="white-bg",
                       mapbox_layers=[
                           {
@@ -77,8 +84,9 @@ def make_bubble_map(gdf, zoom, center, fields):
     to be called fot the non-registered user, should display aggregated points with no species info
     the gdf should be modified such that it only has info on lat/long, and concentration.
     """
-    fig = px.scatter_mapbox(gdf, lat=fields["lat"], lon=fields["lon"], 
-                            hover_name=fields["species"], hover_data=[],
+    fig = px.scatter_mapbox(gdf, lat=fields["lat"], lon=fields["lon"],
+                                hover_name = fields["island_name"],
+                                size = "size",
                             color_discrete_sequence=["red"], zoom=zoom, center= center)
                                 
     fig.update_layout(mapbox_style="white-bg",
@@ -86,7 +94,6 @@ def make_bubble_map(gdf, zoom, center, fields):
                           {
                               "below": 'traces',
                               "sourcetype": "raster",
-                              "sourceattribution": "United States Geological Survey",
                               "source": [
                                   "https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryOnly/MapServer/tile/{z}/{y}/{x}"
                               ]
