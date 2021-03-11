@@ -51,17 +51,17 @@
         </tbody>
     </table>
     <!-- Modal -->
-    <div class="modal fade" id="share-modal" tabindex="-1" aria-hidden="true">
+    <div class="modal fade" id="share-modal" tabindex="-1" aria-hidden="true" style="max-height: 80vh;">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="modal-title">Share dataset</h5>
                     <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="container mx-auto">
-                <div class="modal-body overflow-auto">
+                <div class="container mx-auto mb-3">
+                <div class="modal-body overflow-auto borderless">
                     <input type="text" id="search-users" onfocus="this.value=''">
-                    <ul class="list-group" id="share-list">
+                    <ul class="list-group" id="share-list" style="max-height: 50vh;overflow:scroll;">
                     </ul>
                 </div>
                 <div>
