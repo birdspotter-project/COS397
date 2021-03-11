@@ -60,7 +60,7 @@
                 </div>
                 <div class="container mx-auto">
                 <div class="modal-body overflow-auto">
-                    <input type="text" id="search-users">
+                    <input type="text" id="search-users" onfocus="this.value=''">
                     <ul class="list-group" id="share-list">
                     </ul>
                 </div>
@@ -127,7 +127,6 @@
         });
         $('#commit-share').on('click', function(e){
             toastr.options.escapeHtml = true;
-            // var d = {"users": shared_with}
             $.ajax({
                 type: "POST",
                 url: `/share/${dataset_id}/`,
@@ -139,6 +138,9 @@
                     "remove_share": remove_share},
             })
         });
+    })
+    .on('shown.bs.modal', function() {
+        $(this).find('#search-users').focus()
     });
 </script>
 <script type="text/javascript" charset="utf8"
