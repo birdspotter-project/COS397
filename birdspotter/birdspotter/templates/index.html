@@ -3,88 +3,148 @@
 {% load template_utilities %}
 {% load crispy_forms_tags %}
 <body>
-    <div class="container mt-4">
-        <table id="datasets" class="table table-bordered dt-responsive nowrap" style="width:100%">
-            <thead>
-            <tr>
-                <!-- <th class="details-control sorting_disabled"></th"> -->
-                <th>Name</th>
-                <th>Owner</th>
-                <th>Public</th>
-                <th>Date Uploaded</th>
-                <th>Date Collected</th>
-                <th>Actions</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for dataset in datasets %}
-                <tr>
-                    <!-- <td class="details-control sorting_disabled"></td> -->
-                    <td>{{ dataset.name }}</td>
-                    <td>{{ dataset|get_username:'owner_id' }}</td>
-                    <td>{{ dataset.is_public }}</td>
-                    <td>{{ dataset|get_date:'date_created' }}</td>
-                    <td>{{ dataset|get_item:'date_collected' }}</td>
-                    <td>
-                        <div class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle " href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Actions</a>
-                            <div class="dropdown-menu dropdown-menu-right">
-                                <a class="nav-link" href="/map">Map View</a>
-                                <a class="nav-link" href="/data">Data View</a>
-                                <!--should only be available to superusers and the owner(s)-->
-                                {% if dataset.owner_id == request.user.id or request.user.is_superuser %}
-                                <a class="nav-link" href="/import/share/{{dataset.dataset_id}}" data-toggle="modal" data-target="#share-modal" data-button='{"dataset_id": "{{ dataset.dataset_id }}","dataset_name": "{{ dataset.name }}"}'>Share</a>
-                                <a class="nav-link" href="/queue/{{ dataset.dataset_id }}">Queue Analysis</a>
-                                <a class="nav-link" href="/edit/{{ dataset.dataset_id }}">Edit Dataset</a> 
-                                {% endif %}
-                                <!--should only be available to registered users-->
-                                <a class="nav-link" href="/Export">Export</a>                                
+<div class="container mt-4">
+    <table id="datasets" class="table table-bordered dt-responsive nowrap" style="width:100%">
+        <thead>
+        <tr>
+            <!-- <th class="details-control sorting_disabled"></th"> -->
+            <th>Name</th>
+            <th>Owner</th>
+            <th>Public</th>
+            <th>Date Uploaded</th>
+            <th>Date Collected</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for dataset in datasets %}
+        <tr>
+            <!-- <td class="details-control sorting_disabled"></td> -->
+            <td>{{ dataset.name }}</td>
+            <td>{{ dataset|get_username:'owner_id' }}</td>
+            <td>{{ dataset.is_public }}</td>
+            <td>{{ dataset|get_date:'date_created' }}</td>
+            <td>{{ dataset|get_item:'date_collected' }}</td>
+            <td>
+                <div class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle " href="#" id="navbarDropdown" role="button"
+                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Actions</a>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a class="nav-link" href="/map">Map View</a>
+                        <a class="nav-link" href="/data">Data View</a>
+                        <!--should only be available to superusers and the owner(s)-->
+                        {% if dataset.owner_id == request.user.id or request.user.is_superuser %}
+                        <a class="nav-link" href="/share/{{dataset.dataset_id}}" data-toggle="modal"
+                           data-target="#share-modal"
+                           data-button='{"dataset_id": "{{ dataset.dataset_id }}","dataset_name": "{{ dataset.name }}"}'>Share</a>
+                        <a class="nav-link" href="/queue/{{ dataset.dataset_id }}">Queue Analysis</a>
+                        <a class="nav-link" href="/edit/{{ dataset.dataset_id }}">Edit Dataset</a>
+                        {% endif %}
+                        <!--should only be available to registered users-->
+                        <a class="nav-link" href="/Export">Export</a>
 
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-        <!-- Modal -->
-        <div class="modal fade" id="share-modal" tabindex="-1" aria-hidden="true">
-          <div class="modal-dialog">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <!-- Modal -->
+    <div class="modal fade" id="share-modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
             <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="modal-title">Share dataset</h5>
-                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body" id="showForm">
-              </div>
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modal-title">Share dataset</h5>
+                    <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="container mx-auto">
+                <div class="modal-body overflow-auto">
+                    <input type="text" id="search-users">
+                    <ul class="list-group" id="share-list">
+                    </ul>
+                </div>
+                <div>
+                    <button class="btn btn-primary" type="submit" id="commit-share" data-dismiss="modal">Make Changes</button>
+                </div>
+                </div>
             </div>
-          </div>
         </div>
     </div>
-
-
-    <script type="text/javascript">
+</div>
+<script type="text/javascript">
     $('#share-modal').on('show.bs.modal', function (event) {
-        var button = $(event.relatedTarget)
-        const data = $.parseJSON($(button).attr('data-button'));
+        const data = $.parseJSON($(event.relatedTarget).attr('data-button'))
         var dataset_name = data.dataset_name
         var dataset_id = data.dataset_id
-        console.log(`Showing modal for ${dataset_id}`)
         var modal = $(this)
+        var shared_with = []
         modal.find('.modal-title').text(`Share dataset: ${dataset_name}`)
         $.ajax({
             type: 'GET',
-            url: `/import/share/${dataset_id}/`,
-            success: function(resp){
-                console.log(resp)
-                $('#showForm').html(resp)
+            url: `/share/${dataset_id}/test`,
+            success: function (resp) {
+                $('#search-users').on('input', function (e) {
+                    let input = $(this).val()
+                    input.value = ''
+                    let filter = input.toLowerCase()
+                    var ul = document.getElementById("share-list");
+                    var filteredArray;
+                    if (filter !== ""){
+                        filteredArray = resp.users.filter(a => a.username.includes(filter))
+                    } else {
+                        filteredArray = []
+                    }
+                    $("#share-list").empty();
+                    filteredArray.map(function (k, _) {
+                        var item = document.createElement("li")
+                        item.setAttribute('class', 'list-group-item')
+                        var checkbox = document.createElement("input")
+                        checkbox.setAttribute('class', 'form-check-input')
+                        checkbox.setAttribute('type', 'checkbox')
+                        if (k.is_shared) {
+                            checkbox.setAttribute('checked', 'true')
+                        }
+                        checkbox.setAttribute('value', k.user_id)
+                        item.appendChild(checkbox)
+                        item.append(`${k.username}`)
+                        ul.appendChild(item)
+                    });
+                    $('#share-list :checkbox').click(function(){
+                        var isChecked = $(this).is(':checked')
+                        if (isChecked) {
+                            shared_with.push($(this).val());
+                        } else {
+                            shared_with = shared_with.filter(item => item != $(this).val())
+                        }
+                    });
+            });
             }
-        })
+        });
+        $('#commit-share').on('click', function(e){
+            console.log(shared_with)
+            toastr.options.escapeHtml = true;
+            // var d = {"users": shared_with}
+            $.ajax({
+                type: "POST",
+                url: `/share/${dataset_id}/test/`,
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                data: {"users": shared_with},
+                success:function() {
+                    toastr.success('Dataset shared successfully')
+                },
+                error: function() {
+                    toastr.error('There was an error sharing the dataset')
+                }
+            })
+        });
     });
-    </script>
-    <script type="text/javascript" charset="utf8"
+</script>
+<script type="text/javascript" charset="utf8"
         src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.js"></script>
-    <script>
+<script>
     $(document).ready(function () {
         var table = $('#datasets').DataTable({
             "language": {"emptyTable": "No datasets to display"}
@@ -106,7 +166,7 @@
         $('#datasets tbody').on('click', 'td.details-control', function () {
             var tr = $(this).closest('tr');
             var row = table.row(tr);
-    
+
             if (row.child.isShown()) {
                 // This row is already open - close it
                 row.child.hide();
@@ -118,6 +178,6 @@
             }
         });
     });
-    </script>
+</script>
 </body>
 {% endblock content%}

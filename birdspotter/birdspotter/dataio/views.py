@@ -1,4 +1,6 @@
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import get_user_model
+from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render
 from django.contrib import messages
 import logging
@@ -7,6 +9,9 @@ from .forms import ImportForm, ShareDatasetForm
 from .scripts.import_handler import import_data
 from .models import Dataset
 from django.shortcuts import redirect
+
+from django.core.serializers import serialize
+
 @login_required
 def index(request):
     """Landing page for dataio path
@@ -59,3 +64,30 @@ def share_dataset(request, dataset_id):
     dataset = Dataset.objects.get(dataset_id=dataset_id)
     form = ShareDatasetForm(instance=dataset)
     return render(request, 'share.html', {'form': form})
+
+def share_test(request, dataset_id):
+    dataset = Dataset.objects.get(dataset_id=dataset_id)
+    if request.method == "POST":
+        """
+        Get all checked values and add the users to dataset.shared_with
+        """
+        print("here")
+        user_ids = [request.POST.get('users[]')]
+        User = get_user_model()
+        users = User.objects.filter(user_id__in=user_ids)
+        print(users)
+        dataset.shared_with.add(*users)
+        print(dataset.shared_with.all())
+
+        return HttpResponse(status=200)
+
+    elif request.method == "GET":
+        """
+        Return with list of all users and if the dataset is shared with them
+        """
+        User = get_user_model()
+        data = []
+        for u in User.objects.all():
+            if not u == request.user:
+                data.append({"user_id": u.user_id, "username": u.username, "is_shared": u in dataset.shared_with.all()})
+        return JsonResponse({"users": data}, safe=False)
