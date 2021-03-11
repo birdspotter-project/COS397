@@ -79,6 +79,7 @@
         var dataset_id = data.dataset_id
         var modal = $(this)
         var shared_with = []
+        var remove_share = []
         modal.find('.modal-title').text(`Share dataset: ${dataset_name}`)
         $.ajax({
             type: 'GET',
@@ -102,7 +103,7 @@
                         var checkbox = document.createElement("input")
                         checkbox.setAttribute('class', 'form-check-input')
                         checkbox.setAttribute('type', 'checkbox')
-                        if (k.is_shared) {
+                        if (k.is_shared | shared_with.includes(k.user_id)) {
                             checkbox.setAttribute('checked', 'true')
                         }
                         checkbox.setAttribute('value', k.user_id)
@@ -112,17 +113,19 @@
                     });
                     $('#share-list :checkbox').click(function(){
                         var isChecked = $(this).is(':checked')
+                        var uid = $(this).val()
                         if (isChecked) {
-                            shared_with.push($(this).val());
+                            shared_with.push(uid);
+                            remove_share = remove_share.filter(item => item != uid)
                         } else {
-                            shared_with = shared_with.filter(item => item != $(this).val())
+                            shared_with = shared_with.filter(item => item != uid)
+                            remove_share.push(uid)
                         }
                     });
             });
             }
         });
         $('#commit-share').on('click', function(e){
-            console.log(shared_with)
             toastr.options.escapeHtml = true;
             // var d = {"users": shared_with}
             $.ajax({
@@ -131,7 +134,9 @@
                 headers: {
                     'X-CSRFToken': '{{ csrf_token }}'
                 },
-                data: {"users": shared_with},
+                data: {
+                    "add_share": shared_with,
+                    "remove_share": remove_share},
             })
         });
     });

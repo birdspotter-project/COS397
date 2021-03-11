@@ -62,9 +62,17 @@ def share_dataset(request, dataset_id):
     User = get_user_model()
     if request.method == "POST":
         # and array of users is specified with the [] appended to the json key
-        user_ids = request.POST.getlist('users[]')
-        users = User.objects.filter(user_id__in=user_ids).all()
+        add_shared = request.POST.getlist('add_share[]')
+        remove_shared = request.POST.getlist('remove_share[]')
+
+        # add users to share
+        users = User.objects.filter(user_id__in=add_shared).all()
         dataset.shared_with.add(*users)
+
+        # remove users from share
+        users = User.objects.filter(user_id__in=remove_shared).all()
+        dataset.shared_with.remove(*users)
+
         dataset.save()
         messages.success(request, "Dataset successfully shared with users")
         return HttpResponse(status=200)
