@@ -35,23 +35,7 @@ def create_map(is_admin, gdf):
     """
 
 
-    fields = {"lon":None, "lat":None, "species":None}
-    #get accepted field names, should likely be standardized somewhere other than in this file.  
-    for _ in gdf:
-        #get latitude
-        if _.lower() in ["lat", "latitude"]:
-            fields["lat"] = getattr(gdf, _)
-            break
-    for _ in gdf:
-        #get longitude
-        if _.lower() in ["lon", "long", "longitude"]:
-            fields["lon"] = getattr(gdf, _)
-            break
-    for _ in gdf:
-        #get species
-        if _.lower() in ["species"]:
-            fields["species"] = getattr(gdf, _)
-            break
+    fields = {"lon":gdf.longitude, "lat":gdf.latitude, "species":gdf.species}
 
 
     zoom, center = zoom_center(lons=fields["lon"], lats=fields["lat"]) #zoom to fit data
@@ -63,9 +47,9 @@ def create_map(is_admin, gdf):
         fig = make_bubble_map(gdf, zoom, center, fields)      
 
 
-    fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
-    fig.update_layout(height=742)
-    return plotly.offline.plot(fig, auto_open = False, output_type="div")
+    fig.update_layout(margin={"r":0,"l":0,"b":0,"t":0})
+    #fig = fig.to_image(format="png", width=600, height=350, scale=2)
+    return plotly.offline.plot(fig, auto_open = False, output_type="div", config={'displayModeBar': False})
 
 
 def make_point_map(gdf, zoom, center, fields):
@@ -80,7 +64,6 @@ def make_point_map(gdf, zoom, center, fields):
                           {
                               "below": 'traces',
                               "sourcetype": "raster",
-                              "sourceattribution": "United States Geological Survey",
                               "source": [
                                   "https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryOnly/MapServer/tile/{z}/{y}/{x}"
                               ]
