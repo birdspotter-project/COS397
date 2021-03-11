@@ -5,12 +5,11 @@ from django.shortcuts import render
 from django.contrib import messages
 import logging
 from django.conf import settings
-from .forms import ImportForm, ShareDatasetForm
+from .forms import ImportForm
 from .scripts.import_handler import import_data
 from .models import Dataset
 from django.shortcuts import redirect
 
-from django.core.serializers import serialize
 
 @login_required
 def index(request):
@@ -26,7 +25,8 @@ def index(request):
         form = ImportForm(data=request.POST)
         if form.is_valid():
             messages.success(request, "File uploaded, starting processing")
-            success = import_data(request.user, form.cleaned_data['file_path'], form.cleaned_data['file_name'], form.cleaned_data['created_date'], form.cleaned_data['public'])
+            success = import_data(request.user, form.cleaned_data['file_path'], form.cleaned_data['file_name'],
+                                  form.cleaned_data['created_date'], form.cleaned_data['public'])
             if success:
                 messages.success(request, "File processing successful")
             else:
@@ -53,41 +53,25 @@ def index(request):
 
 
 def share_dataset(request, dataset_id):
-    if request.method == "POST":
-        dataset = Dataset.objects.get(dataset_id=dataset_id)
-        form = ShareDatasetForm(request.POST, instance=dataset)
-        if form.is_valid():
-            form.save()
-            messages.success(request, "Dataset shared with users")
-            return redirect('/')
-
+    """
+    Handles the share dialog and accepts GET and POST requests to /share/<dataset_id>/
+    POST: Get list of user_ids and add users to dataset.shared_with
+    GET: Returns an object with an array of usernames, along with if they are already shared the dataset
+    """
     dataset = Dataset.objects.get(dataset_id=dataset_id)
-    form = ShareDatasetForm(instance=dataset)
-    return render(request, 'share.html', {'form': form})
-
-def share_test(request, dataset_id):
-    dataset = Dataset.objects.get(dataset_id=dataset_id)
+    User = get_user_model()
     if request.method == "POST":
-        """
-        Get all checked values and add the users to dataset.shared_with
-        """
-        print("here")
-        user_ids = [request.POST.get('users[]')]
-        User = get_user_model()
-        users = User.objects.filter(user_id__in=user_ids)
-        print(users)
+        # and array of users is specified with the [] appended to the json key
+        user_ids = request.POST.getlist('users[]')
+        users = User.objects.filter(user_id__in=user_ids).all()
         dataset.shared_with.add(*users)
-        print(dataset.shared_with.all())
-
+        dataset.save()
+        messages.success(request, "Dataset successfully shared with users")
         return HttpResponse(status=200)
-
-    elif request.method == "GET":
-        """
-        Return with list of all users and if the dataset is shared with them
-        """
-        User = get_user_model()
+    if request.method == "GET":
         data = []
         for u in User.objects.all():
             if not u == request.user:
                 data.append({"user_id": u.user_id, "username": u.username, "is_shared": u in dataset.shared_with.all()})
         return JsonResponse({"users": data}, safe=False)
+    return HttpResponse(status=405)
