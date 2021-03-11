@@ -8,7 +8,7 @@ def get_datasets_for_user(user):
   """
   Return datasets that the user has access to, including public datasets
   """
-  return Dataset.objects.filter(Q(owner_id=user.id)|Q(is_public=True)|Q(shared_with=user)).values()
+  return Dataset.objects.filter(Q(owner_id=user.id)|Q(is_public=True)|Q(shared_with=user)).distinct().values()
 
 def get_public_datasets():
   """

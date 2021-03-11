@@ -1,9 +1,7 @@
 from django import forms
-from django.contrib.auth import get_user_model
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
 
-from .models import Dataset
 
 class NoInput(forms.Widget):
     input_type = "hidden"
@@ -57,25 +55,4 @@ class ImportForm(forms.Form):
         self.helper.label_class = 'col-sm-2 control-label'
         self.helper.field_class = 'col-sm-10'
         self.helper.form_action = '/upload/'
-        self.helper.add_input(Submit('submit', 'Submit'))
-
-class ShareDatasetForm(forms.ModelForm):
-    class Meta:
-        model = Dataset
-        fields = ('shared_with',)
-
-    User = get_user_model()
-    shared_with = forms.ModelMultipleChoiceField(
-        queryset=User.objects.all(),
-        widget=forms.CheckboxSelectMultiple,
-        label='Share with'
-        )
-
-    def __init__(self, *args, **kwagrs):
-        super().__init__(*args, **kwagrs)
-        self.helper = FormHelper()
-        self.helper.form_id = 'share-form'
-        self.helper.form_method= 'POST'
-        self.helper.field_class = 'col-sm-10'
-        self.helper.form_action = f'/import/share/{self.instance.dataset_id}/'
         self.helper.add_input(Submit('submit', 'Submit'))

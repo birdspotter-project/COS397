@@ -82,7 +82,7 @@
         modal.find('.modal-title').text(`Share dataset: ${dataset_name}`)
         $.ajax({
             type: 'GET',
-            url: `/share/${dataset_id}/test`,
+            url: `/share/${dataset_id}/`,
             success: function (resp) {
                 $('#search-users').on('input', function (e) {
                     let input = $(this).val()
@@ -127,17 +127,11 @@
             // var d = {"users": shared_with}
             $.ajax({
                 type: "POST",
-                url: `/share/${dataset_id}/test/`,
+                url: `/share/${dataset_id}/`,
                 headers: {
                     'X-CSRFToken': '{{ csrf_token }}'
                 },
                 data: {"users": shared_with},
-                success:function() {
-                    toastr.success('Dataset shared successfully')
-                },
-                error: function() {
-                    toastr.error('There was an error sharing the dataset')
-                }
             })
         });
     });
