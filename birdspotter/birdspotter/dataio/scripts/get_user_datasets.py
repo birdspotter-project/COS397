@@ -14,6 +14,11 @@ def get_public_datasets():
 
 
 def get_dataset_data(is_authed, uuid):
+    """
+    Arguments:
+        is_authed (bool):   true for registered users
+        uuid (dataset id)
+    """
     dataset = Dataset.objects.get(dataset_id=uuid)
     shapefile_lines = Shapefile.objects.filter(data_set=dataset.id)
     shapefile_data = {}
@@ -50,6 +55,7 @@ def get_dataset_data(is_authed, uuid):
                 aggregation[key] = [i.latitude, i.longitude, 1, i.island_name]
                 
         for key in aggregation:
+            # average data region, to 4 decimal precision
             aggregation[key][0] = round(aggregation[key][0]/aggregation[key][2], 4)
             aggregation[key][1] = round(aggregation[key][1]/aggregation[key][2], 4)
                           

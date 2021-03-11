@@ -8,7 +8,8 @@ from birdspotter.dataio.scripts.get_user_datasets import get_dataset_data
 
 def index(request, uuid):
     """
-    base function for the Map View handling, checks permissions of the user and dispatches to other functions
+    Arguments:
+        uuid (dataset id)
     """
 
     args = {}
@@ -35,22 +36,25 @@ def index(request, uuid):
 def create_map(is_admin, gdf):
     """
     return a figure from plotly.offline.plot
+    Arguments:
+        gdf (geodataframe): geodataframe retrieved from dataset
+            if user is registered:
+                required: "latitude", "longitude", "island_name", and "species" fields
+            otherwise:
+                required: "latitude", "longitude", "island_name", and "size" fields
+        
     """
 
-
-    fields = {"lon":gdf.longitude, "lat":gdf.latitude, "island_name": gdf.island_name}
-
-
-    zoom, center = zoom_center(lons=fields["lon"], lats=fields["lat"]) #zoom to fit data
+    zoom, center = zoom_center(lons=gdf.longitude, lats=gdf.latitude) #zoom to fit data
     if is_admin:
         #should have data retreived on backend to be consistent
-        fields["species"] = gdf.species
-        fig = make_point_map(gdf, zoom, center, fields)
+        #fields["species"] = gdf.species
+        fig = make_point_map(gdf, zoom, center)
     else:
-        print("COUNT: ", gdf.size)
-        fields["size"] = gdf.size
+        #print("COUNT: ", gdf.size)
+        #fields["size"] = gdf.size
         #need to hide data on backend, not client-side
-        fig = make_bubble_map(gdf, zoom, center, fields)      
+        fig = make_bubble_map(gdf, zoom, center)      
 
 
     fig.update_layout(margin={"r":0,"l":0,"b":0,"t":0})
@@ -58,12 +62,18 @@ def create_map(is_admin, gdf):
     return plotly.offline.plot(fig, auto_open = False, output_type="div", config={'displayModeBar': False})
 
 
-def make_point_map(gdf, zoom, center, fields):
+def make_point_map(gdf, zoom, center):
     """
-    to be called for the registered user, displays all individual points and bird species
+    creates a point map for display (1:1 datapoint to point), gets data from gdf
+    Arguments:
+        gdf (geodataframe): geodataframe retrieved from dataset
+            required: "latitude", "longitude", "island_name", and "species" fields
+        zoom (integer): scale for plotly scale in scatter_mapbox
+        center (dict): dictionary with keys "lat" and "lon", used to set the center
+                        of the map to specified latitude and longitude
     """
-    fig = px.scatter_mapbox(gdf, lat=fields["lat"], lon=fields["lon"], 
-                            hover_name=fields["island_name"], hover_data=["species"],
+    fig = px.scatter_mapbox(gdf, lat="latitude", lon="longitude", 
+                            hover_name="island_name", hover_data=["species"],
                             color_discrete_sequence=["red"], zoom=zoom, center=center)
     
     fig.update_layout(mapbox_style="white-bg",
@@ -79,13 +89,19 @@ def make_point_map(gdf, zoom, center, fields):
     return fig
 
 
-def make_bubble_map(gdf, zoom, center, fields):
+def make_bubble_map(gdf, zoom, center):
     """
-    to be called fot the non-registered user, should display aggregated points with no species info
-    the gdf should be modified such that it only has info on lat/long, and concentration.
-    """
-    fig = px.scatter_mapbox(gdf, lat=fields["lat"], lon=fields["lon"],
-                                hover_name = fields["island_name"],
+    creates bubble map for display, gets data from gdf
+    Arguments:
+        gdf (geodataframe): geodataframe retrieved from dataset
+            required: "latitude", "longitude", "island_name", and "size" fields
+
+        zoom (integer): scale for plotly scale in scatter_mapbox
+        center (dict): dictionary with keys "lat" and "lon", used to set the center
+                        of the map to specified latitude and longitude
+        """
+    fig = px.scatter_mapbox(gdf, lat="latitude", lon="longitude",
+                                hover_name = "island_name",
                                 size = "size",
                             color_discrete_sequence=["red"], zoom=zoom, center= center)
                                 
