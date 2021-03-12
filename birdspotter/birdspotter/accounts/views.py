@@ -34,16 +34,25 @@ def login_view(request):
                                 username=request.POST['username'],
                                 password=request.POST['password']):
             login(request, user)
+            messages.success(request, f"Welcome, {user.username}!")
+        else:
+            messages.error(request, "Login failed.")
     return redirect('/')
 
 
 def logout_view(request):
+    """ View that logs the current user out of the application and redirects
+    to the application index
+    """
     logout(request)
     return redirect('/')
 
 
 @login_required
 def account_view(request):
+    """ View where a logged in user can view their account information and also
+    change some information via an AccountForm
+    """
     if request.method == 'POST':
         form = AccountForm(request.POST)
         if form.is_valid():
@@ -61,6 +70,11 @@ def account_view(request):
 
 
 def register_view(request):
+    """ View where the user registers for an account in the system
+    Upon submitting, a GroupRequest is created and an admin is notified of
+    the request. The user cannot log into the system until that request is
+    approved.
+    """
     form = RegisterForm()
     if request.method == 'POST':
         form = RegisterForm(request.POST)
@@ -80,6 +94,10 @@ def register_view(request):
 
 @login_required
 def request_privileged_view(request):
+    """ View where a logged in user can request a different permissions group
+    via a GroupRequestForm. Once the form is submitted, a GroupRequest is
+    created and an admin is notified of the request
+    """
     if request.method == 'POST':
         form = GroupRequestForm(request.POST)
         if form.is_valid():
@@ -97,8 +115,9 @@ def request_privileged_view(request):
 @login_required
 @staff_member_required
 def group_request_view(request):
-    if request.method == 'POST':
-        pass
+    """ View where a logged in staff member (Admin) can view and take action
+    on group requests.
+    """
     group_requests = GroupRequest.objects.filter(approved=False).filter(reviewed_by__isnull=True)
     return render(request, 'group_requests.html', {'group_requests': group_requests})
 
@@ -106,6 +125,10 @@ def group_request_view(request):
 @login_required
 @staff_member_required
 def process_request_action(request, request_id, action):
+    """ View that accepts requests from the group_request_view, and performs
+    the associated action, whether that be accepting the request of denying it.
+    For actions to occur, the user must be logged in and a member of staff (Admin)
+    """
     group_request = GroupRequest.objects.get(request_id=request_id)
     if action == 'approve':
         group_request.approve_request(request)
@@ -113,4 +136,5 @@ def process_request_action(request, request_id, action):
         group_request.deny_request(request)
     else:
         messages.error(request, 'There was an error %sing the request' % action)
+        return HttpResponse(status=500)
     return HttpResponse(status=200)

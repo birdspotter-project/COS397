@@ -4,7 +4,7 @@ import uuid
 from private_storage.storage.files import PrivateFileSystemStorage
 from birdspotter.dataio.models import RawData, Dataset, RawShapefile
 
-# Create your models here.
+
 class Algorithm(models.Model):
     """Algorithm (script) 
 
@@ -19,6 +19,8 @@ class Algorithm(models.Model):
     def __str__(self):
         return self.name
     file_name = models.FileField(storage=PrivateFileSystemStorage, upload_to="algorithms/")
+
+
 class AnalysisJob(models.Model):
     """Status and related information for Job queued on external compute
 

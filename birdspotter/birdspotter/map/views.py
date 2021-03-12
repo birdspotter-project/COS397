@@ -1,25 +1,24 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 import geopandas as gpd
 import plotly
 import plotly.express as px
 import numpy as np
 import pandas as pd
 from birdspotter.dataio.scripts.get_user_datasets import get_dataset_data
+from django.contrib import messages
 
-def index(request):
+def index(request, uuid):
     """
-    base function for the Map View handling, checks permissions of the user and dispatches to other functions
+    Arguments:
+        uuid (dataset id)
     """
 
     args = {}
 
-    if request.user.is_authenticated:
-        args['isAdmin'] = True
-    else:
-        args['isAdmin'] = False
-
-    shapefile_lines = get_dataset_data(args['isAdmin'])
-
+    shapefile_lines = get_dataset_data(request.user.is_authenticated, uuid)
+    if shapefile_lines is None:
+        messages.error(request, "The selected dataset does not have an associated shapefile")
+        return redirect('/')
     df = pd.DataFrame({})
     #populate DataFrame
     for key in shapefile_lines:
@@ -27,8 +26,12 @@ def index(request):
     #create corresponding GeoDataFrame
     gdf = gpd.GeoDataFrame(df, geometry=gpd.points_from_xy(df.longitude, df.latitude))
     
-    plot = create_map(args['isAdmin'], gdf)
-    args['graph_div'] = plot
+    if not gdf.empty:
+        #likely also needs a check for species and other fields if the user is logged in
+        plot = create_map(request.user.is_authenticated, gdf)
+        args['graph_div'] = plot
+    else:
+        pass
     
     return render(request, 'map.html', args)
 
@@ -36,55 +39,51 @@ def index(request):
 def create_map(is_admin, gdf):
     """
     return a figure from plotly.offline.plot
+    Arguments:
+        gdf (geodataframe): geodataframe retrieved from dataset
+            if user is registered:
+                required: "latitude", "longitude", "island_name", and "species" fields
+            otherwise:
+                required: "latitude", "longitude", "island_name", and "size" fields
+        
     """
 
-
-    fields = {"lon":None, "lat":None, "species":None}
-    #get accepted field names, should likely be standardized somewhere other than in this file.  
-    for _ in gdf:
-        #get latitude
-        if _.lower() in ["lat", "latitude"]:
-            fields["lat"] = getattr(gdf, _)
-            break
-    for _ in gdf:
-        #get longitude
-        if _.lower() in ["lon", "long", "longitude"]:
-            fields["lon"] = getattr(gdf, _)
-            break
-    for _ in gdf:
-        #get species
-        if _.lower() in ["species"]:
-            fields["species"] = getattr(gdf, _)
-            break
-
-
-    zoom, center = zoom_center(lons=fields["lon"], lats=fields["lat"]) #zoom to fit data
+    zoom, center = zoom_center(lons=gdf.longitude, lats=gdf.latitude) #zoom to fit data
     if is_admin:
         #should have data retreived on backend to be consistent
-        fig = make_point_map(gdf, zoom, center, fields)
+        #fields["species"] = gdf.species
+        fig = make_point_map(gdf, zoom, center)
     else:
+        #print("COUNT: ", gdf.size)
+        #fields["size"] = gdf.size
         #need to hide data on backend, not client-side
-        fig = make_bubble_map(gdf, zoom, center, fields)      
+        fig = make_bubble_map(gdf, zoom, center)      
 
 
-    fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
-    fig.update_layout(height=742)
-    return plotly.offline.plot(fig, auto_open = False, output_type="div")
+    fig.update_layout(margin={"r":0,"l":0,"b":0,"t":0})
+    #fig = fig.to_image(format="png", width=600, height=350, scale=2)
+    return plotly.offline.plot(fig, auto_open = False, output_type="div", config={'displayModeBar': False})
 
 
-def make_point_map(gdf, zoom, center, fields):
+def make_point_map(gdf, zoom, center):
     """
-    to be called for the registered user, displays all individual points and bird species
+    creates a point map for display (1:1 datapoint to point), gets data from gdf
+    Arguments:
+        gdf (geodataframe): geodataframe retrieved from dataset
+            required: "latitude", "longitude", "island_name", and "species" fields
+        zoom (integer): scale for plotly scale in scatter_mapbox
+        center (dict): dictionary with keys "lat" and "lon", used to set the center
+                        of the map to specified latitude and longitude
     """
-    fig = px.scatter_mapbox(gdf, lat=fields["lat"], lon=fields["lon"], 
-                            hover_name=fields["species"], hover_data=[],
+    fig = px.scatter_mapbox(gdf, lat="latitude", lon="longitude", 
+                            hover_name="island_name", hover_data=["species"],
                             color_discrete_sequence=["red"], zoom=zoom, center=center)
+    
     fig.update_layout(mapbox_style="white-bg",
                       mapbox_layers=[
                           {
                               "below": 'traces',
                               "sourcetype": "raster",
-                              "sourceattribution": "United States Geological Survey",
                               "source": [
                                   "https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryOnly/MapServer/tile/{z}/{y}/{x}"
                               ]
@@ -93,13 +92,20 @@ def make_point_map(gdf, zoom, center, fields):
     return fig
 
 
-def make_bubble_map(gdf, zoom, center, fields):
+def make_bubble_map(gdf, zoom, center):
     """
-    to be called fot the non-registered user, should display aggregated points with no species info
-    the gdf should be modified such that it only has info on lat/long, and concentration.
-    """
-    fig = px.scatter_mapbox(gdf, lat=fields["lat"], lon=fields["lon"], 
-                            hover_name=fields["species"], hover_data=[],
+    creates bubble map for display, gets data from gdf
+    Arguments:
+        gdf (geodataframe): geodataframe retrieved from dataset
+            required: "latitude", "longitude", "island_name", and "size" fields
+
+        zoom (integer): scale for plotly scale in scatter_mapbox
+        center (dict): dictionary with keys "lat" and "lon", used to set the center
+                        of the map to specified latitude and longitude
+        """
+    fig = px.scatter_mapbox(gdf, lat="latitude", lon="longitude",
+                                hover_name = "island_name",
+                                size = "size",
                             color_discrete_sequence=["red"], zoom=zoom, center= center)
                                 
     fig.update_layout(mapbox_style="white-bg",
@@ -107,7 +113,6 @@ def make_bubble_map(gdf, zoom, center, fields):
                           {
                               "below": 'traces',
                               "sourcetype": "raster",
-                              "sourceattribution": "United States Geological Survey",
                               "source": [
                                   "https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryOnly/MapServer/tile/{z}/{y}/{x}"
                               ]
@@ -147,7 +152,6 @@ def zoom_center(lons: tuple = None, lats: tuple = None,
 
     maxlon, minlon = max(lons), min(lons)
     maxlat, minlat = max(lats), min(lats)
-    #center = 
 
     # longitudinal range by zoom level (20 to 1)
     # in degrees, if centered at equator

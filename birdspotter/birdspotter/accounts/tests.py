@@ -37,6 +37,11 @@ def gen_creds():
 
 
 def create_testuser():
+    """ Create a test user
+    Returns:
+        user (User): unique user to be used in a test
+        CREDS (dict{username, email, password}): the credentials for the test user
+    """
     CREDS = gen_creds()
     user = User.objects.create(username=CREDS['username'])
     user.set_password(CREDS['password'])
@@ -46,6 +51,8 @@ def create_testuser():
 
 
 class AccountEditingTests(TestCase):
+    """ Tests for the editing of user account information
+    """
 
     def test_edit_username_success(self):
         """
@@ -82,7 +89,7 @@ class AccountEditingTests(TestCase):
 
     def test_edit_personal_info(self):
         """
-        Ensure that 
+        Ensure that all personal information can be changed successfully
         """
         user, _ = create_testuser()
         name_str = 'test_changed'
@@ -122,12 +129,23 @@ class ChangePasswordTests(TestCase):
     }
 
     def setup(self):
+        """
+        Creates a tes user and logs it into the django test client
+        for request testing
+        Returns:
+            creds (dict{username, email, password}): test user credentials
+        """
         self.user, creds = create_testuser()
         self.client = Client()
         self.client.login(username=creds['username'], password=creds['password'])
         return creds
 
     def run_request(self, old_password, new_password, new_password2=""):
+        """
+        Runs requests for POST request tests
+        Returns:
+            resp (requests.Response): request response
+        """
         content = {
             'old_password': old_password,
             'new_password1': new_password,
@@ -138,6 +156,9 @@ class ChangePasswordTests(TestCase):
 
     # api tests
     def test_changepassword(self):
+        """
+        Ensure that a password change is completed successfully
+        """
         creds = self.setup()
         new_password = gen_password()
         resp = self.run_request(creds['password'], new_password)
@@ -145,6 +166,9 @@ class ChangePasswordTests(TestCase):
         self.assertTrue(result.check_password(new_password))
 
     def test_incorrect_old_password(self):
+        """
+        Test changing password to be the same as the old password
+        """
         self.setup()
         new_password = gen_password()
         resp = self.run_request('', new_password)
@@ -152,6 +176,10 @@ class ChangePasswordTests(TestCase):
         self.assertFalse(result.check_password(new_password))
 
     def test_passwords_dont_match(self):
+        """
+        Test changing password where the confirmation field does not match
+        the intial password change field
+        """
         creds = self.setup()
         new_password = gen_password()
         new_password2 = new_password + 'no match'
@@ -161,6 +189,10 @@ class ChangePasswordTests(TestCase):
 
     # form validator tests
     def test_user_similarity(self):
+        """
+        Test form validation for a password that is similar to
+        the user's information
+        """
         creds = self.setup()
         user = User.objects.get(username=creds['username'])
         new_password = creds['username'] + '12'
@@ -174,6 +206,9 @@ class ChangePasswordTests(TestCase):
         self.assertTrue(form.errors['new_password2'][0] == self.ERROR_MESSAGES['similar'])
 
     def test_password_too_short(self):
+        """
+        Test form validation for a password that is too short
+        """
         creds = self.setup()
         user = User.objects.get(username=creds['username'])
         new_password = gen_password()[:3]
@@ -187,6 +222,9 @@ class ChangePasswordTests(TestCase):
         self.assertTrue(form.errors['new_password2'][0] == self.ERROR_MESSAGES['short'])
 
     def test_password_common(self):
+        """
+        Test form validation for a password that is too common
+        """
         creds = self.setup()
         user = User.objects.get(username=creds['username'])
         # 3rd most common password accoring to nordpass.com
@@ -201,6 +239,9 @@ class ChangePasswordTests(TestCase):
         self.assertTrue(form.errors['new_password2'][0] == self.ERROR_MESSAGES['common'])
 
     def test_password_numeric(self):
+        """
+        Test form validation for a password that consists of all numbers
+        """
         creds = self.setup()
         user = User.objects.get(username=creds['username'])
         new_password = '161876292354838259283908' #nosec

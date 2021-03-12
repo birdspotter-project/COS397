@@ -1,4 +1,8 @@
+{% load static %}
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
+	{% if not no_back_button %}
+	<a href='{{ back_view|default:"/" }}' class="pr-2"><img src="{% static 'back.svg' %}" alt="Map View" style="object-fit: contain;" title="Map View"></a>
+	{% endif %}
 	<a class="navbar-brand" href="/">Birdspotter</a>
 	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 		<span class="navbar-toggler-icon"></span>
@@ -9,15 +13,11 @@
 			<span class="navbar-text">{{ request.user }}</span>
 			</ul>
 			<ul class="navbar-nav">
-                <li class="nav-item">
-				<a class="nav-link" href="/map">Map</a>
-			</li>
-			<li class="nav-item">
-				<a class="nav-link" href="/data">Data</a>
-			</li>
+			{% if request.user.is_authenticated %}
 			<li class="nav-item">
 				<a class="nav-link" href="/import">Import</a>
 			</li>
+			{% endif %}
             {% if request.user.is_admin %}
                 <li class="nav-item"><a class="nav-link" href="/accounts/group_requests">Group Requests</a></li>
                 <li class="nav-item">
@@ -33,7 +33,6 @@
 						<a class="dropdown-item" style="padding-bottom: 10px;" href="/accounts/profile/">Profile</a>
 						{%if request.user.is_staff %}
 						<a class="dropdown-item" style="padding-bottom: 10px;" href="/queue/">Job Queue</a>
-						<a class="dropdown-item" style="padding-bottom: 10px;" href="/admin">Admin Panel</a>
 						{% endif %}
 						<div style="padding-left: 20px; padding-top: 10px;"><button type="submit" class="btn btn-danger" onclick="location.href='/accounts/logout/'">Logout</button></div>
 				</div>
