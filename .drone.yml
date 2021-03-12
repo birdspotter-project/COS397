@@ -7,7 +7,6 @@ workspace:
 steps:
 - name: unit-test
   image: devinchristianson/birdspotter:dev-deps
-  depends_on: [ rebuild-dev-deps ]
   pull: always
   commands:
     - cd /app/birdspotter
@@ -25,7 +24,6 @@ steps:
      - /app/birdspotter/coverage.xml
 - name: linter-tests
   image: devinchristianson/birdspotter:dev-deps
-  depends_on: [ rebuild-dev-deps ]
   pull: always
   commands:
     - cd /app/birdspotter
