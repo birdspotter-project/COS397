@@ -1,7 +1,7 @@
 version: "3.9"
 services:
   birdspotter:
-    image: devinchristianson/birdspotter:0.1.1
+    image: devinchristianson/birdspotter:latest
     env_file: 
       - .env
     environment:
@@ -44,7 +44,7 @@ services:
       - "--certificatesresolvers.leresolver.acme.storage=acme.json"
       - "--certificatesresolvers.leresolver.acme.httpchallenge.entrypoint=web"
     volumes:
-      - "./letsencrypt:/letsencrypt"
+      - "./acme.json:/acme.json"
   postgres:
     restart: unless-stopped
     env_file: 
