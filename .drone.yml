@@ -5,20 +5,6 @@ name: default
 workspace:
   base: /app
 steps:
-- name: rebuild-dev-deps
-  image: plugins/docker
-  settings:
-    repo: devinchristianson/birdspotter
-    dockerfile: docker/Dockerfile
-    context: birdspotter/
-    target: dev
-    username: 
-      from_secret: dockerhub_username
-    password: 
-      from_secret: dockerhub_password
-    tags: 
-      - dev-deps
-    custom_dns: 1.1.1.1
 - name: unit-test
   image: devinchristianson/birdspotter:dev-deps
   depends_on: [ rebuild-dev-deps ]
@@ -63,15 +49,35 @@ steps:
     target: prod
     tags: 
       - dev
-    dry_run: false
+- name: publish-latest-image
+  depends_on: [unit-test, linter-tests]
+  when:
+    status: 
+      - success
+    event: 
+      - tag
+  image: plugins/docker
+  settings:
+    repo: devinchristianson/birdspotter
+    username: 
+      from_secret: dockerhub_username
+    password: 
+      from_secret: dockerhub_password
+    dockerfile: docker/Dockerfile
+    context: birdspotter/
+    target: prod
+    auto_tag: true
+    tags: 
+      - latest
 trigger:
   branch:
     - master
   event:
     - push
     - pull_request
+    - tag
 ---
 kind: signature
-hmac: 730246eb53399b8821f140fbac7b02db5d5060fc80431f0008a043c8211ec5ad
+hmac: 83431f3922b35ac7eca0cb79daf7952822db68de9e9525e2b0bed7b8b3850a30
 
 ...
