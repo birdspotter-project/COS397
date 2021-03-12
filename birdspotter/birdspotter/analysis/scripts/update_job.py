@@ -30,4 +30,4 @@ def parse_slurm(subj):
 def import_results(job_id, user):
     analysisJob = AnalysisJob.objects.get(external_job_id=job_id)
     dataset = Dataset.objects.get(dataset_id=analysisJob.dataset_id)
-    import_data(user, open(settings.PRIVATE_STORAGE_ROOT + "/job_output/" + job_id + "_output"), datetime.datetime.now(), dataset=dataset)
+    import_data(user, open(f"{settings.PRIVATE_STORAGE_ROOT}/job_output/{job_id}_output"), datetime.datetime.now(), dataset=dataset)
