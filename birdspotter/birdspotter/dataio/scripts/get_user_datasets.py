@@ -1,6 +1,6 @@
 from birdspotter.dataio.models import Dataset
 from birdspotter.dataio.models import Shapefile
-
+import logging
 def get_datasets_for_user(user):
     """Gets all datasets owned by user
     """
@@ -21,6 +21,9 @@ def get_dataset_data(is_authed, uuid):
     """
     dataset = Dataset.objects.get(dataset_id=uuid)
     shapefile_lines = Shapefile.objects.filter(data_set=dataset.id)
+    if not shapefile_lines.exists():
+        logging.error("no shape lines")
+        return None
     shapefile_data = {}
 
     if is_authed:

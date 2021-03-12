@@ -13,9 +13,11 @@
 			<span class="navbar-text">{{ request.user }}</span>
 			</ul>
 			<ul class="navbar-nav">
+			{% if request.user.is_authenticated %}
 			<li class="nav-item">
 				<a class="nav-link" href="/import">Import</a>
 			</li>
+			{% endif %}
             {% if request.user.is_admin %}
                 <li class="nav-item"><a class="nav-link" href="/accounts/group_requests">Group Requests</a></li>
                 <li class="nav-item">

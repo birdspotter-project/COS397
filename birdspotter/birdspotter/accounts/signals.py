@@ -20,9 +20,7 @@ def save_user(instance, created, **kwargs): # noqa
         created (boolean): flag for if the save was successful
     """
     if created:
-        """superusers can be ignored because they do not go through the 
-        normal sign up flow
-        """
+        # superusers can be ignored because they do not go through the normal sign up flow
         if not instance.is_superuser:
             instance.is_active = False
         try:

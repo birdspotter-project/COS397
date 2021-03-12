@@ -1,10 +1,11 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 import geopandas as gpd
 import plotly
 import plotly.express as px
 import numpy as np
 import pandas as pd
 from birdspotter.dataio.scripts.get_user_datasets import get_dataset_data
+from django.contrib import messages
 
 def index(request, uuid):
     """
@@ -15,7 +16,9 @@ def index(request, uuid):
     args = {}
 
     shapefile_lines = get_dataset_data(request.user.is_authenticated, uuid)
-
+    if shapefile_lines is None:
+        messages.error(request, "The selected dataset does not have an associated shapefile")
+        return redirect('/')
     df = pd.DataFrame({})
     #populate DataFrame
     for key in shapefile_lines:

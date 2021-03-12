@@ -1,9 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 import plotly
 import plotly.express as px
 import plotly.graph_objects as go
 import pandas as pd
 from birdspotter.dataio.scripts.get_user_datasets import get_dataset_data
+from django.contrib import messages
 
 # Create your views here.
 
@@ -12,7 +13,9 @@ def index(request, uuid):
     args = {}
 
     data_table = get_dataset_data(request.user.is_authenticated, uuid)
-
+    if data_table is None:
+        messages.error(request, "The selected dataset does not have an associated shapefile")
+        return redirect('/')
     bird_data_total = pd.DataFrame({})
 
     for key in data_table:

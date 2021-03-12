@@ -4,9 +4,9 @@ from django.contrib import messages
 from .forms import ImportForm
 import logging
 from django.conf import settings
-from .forms import ImportForm
 from .scripts.import_handler import import_data
-from django.shortcuts import redirect
+
+
 @login_required
 def index(request):
     """Landing page for dataio path
@@ -21,13 +21,13 @@ def index(request):
         form = ImportForm(data=request.POST)
         if form.is_valid():
             messages.success(request, "File uploaded, starting processing")
-            success = import_data(request.user, form.cleaned_data['file_path'], form.cleaned_data['file_name'], form.cleaned_data['created_date'])
+            success = import_data(request.user, form.cleaned_data['file_path'], 
+                    form.cleaned_data['created_date'], file_name=form.cleaned_data['file_name'])
             if success:
                 messages.success(request, "File processing successful")
                 return redirect("/")
-            else:
-                messages.error(request, "File processing failed, please upload a valid zipfile or GeoTiff")
-                return redirect("/import/")
+            messages.error(request, "File processing failed, please upload a valid zipfile or GeoTiff")
+            return redirect("/import/")
         if (settings.DEBUG.lower == "true" or request.user.is_admin()):
             messages.error(request, f"Errors: {form.errors}", extra_tags='safe')
         else:
