@@ -49,13 +49,13 @@ def index(request, uuid):
 
     # Species total pie chart
     fig_bird_total = px.pie(combined, values=bird_count, names='species', title='Island Totals')
-    args['total_graph'] = plotly.offline.plot(fig_bird_total, auto_open = False, output_type="div")
-
-    # Bar Graph
-    fig_bird_nesting = px.bar(combined, x="species", y=['Nesting', 'Non-Nesting', 'Flying'], title="Nesting Behavior")
+    args['total_graph'] = plotly.offline.plot(fig_bird_total, auto_open = False, output_type='div')
 
     # Species behavior Bar graph
-    fig_bird_nesting = px.bar(combined, x='species', y=['Nesting', 'Non-Nesting', 'Flying'], title='Nesting Behavior')
+    fig_bird_nesting = px.bar(combined, x="species", y=['Nesting', 'Non-Nesting', 'Flying'], title='Nesting Behavior')
+
+    args['nesting_graph'] = plotly.offline.plot(fig_bird_nesting, auto_open = False, output_type='div')
+
     # Table Figure
     fig_table = go.Figure(data=[go.Table(header=dict(values=list(combined.columns)),
                                          cells=dict(values=[combined['species'], combined['Nesting'], combined['Non-Nesting'], combined['Flying']]))])
