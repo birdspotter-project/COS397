@@ -76,6 +76,6 @@ trigger:
     - tag
 ---
 kind: signature
-hmac: 83431f3922b35ac7eca0cb79daf7952822db68de9e9525e2b0bed7b8b3850a30
+hmac: 4a59e872a5fb594e9d808f164e38e44b55dae0467fd82cc2f289cec690e48e8c
 
 ...
