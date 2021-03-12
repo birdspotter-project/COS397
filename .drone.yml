@@ -64,9 +64,9 @@ steps:
     dockerfile: docker/Dockerfile
     context: birdspotter/
     target: prod
-    auto_tag: true
     tags: 
       - latest
+      - ${DRONE_TAG}
 trigger:
   branch:
     - master
@@ -76,6 +76,6 @@ trigger:
     - tag
 ---
 kind: signature
-hmac: 4a59e872a5fb594e9d808f164e38e44b55dae0467fd82cc2f289cec690e48e8c
+hmac: 244f19dd808057e7d20d50fdfb2dc7ffc5e8e14a450e211d797b978ac0c4c278
 
 ...
