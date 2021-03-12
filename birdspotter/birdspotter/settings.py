@@ -204,9 +204,16 @@ if PROD_FS :
     MEDIA_ROOT = '/media/'
     STATIC_ROOT = '/share/static/'
 
+SENTRY_URI = os.getenv('SENTRY_URI')
+if SENTRY_URI : 
+    import sentry_sdk
+    from sentry_sdk.integrations.django import DjangoIntegration
+    sentry_sdk.init(
+        dsn=SENTRY_URI,
+        integrations=[DjangoIntegration()],
+        traces_sample_rate=1.0,
 
-SLURM_HOST=os.getenv('SLURM_HOST')
-SLURM_USER=os.getenv('SLURM_USER', 'root')
-SLURM_PASSWD=os.getenv('SLURM_PASSWD', 'testing')
-SLURM_OPTS=os.getenv('SLURM_OPTS', "") #note: likely will need opts for PROD use
-IMAP_URI="imap://debug%40example.org:debug@mail"
+        # If you wish to associate users to errors (assuming you are using
+        # django.contrib.auth) you may enable sending PII data.
+        send_default_pii=True
+    )

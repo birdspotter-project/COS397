@@ -1,7 +1,7 @@
-{% include 'base.html' %}
+{% include 'base.html' with no_back_button=True %}
+{% load static %}
 {% block content %}
 {% load template_utilities %}
-{% load crispy_forms_tags %}
 <body>
 <div class="container mt-4">
     <table id="datasets" class="table table-bordered dt-responsive nowrap" style="width:100%">

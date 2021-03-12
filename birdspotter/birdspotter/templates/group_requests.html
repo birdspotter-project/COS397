@@ -3,17 +3,17 @@
 {% load template_utilities %}
 <body>
     <div class="container mt-4">
-        <table id="group-requests" class="table table-bordered dt-responsive nowrap" style="width:100%">
+        <table id="group-requests" class="table table-outlined" style="width:100%">
             <thead>
                 <tr>
                     <!-- <th class="details-control sorting_disabled"></th"> -->
-                        <th>Username</th>
-                        <th>Firstname</th>
-                        <th>Lastname</th>
-                        <th>Group Requested</th>
-                        <th>Date Requested</th>
-                        <th>Notes</th>
-                        <th>Actions</th>
+                        <th scope="col">Username</th>
+                        <th scope="col">Firstname</th>
+                        <th scope="col">Lastname</th>
+                        <th scope="col">Group Requested</th>
+                        <th scope="col">Date Requested</th>
+                        <th scope="col">Notes</th>
+                        <th scope="col">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -60,8 +60,10 @@
 
             </table>
         </div>
-        <script type="text/javascript" charset="utf8"
+        <!-- <script type="text/javascript" charset="utf8"
         src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.js"></script>
+            }); -->
+
         <script type="text/javascript">
         var funcs = {
             approve: function(request_id) {
@@ -92,42 +94,6 @@
             const data = $.parseJSON($(this).attr('data-button'));
             funcs[data.func](data.request_id)
         });
-
-        </script>
-        <script>
-        $(document).ready(function () {
-            var table = $('#group-requests').DataTable({
-                "language": {"emptyTable": "No outstanding group requests"}
-            });
-            $('#group-requests tbody').on('click', 'td', function () {
-                var tr = $(this).closest('tr');
-                if (!(tr.hasClass('childRowData') || $(this).hasClass('details-control'))) {
-                    if (tr.hasClass('selected')) {
-                        tr.removeClass('selected');
-                        $(".dataset-action").addClass('disabled')
-                    } else {
-                        table.$('tr.selected').removeClass('selected');
-                        tr.addClass('selected');
-                        $(".dataset-action").removeClass('disabled')
-                    }
-                }
-            });
-        // Add event listener for opening and closing details
-        $('#group-requests tbody').on('click', 'td.details-control', function () {
-            var tr = $(this).closest('tr');
-            var row = table.row(tr);
-
-            if (row.child.isShown()) {
-                // This row is already open - close it
-                row.child.hide();
-                tr.removeClass('shown');
-            } else {
-                // Open this row
-                row.child("<label for='metadata'>Metadata:<label><textarea id='metadata'>default value</textarea>", "childRowData").show();
-                tr.addClass('shown');
-            }
-        });
-    });
         </script>
     </body>
     {% endblock %}

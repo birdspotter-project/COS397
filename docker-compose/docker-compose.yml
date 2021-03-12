@@ -2,37 +2,15 @@ version: "3.9"
 services:
   birdspotter:
     restart: unless-stopped
-    build:
-      context: ../birdspotter
-      dockerfile: ../docker/Dockerfile
-      target: prod
-    env_file: 
-      - .env
     environment:
       - DBHOST=postgres
     depends_on: 
       postgres:
         condition: service_healthy
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.birdspotter.rule=Host(`${DOMAIN}`)"
-      - "traefik.http.routers.birdspotter.entrypoints=web"
-    volumes:
-      - media:/share/media
-      - ../birdspotter/:/app
   traefik:
     image: traefik:latest
-    ports:
-      - 8001:80
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
-    command:
-      - "--ping.entryPoint=ping"
-      - "--api.insecure=true"
-      - "--providers.docker=true"
-      - "--providers.docker.exposedbydefault=false"
-      - "--entrypoints.web.address=:80"
-      - "--entryPoints.ping.address=:8082"
     depends_on: 
       - birdspotter
     healthcheck:
@@ -43,110 +21,13 @@ services:
   postgres:
     restart: unless-stopped
     image: postgres:13
-    env_file: 
-      - .env
-    environment:
-      - PGDATA=/var/lib/postgresql/data/pgdata
     volumes:
-      - pgdata:/var/lib/postgresql/data
       - ./initdb.sql:/docker-entrypoint-initdb.d/initdb.sql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
       timeout: 5s
       retries: 5
-  media:
-    build: ../docker/nginx
-    image: nginx_upload
+  nginx:
     depends_on:
       - birdspotter
-    volumes:
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf
-      - media:/share/media
-    labels:
-    - "traefik.enable=true"
-    - "traefik.http.routers.media.rule=Host(`${DOMAIN}`) && PathPrefix(`/media`) || PathPrefix(`/upload`)"
-    - "traefik.http.routers.media.entrypoints=web"
-################### supporting services for dev purposes #################################
-#### mail dev server ####
-  mail: 
-    image: antespi/docker-imap-devel:latest
-#### dev slurm cluster #### 
-  mysql:
-    image: mysql:5.7
-    hostname: mysql
-    environment:
-      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
-      MYSQL_DATABASE: slurm_acct_db
-      MYSQL_USER: slurm
-      MYSQL_PASSWORD: password
-    volumes:
-      - slurm_mysql:/var/lib/mysql
-  slurmdbd:
-    build: ../docker/slurm
-    image: slurm_dev
-    command: ["slurmdbd"]
-    hostname: slurmdbd
-    volumes:
-      - etc_munge:/etc/munge
-      - etc_slurm:/etc/slurm
-      - var_log_slurm:/var/log/slurm
-    expose:
-      - "6819"
-    depends_on:
-      - mysql
-
-  slurmctld:
-    build: ../docker/slurm
-    image: slurm_dev
-    command: ["slurmctld"]
-    hostname: slurmctld
-    volumes:
-      - etc_munge:/etc/munge
-      - etc_slurm:/etc/slurm
-      - slurm_jobdir:/data
-      - var_log_slurm:/var/log/slurm
-    expose:
-      - "6817"
-    ports:
-      - "2222:22"
-    depends_on:
-      - "slurmdbd"
-
-  c1:
-    build: ../docker/slurm
-    image: slurm_dev
-    command: ["slurmd"]
-    hostname: c1
-    volumes:
-      - etc_munge:/etc/munge
-      - etc_slurm:/etc/slurm
-      - slurm_jobdir:/data
-      - var_log_slurm:/var/log/slurm
-    expose:
-      - "6818"
-    depends_on:
-      - "slurmctld"
-
-  c2:
-    build: ../docker/slurm
-    image: slurm_dev
-    command: ["slurmd"]
-    hostname: c2
-    volumes:
-      - etc_munge:/etc/munge
-      - etc_slurm:/etc/slurm
-      - slurm_jobdir:/data
-      - var_log_slurm:/var/log/slurm
-    expose:
-      - "6818"
-    depends_on:
-      - "slurmctld"
-volumes:
-  pgdata:
-  media:
-  slurm_mysql:
-  etc_munge:
-  etc_slurm:
-  slurm_jobdir:
-  var_log_slurm:

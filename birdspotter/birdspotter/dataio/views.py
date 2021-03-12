@@ -3,9 +3,9 @@ from django.contrib.auth import get_user_model
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render
 from django.contrib import messages
+from .forms import ImportForm
 import logging
 from django.conf import settings
-from .forms import ImportForm
 from .scripts.import_handler import import_data
 from .models import Dataset
 from django.shortcuts import redirect
@@ -29,9 +29,9 @@ def index(request):
                                   form.cleaned_data['created_date'], form.cleaned_data['public'])
             if success:
                 messages.success(request, "File processing successful")
-            else:
-                messages.error(request, "File processing failed, please upload a valid zipfile or GeoTiff")
-            return redirect('/')
+                return redirect("/")
+            messages.error(request, "File processing failed, please upload a valid zipfile or GeoTiff")
+            return redirect("/import/")
         if (settings.DEBUG.lower == "true" or request.user.is_admin()):
             messages.error(request, f"Errors: {form.errors}", extra_tags='safe')
         else:

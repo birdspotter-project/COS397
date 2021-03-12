@@ -2,35 +2,27 @@
 {% block content %}
 <html>
     <style>
-     .flex-container {
-         display: inline-flex;
-         position: relative;
-         align-items: flex-start;
-     }
-     .flex-container > div {
-         height: 100%;
-         width: 100%;
-
-     }
+    div {
+        width: inherit;    
+    }
      .container {
-         height: 90vh;
          min-width: 100%;
+         min-height: calc(100% - 56px);
          padding-left: 0px;
          padding-right: 0px;
          position: absolute;
          display: flex;
-         flex-direction: column;
+         flex-direction: row;
          overflow: visible;
-     }
+    }
+     div {justify-content: center;}
     </style>
 </html>
 
 
 <body>
 	<div class="container">
-		<div class="flex-container">
-			{{ graph_div|safe }}
-		</div>
+		{{ graph_div|safe }}
 	</div>
 </body>
 {% endblock %}

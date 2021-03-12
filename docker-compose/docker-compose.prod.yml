@@ -1,0 +1,69 @@
+version: "3.9"
+services:
+  birdspotter:
+    image: devinchristianson/birdspotter:latest
+    env_file: 
+      - .env
+    environment:
+      - DBHOST=postgres
+    environment:
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    depends_on: 
+      postgres:
+        condition: service_healthy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.birdspotter.rule=Host(`${DOMAIN}`)"
+      - "traefik.http.routers.birdspotter.entrypoints=websecure"
+      - "traefik.http.routers.birdspotter.tls=true"
+      - "traefik.http.routers.birdspotter.tls.certresolver=leresolver"
+    volumes:
+      - media:/share/media
+  traefik:
+    ports:
+      - 80:80
+      - 443:443
+    command:
+        # define healthcheck
+      - "--ping.entryPoint=ping"
+      - "--entryPoints.ping.address=:8082"
+        # security & provider config
+      - "--api.insecure=false"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+        # define routers for http and https
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+        # define permanent redirect to https
+      - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
+        # define and assign certificate resolver 
+      - "--entrypoints.websecure.http.tls.certResolver=leresolver"
+      - "--entrypoints.websecure.http.tls.domains.main=${DOMAIN}"
+      - "--certificatesresolvers.leresolver.acme.email=${DJANGO_SUPERUSER_EMAIL}"
+      - "--certificatesresolvers.leresolver.acme.storage=acme.json"
+      - "--certificatesresolvers.leresolver.acme.httpchallenge.entrypoint=web"
+    volumes:
+      - "./acme.json:/acme.json"
+  postgres:
+    restart: unless-stopped
+    env_file: 
+      - .env
+    environment:
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+  nginx:
+    image: devinchristianson/birdspotter:nginx-upload
+    depends_on:
+      - birdspotter
+    volumes:
+      - media:/share/media
+    labels:
+    - "traefik.enable=true"
+    - "traefik.http.routers.media.rule=Host(`${DOMAIN}`) && PathPrefix(`/media`) || PathPrefix(`/upload`)"
+    - "traefik.http.routers.media.entrypoints=websecure"
+    - "traefik.http.routers.media.tls=true"
+volumes:
+  pgdata:
+  media:

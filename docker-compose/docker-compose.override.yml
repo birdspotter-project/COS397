@@ -1,0 +1,57 @@
+version: "3.9"
+services:
+  birdspotter:
+    build:
+      context: ../birdspotter
+      dockerfile: ../docker/Dockerfile
+      target: prod  
+    env_file: 
+      - .env
+    environment:
+      - DBHOST=postgres
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.birdspotter.rule=Host(`${DOMAIN}`)"
+      - "traefik.http.routers.birdspotter.entrypoints=web"
+    volumes:
+      - media:/share/media
+      - ../birdspotter/:/app
+  traefik:
+    image: traefik:latest
+    ports:
+      - 8001:80
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    command:
+      - "--ping.entryPoint=ping"
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entryPoints.ping.address=:8082"
+    depends_on: 
+      - birdspotter
+  postgres:
+    restart: unless-stopped
+    image: postgres:13
+    env_file: 
+      - .env
+    environment:
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+  nginx:
+    build: ../docker/nginx
+    depends_on:
+      - birdspotter
+    volumes:
+      - media:/share/media
+    labels:
+    - "traefik.enable=true"
+    - "traefik.http.routers.media.rule=Host(`${DOMAIN}`) && PathPrefix(`/media`) || PathPrefix(`/upload`)"
+    - "traefik.http.routers.media.entrypoints=web"
+  mail: 
+    image: antespi/docker-imap-devel:latest
+volumes:
+  pgdata:
+  media:
