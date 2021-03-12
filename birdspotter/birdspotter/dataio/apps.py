@@ -2,4 +2,4 @@ from django.apps import AppConfig
 
 
 class DataioConfig(AppConfig):
-    name = 'dataio'
+    name = 'birdspotter.dataio'
