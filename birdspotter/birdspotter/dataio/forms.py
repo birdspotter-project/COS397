@@ -9,6 +9,8 @@ class NoInput(forms.Widget):
 
     def render(self, name, value, attrs=None, renderer=None):
         return ""
+
+
 class UploadedFileInput(forms.widgets.FileInput):
     input_type = 'file'
     needs_multipart_form = True
@@ -27,6 +29,8 @@ class UploadedFileInput(forms.widgets.FileInput):
 
     def use_required_attribute(self, initial):
         return super().use_required_attribute(initial) and not initial
+
+
 class ImportForm(forms.Form):
     """Form for the import page
 

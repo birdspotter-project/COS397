@@ -10,10 +10,14 @@
             <!-- <th class="details-control sorting_disabled"></th"> -->
             <th>Name</th>
             <th>Owner</th>
+            {% if request.user.is_authenticated %}
             <th>Public</th>
+            {% endif %}
             <th>Date Uploaded</th>
             <th>Date Collected</th>
+            {% if request.user.is_authenticated %}
             <th>Actions</th>
+            {% endif %}
         </tr>
         </thead>
         <tbody>
@@ -22,30 +26,39 @@
             <!-- <td class="details-control sorting_disabled"></td> -->
             <td>{{ dataset.name }}</td>
             <td>{{ dataset|get_username:'owner_id' }}</td>
+            {% if request.user.is_authenticated %}
             <td>{{ dataset.is_public }}</td>
+            {% endif %}
             <td>{{ dataset|get_date:'date_created' }}</td>
             <td>{{ dataset|get_item:'date_collected' }}</td>
+             <td>
+                <div style="display: block; width:80%; height: 50%; margin-left: auto; margin-right: auto;">
+                    <a href="/map/{{ dataset|get_item:'dataset_id' }}" style="width: 45%; float: left;"><img src="{% static 'map.svg' %}" alt="Map View" style="object-fit: contain;" title="Map View"></a>
+                    <a href="/data/{{ dataset|get_item:'dataset_id' }}" style="width: 45%; float: right;"><img src="{% static 'graph.svg' %}" alt="Graph View" style="object-fit: contain;" title="Graph View"></a>
+                </div>
+            </td>
+            {% if request.user.is_authenticated %}
             <td>
                 <div class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle " href="#" id="navbarDropdown" role="button"
                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Actions</a>
                     <div class="dropdown-menu dropdown-menu-right">
                         <a class="nav-link" href="/map">Map View</a>
-                        <a class="nav-link" href="/data">Data View</a>
-                        <!--should only be available to superusers and the owner(s)-->
-                        {% if dataset.owner_id == request.user.id or request.user.is_superuser %}
-                        <a class="nav-link" href="/share/{{dataset.dataset_id}}" data-toggle="modal"
-                           data-target="#share-modal"
-                           data-button='{"dataset_id": "{{ dataset.dataset_id }}","dataset_name": "{{ dataset.name }}"}'>Share</a>
-                        <a class="nav-link" href="/queue/{{ dataset.dataset_id }}">Queue Analysis</a>
-                        <a class="nav-link" href="/edit/{{ dataset.dataset_id }}">Edit Dataset</a>
-                        {% endif %}
-                        <!--should only be available to registered users-->
-                        <a class="nav-link" href="/Export">Export</a>
-
+                             <a class="nav-link" href="/queue/{{ dataset|get_item:'dataset_id' }}">Queue Analysis</a>
+                                {% is_dataset_owner request.user dataset as is_owner %}
+                                {% if is_owner %}
+                                <a class="nav-link" href="/edit/{{ dataset|get_item:'dataset_id' }}">Edit Dataset</a>
+                                 <a class="nav-link" href="/share/{{dataset.dataset_id}}" data-toggle="modal"
+                                       data-target="#share-modal"
+                                       data-button='{"dataset_id": "{{ dataset.dataset_id }}","dataset_name": "{{ dataset.name }}"}'>Share</a>
+                                {% endif %}
+                                {% if request.user.is_authenticated %}
+                                <a class="nav-link" href="/export">Export</a>                                
+                                {% endif %}
                     </div>
                 </div>
             </td>
+            {% endif %}
         </tr>
         {% endfor %}
         </tbody>

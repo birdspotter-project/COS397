@@ -3,14 +3,18 @@ from django.db.models import Q
 from birdspotter.dataio.models import Dataset
 from birdspotter.dataio.models import Shapefile
 import logging
+
+
 def get_datasets_for_user(user):
-    """Gets all datasets owned by user
     """
-    return Dataset.objects.filter(owner_id=user.id).values()
+    Return datasets that the user has access to, including public datasets
+    """
+    return Dataset.objects.filter(Q(owner_id=user.id) | Q(is_public=True) | Q(shared_with=user)).distinct().values()
 
 
 def get_public_datasets():
-    """Gets all public datasets
+    """
+    Return public datasets for unregistered users
     """
     return Dataset.objects.filter(is_public=True).values()
 

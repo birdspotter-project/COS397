@@ -10,7 +10,7 @@ from django.contrib.auth import get_user_model
 from birdspotter.dataio.models import Dataset, Shapefile, RawData, Image, RawShapefile
 import uuid
 
-def import_data(user, file_path, file_name, date_created, is_public):
+def import_data(user, file_path, file_name, date_created, is_public, **kwargs):
     """Takes InMemoryFile user, and dat_created and imports data into the database accordingly (creates GeoTiff or Shapefile model and 
     creates a Dataset for each file)
     Args:
@@ -36,7 +36,7 @@ def import_data(user, file_path, file_name, date_created, is_public):
                 if dataset is None :
                     name = os.path.splitext(file_name)[0]
                     dataset = Dataset(name=name, owner=get_user_model().objects.get_by_natural_key(user.username),
-                              date_collected=date_created)
+                              date_collected=date_created, is_public=is_public)
                     dataset.save()
                 raw_shp_binary = zipfile.ZipFile(file_path).open(shapefile_locs[0])
                 new_path = os.path.join(settings.PRIVATE_STORAGE_ROOT, "raw_files/", str(uuid.uuid4()))

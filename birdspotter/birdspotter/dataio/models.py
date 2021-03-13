@@ -50,6 +50,7 @@ class Dataset(models.Model):
                                  null=True, blank=True)
     shared_with = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True,
                                 related_name='datasets_sharedwith')
+    
     def __str__(self):
         return self.name
 
