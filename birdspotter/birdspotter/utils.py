@@ -1,5 +1,4 @@
-GROUPS = {
-    'default': 'Registered',
-    'privileged:': 'Privileged',
-    'admin': 'Admin'
-} 
+class GROUPS:
+    registered = 'Registered'
+    privileged = 'Privileged'
+    admin = 'Admin'

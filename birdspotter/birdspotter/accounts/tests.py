@@ -369,7 +369,7 @@ class PermissionsTests(TestCase):
         group_request = GroupRequest.objects.get(user=user)
         group_request.approve_request(resp.wsgi_request)
         # check that the user now has the 'Registered' group
-        self.assertTrue(user.groups.filter(name=GROUPS['default']).exists())
+        self.assertTrue(user.groups.filter(name=GROUPS.registered).exists())
 
     def test_make_admin(self):
         """

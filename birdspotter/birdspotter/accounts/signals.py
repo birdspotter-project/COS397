@@ -24,7 +24,7 @@ def save_user(instance, created, **kwargs): # noqa
         if not instance.is_superuser:
             instance.is_active = False
         try:
-            default_group = Group.objects.get(name=GROUPS['default'])
+            default_group = Group.objects.get(name=GROUPS.registered)
             instance.groups.add(default_group)
         except Group.DoesNotExist:
             if not settings.TESTING:
