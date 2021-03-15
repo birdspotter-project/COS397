@@ -288,10 +288,11 @@ class RegisterUserTests(TestCase):
         """
         creds = gen_creds()
         self.create_registration_request(creds)
-        # check if the group reguest is generated
-        self.assertTrue(GroupRequest.objects.get(pk=1))
-        # check that the user was created and set to inactive
         user = User.objects.get(username=creds['username'])
+        self.assertTrue(user is not None)
+        # check if the group reguest is generated
+        self.assertTrue(GroupRequest.objects.filter(user=user).exists())
+        # check that the user was created and set to inactive
         self.assertFalse(user.is_active)
 
     def test_username_in_use(self):
