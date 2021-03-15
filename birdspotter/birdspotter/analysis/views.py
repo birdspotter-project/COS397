@@ -5,6 +5,8 @@ from .forms import QueueJobForm
 from .scripts.start_job import start_job
 from .models import AnalysisJob
 
+from birdspotter.utils import group_required, GROUPS
+
 
 @login_required
 def index(request):
@@ -15,6 +17,7 @@ def index(request):
 
 
 @login_required
+@group_required(GROUPS.privileged)
 def queue_job(request, uuid):
     """Queuing form in order to queue datasets for external analysis
     """

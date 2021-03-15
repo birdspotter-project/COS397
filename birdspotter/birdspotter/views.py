@@ -7,6 +7,7 @@ from .forms import DatasetEditForm
 from django.contrib import messages
 from django.http import HttpResponse
 
+from birdspotter.utils import group_required, GROUPS
 
 def index(request):
     """
@@ -21,27 +22,30 @@ def index(request):
 
 
 @login_required
+@group_required(GROUPS.registered)
 def edit_dataset(request, uuid):
     """
     Editing dataset metadata, such as dataset name, comments, and whether the dataset is public
     """
-    user = request.user
-    dataset = Dataset.objects.filter(owner_id=user.id).get(dataset_id=uuid)
-    if dataset is not None:
-        form = DatasetEditForm(request.POST or None, instance=dataset)
-        if form.is_valid():
-            form.save()
-            messages.success(request, "Data set edit complete")
-            return redirect("/")
-    form = DatasetEditForm(initial={
-    'name': dataset.name,
-    'is_public': dataset.is_public,
-    })
-    context = {
-        'form': form,
-        'isAdmin': False
-    }
-    return render(request, "dataset_edit.html", context=context)
+    dataset = Dataset.objects.filter(owner_id=request.user.id).get(dataset_id=uuid)
+    if dataset.owner == request.user:
+        if dataset is not None:
+            form = DatasetEditForm(request.POST or None, instance=dataset)
+            if form.is_valid():
+                form.save()
+                messages.success(request, "Data set edit complete")
+                return redirect("/")
+        form = DatasetEditForm(initial={
+        'name': dataset.name,
+        'is_public': dataset.is_public,
+        })
+        context = {
+            'form': form,
+            'isAdmin': False
+        }
+        return render(request, "dataset_edit.html", context=context)
+    else:
+        return HttpResponse(status=403)
 
 
 # How to correctly send a fully compliant HTTP 204 response, based on https://code.djangoproject.com/ticket/16632

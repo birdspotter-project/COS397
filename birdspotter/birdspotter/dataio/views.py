@@ -1,4 +1,4 @@
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth import get_user_model
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render
@@ -59,27 +59,31 @@ def share_dataset(request, dataset_id):
     GET: Returns an object with an array of usernames, along with if they are already shared the dataset
     """
     dataset = Dataset.objects.get(dataset_id=dataset_id)
-    User = get_user_model()
-    if request.method == "POST":
-        # and array of users is specified with the [] appended to the json key
-        add_shared = request.POST.getlist('add_share[]')
-        remove_shared = request.POST.getlist('remove_share[]')
+    # only allow owner of dataset to share the dataset
+    if dataset.owner == request.user:
+        User = get_user_model()
+        if request.method == "POST":
+            # and array of users is specified with the [] appended to the json key
+            add_shared = request.POST.getlist('add_share[]')
+            remove_shared = request.POST.getlist('remove_share[]')
 
-        # add users to share
-        users = User.objects.filter(user_id__in=add_shared).all()
-        dataset.shared_with.add(*users)
+            # add users to share
+            users = User.objects.filter(user_id__in=add_shared).all()
+            dataset.shared_with.add(*users)
 
-        # remove users from share
-        users = User.objects.filter(user_id__in=remove_shared).all()
-        dataset.shared_with.remove(*users)
+            # remove users from share
+            users = User.objects.filter(user_id__in=remove_shared).all()
+            dataset.shared_with.remove(*users)
 
-        dataset.save()
-        messages.success(request, "Dataset successfully shared with users")
-        return HttpResponse(status=200)
-    if request.method == "GET":
-        data = []
-        for u in User.objects.all():
-            if not u == request.user:
-                data.append({"user_id": u.user_id, "username": u.username, "is_shared": u in dataset.shared_with.all()})
-        return JsonResponse({"users": data}, safe=False)
-    return HttpResponse(status=405)
+            dataset.save()
+            messages.success(request, "Dataset successfully shared with users")
+            return HttpResponse(status=200)
+        if request.method == "GET":
+            data = []
+            for u in User.objects.all():
+                if not u == request.user:
+                    data.append({"user_id": u.user_id, "username": u.username, "is_shared": u in dataset.shared_with.all()})
+            return JsonResponse({"users": data}, safe=False)
+        return HttpResponse(status=405)
+    else:
+        return HTTPRequest(status=403)
