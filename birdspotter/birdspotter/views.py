@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import PermissionDenied
+
 from birdspotter.dataio.scripts.get_user_datasets import get_datasets_for_user, get_public_datasets
 from birdspotter.accounts.models import User
 from birdspotter.dataio.models import Dataset
@@ -22,12 +24,12 @@ def index(request):
 
 
 @login_required
-@group_required(GROUPS.registered)
+@group_required(GROUPS.registered, GROUPS.privileged, GROUPS.admin)
 def edit_dataset(request, uuid):
     """
     Editing dataset metadata, such as dataset name, comments, and whether the dataset is public
     """
-    dataset = Dataset.objects.filter(owner_id=request.user.id).get(dataset_id=uuid)
+    dataset = Dataset.objects.get(dataset_id=uuid)
     if dataset.owner == request.user:
         if dataset is not None:
             form = DatasetEditForm(request.POST or None, instance=dataset)
@@ -45,7 +47,7 @@ def edit_dataset(request, uuid):
         }
         return render(request, "dataset_edit.html", context=context)
     else:
-        return HttpResponse(status=403)
+        raise PermissionDenied
 
 
 # How to correctly send a fully compliant HTTP 204 response, based on https://code.djangoproject.com/ticket/16632

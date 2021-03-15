@@ -17,7 +17,7 @@ def index(request):
 
 
 @login_required
-@group_required(GROUPS.privileged)
+@group_required(GROUPS.privileged, GROUPS.admin)
 def queue_job(request, uuid):
     """Queuing form in order to queue datasets for external analysis
     """

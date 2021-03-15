@@ -3,6 +3,8 @@ from django.contrib.auth import get_user_model
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render
 from django.contrib import messages
+from django.core.exceptions import PermissionDenied
+
 from .forms import ImportForm
 import logging
 from django.conf import settings
@@ -86,4 +88,4 @@ def share_dataset(request, dataset_id):
             return JsonResponse({"users": data}, safe=False)
         return HttpResponse(status=405)
     else:
-        return HTTPRequest(status=403)
+        raise PermissionDenied
