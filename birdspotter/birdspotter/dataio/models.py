@@ -15,9 +15,6 @@ class RawData(models.Model):
     Attributes:
         path (str): File path to file on fileserver
     """
-    class Meta:
-        default_permissions = ()
-
 
     path = models.FileField(storage=PrivateFileSystemStorage, upload_to="raw_files/")
 
@@ -34,7 +31,6 @@ class Dataset(models.Model):
         raw_data (RawData): ForeignKey to dataio.RawData
     """
     class Meta:
-        default_permissions = ()
         permissions = [
             ("export_dataset", "Can export dataset")
         ]
@@ -65,10 +61,7 @@ class Image(models.Model):
     Attributes:
         img_path (str): File path to image in fileserver
     """
-    class Meta:
-        default_permissions = ()
-
-  
+    
     img_path = models.ImageField(storage=PrivateFileSystemStorage)
     image_id = models.UUIDField(primary_key=False,
                                 default=uuid.uuid4,
@@ -81,10 +74,6 @@ class RawShapefile(models.Model):
         rawshp (RawData): RawData containing shapefile
         dataset (Dataset): Dataset that the shapefile belongs to
     """
-    class Meta:
-        default_permissions = ()
-
-
     rawshp = models.ForeignKey(RawData, on_delete=models.CASCADE)
     dataset = models.ForeignKey(Dataset, on_delete=models.CASCADE)
     image_id = models.UUIDField(primary_key=False,
@@ -111,9 +100,6 @@ class Shapefile(models.Model):
         point_y (float): y coordinate in relation to raster image
         species (str): bird species
     """
-    class Meta:
-        default_permissions = ()
-
 
     data_set = models.ForeignKey(Dataset, on_delete=models.CASCADE)
     entry_id = models.UUIDField(primary_key=False,

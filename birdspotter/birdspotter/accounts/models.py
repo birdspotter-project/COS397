@@ -3,8 +3,8 @@ import uuid
 from django.contrib import messages
 from django.contrib.auth.models import AbstractUser, Group
 from django.db import models
-from django.utils import timezone
 
+from django.utils import timezone
 from birdspotter.utils import GROUPS
 
 
@@ -13,10 +13,6 @@ class User(AbstractUser):
     Attributes:
         username (str): user specified username, used as unique identifier
     """
-    class Meta:
-        default_permissions = ()
-
-
     username = models.CharField(max_length=30, unique=True)
     user_id = models.UUIDField(primary_key=False,
                                default=uuid.uuid4, editable=False, unique=True)
@@ -34,7 +30,7 @@ class User(AbstractUser):
     def is_admin(self):
         """ Returns whether the current user is part of the admin group, or is a superuser
         """
-        return self.is_superuser or self.groups.filter(name=GROUPS.admin).exists()
+        return self.groups.filter(name=GROUPS.admin).exists() or self.is_superuser
 
     def make_active(self):
         """ Makes the current user active within the system
@@ -63,10 +59,6 @@ class GroupRequest(models.Model):
         reviewed_by (User): the user that reviewed the request and either approved or denied the request
         notes (str < 2000 chars): notes that the requesting user can add to a request
     """
-    class Meta:
-        default_permissions = ()
-
-
     groups = ['Admin', 'Privileged', 'Registered']
 
     GROUP_CHOICES = [(a, a) for a in groups]
