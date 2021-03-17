@@ -53,7 +53,7 @@ def index(request):
     }
     return render(request, 'upload.html', context)
 
-
+@login_required
 def share_dataset(request, dataset_id):
     """
     Handles the share dialog and accepts GET and POST requests to /share/<dataset_id>/
@@ -79,7 +79,7 @@ def share_dataset(request, dataset_id):
 
             dataset.save()
             messages.success(request, "Dataset successfully shared with users")
-            return HttpResponse(status=200)
+            return HttpResponse(status=200, content='Dataset sharing successfully updated')
         if request.method == "GET":
             data = []
             for u in User.objects.all():
