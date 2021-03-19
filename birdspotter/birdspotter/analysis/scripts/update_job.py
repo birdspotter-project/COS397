@@ -2,7 +2,6 @@ from birdspotter.analysis.models import AnalysisJob
 import re
 from django.conf import settings
 from birdspotter.dataio.scripts.import_handler import import_data
-import datetime
 from birdspotter.dataio.models import Dataset
 
 
@@ -13,7 +12,7 @@ def handle_update(message):
     job.status = update['status']
     job.save(update_fields='status')
     if job.status == "COMPLETED":
-        import_results(job.external_job_id, job.owner)
+        import_results(job.external_job_id)
         print("COMPLETED job " + job.external_job_id)
         
         
@@ -27,7 +26,7 @@ def parse_slurm(subj):
     return d
 
 
-def import_results(job_id, user):
+def import_results(job_id):
     analysisJob = AnalysisJob.objects.get(external_job_id=job_id)
     dataset = Dataset.objects.get(dataset_id=analysisJob.dataset_id)
-    import_data(user, open(f"{settings.PRIVATE_STORAGE_ROOT}/job_output/{job_id}_output"), datetime.datetime.now(), dataset=dataset)
+    import_data(open(f"{settings.PRIVATE_STORAGE_ROOT}/job_output/{job_id}_output"), dataset)

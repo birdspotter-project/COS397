@@ -1,10 +1,16 @@
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
+from django.contrib.auth import get_user_model
+from django.http import JsonResponse, HttpResponse
+from django.shortcuts import render
 from django.contrib import messages
+from django.core.exceptions import PermissionDenied
+
 from .forms import ImportForm
 import logging
 from django.conf import settings
-from .scripts.import_handler import import_data
+from .scripts.import_handler import import_new_data
+from .models import Dataset
+from django.shortcuts import redirect
 
 
 @login_required
@@ -21,8 +27,8 @@ def index(request):
         form = ImportForm(data=request.POST)
         if form.is_valid():
             messages.success(request, "File uploaded, starting processing")
-            success = import_data(request.user, form.cleaned_data['file_path'], 
-                    form.cleaned_data['created_date'], file_name=form.cleaned_data['file_name'])
+            success = import_new_data(request.user, form.cleaned_data['file_path'],
+                                  form.cleaned_data['created_date'], form.cleaned_data['public'], form.cleaned_data['file_name'])
             if success:
                 messages.success(request, "File processing successful")
                 return redirect("/")
@@ -46,3 +52,39 @@ def index(request):
         'isAdmin': False
     }
     return render(request, 'upload.html', context)
+
+@login_required
+def share_dataset(request, dataset_id):
+    """
+    Handles the share dialog and accepts GET and POST requests to /share/<dataset_id>/
+    POST: Get list of user_ids and add users to dataset.shared_with
+    GET: Returns an object with an array of usernames, along with if they are already shared the dataset
+    """
+    dataset = Dataset.objects.get(dataset_id=dataset_id)
+    # only allow owner of dataset to share the dataset
+    if dataset.owner == request.user:
+        User = get_user_model()
+        if request.method == "POST":
+            # and array of users is specified with the [] appended to the json key
+            add_shared = request.POST.getlist('add_share[]')
+            remove_shared = request.POST.getlist('remove_share[]')
+
+            # add users to share
+            users = User.objects.filter(user_id__in=add_shared).all()
+            dataset.shared_with.add(*users)
+
+            # remove users from share
+            users = User.objects.filter(user_id__in=remove_shared).all()
+            dataset.shared_with.remove(*users)
+
+            dataset.save()
+            messages.success(request, "Dataset successfully shared with users")
+            return HttpResponse(status=200, content='Dataset sharing successfully updated')
+        if request.method == "GET":
+            data = []
+            for u in User.objects.all():
+                if not u == request.user:
+                    data.append({"user_id": u.user_id, "username": u.username, "is_shared": u in dataset.shared_with.all()})
+            return JsonResponse({"users": data}, safe=False)
+        return HttpResponse(status=405)
+    raise PermissionDenied

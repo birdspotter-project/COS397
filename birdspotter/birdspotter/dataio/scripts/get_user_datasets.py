@@ -1,14 +1,20 @@
+from django.db.models import Q
+
 from birdspotter.dataio.models import Dataset
 from birdspotter.dataio.models import Shapefile
 import logging
+
+
 def get_datasets_for_user(user):
-    """Gets all datasets owned by user
     """
-    return Dataset.objects.filter(owner_id=user.id).values()
+    Return datasets that the user has access to, including public datasets
+    """
+    return Dataset.objects.filter(Q(owner_id=user.id) | Q(is_public=True) | Q(shared_with=user)).distinct().values()
 
 
 def get_public_datasets():
-    """Gets all public datasets
+    """
+    Return public datasets for unregistered users
     """
     return Dataset.objects.filter(is_public=True).values()
 
@@ -39,15 +45,15 @@ def get_dataset_data(is_authed, uuid):
                           "comments"    : [i.comments for i in shapefile_lines],
                           }
     else:
-        
+
         precision = 3       # aggregate data to 3 decimals points of lat/long
         precision_mod = 1  # allows for more precise tuning, >1 reduces region size <1 increases region size
         aggregation = {}
-        
+
         for i in shapefile_lines:
-            # separate by island name and by precision, 
+            # separate by island name and by precision,
             # in case there are multiple islands in one dataset
-            key = (round(i.latitude*precision_mod, precision), 
+            key = (round(i.latitude*precision_mod, precision),
                 round(i.longitude*precision_mod, precision),
                 i.island_name)
             if key in aggregation:
@@ -56,12 +62,12 @@ def get_dataset_data(is_authed, uuid):
                 aggregation[key][2] += 1
             else:
                 aggregation[key] = [i.latitude, i.longitude, 1, i.island_name]
-                
+
         for key in aggregation:
             # average data region, to 4 decimal precision
             aggregation[key][0] = round(aggregation[key][0]/aggregation[key][2], 4)
             aggregation[key][1] = round(aggregation[key][1]/aggregation[key][2], 4)
-                          
+
         shapefile_data = {"latitude"    : [aggregation[key][0] for key in aggregation],
                           "longitude"   : [aggregation[key][1] for key in aggregation],
                           "island_name" : [aggregation[key][3] for key in aggregation],
