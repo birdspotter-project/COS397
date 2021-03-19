@@ -8,7 +8,7 @@ from django.core.exceptions import PermissionDenied
 from .forms import ImportForm
 import logging
 from django.conf import settings
-from .scripts.import_handler import import_data
+from .scripts.import_handler import import_new_data
 from .models import Dataset
 from django.shortcuts import redirect
 
@@ -27,8 +27,8 @@ def index(request):
         form = ImportForm(data=request.POST)
         if form.is_valid():
             messages.success(request, "File uploaded, starting processing")
-            success = import_data(request.user, form.cleaned_data['file_path'],
-                                  form.cleaned_data['created_date'], form.cleaned_data['public'], file_name=form.cleaned_data['file_name'])
+            success = import_new_data(request.user, form.cleaned_data['file_path'],
+                                  form.cleaned_data['created_date'], form.cleaned_data['public'], form.cleaned_data['file_name'])
             if success:
                 messages.success(request, "File processing successful")
                 return redirect("/")
@@ -87,5 +87,4 @@ def share_dataset(request, dataset_id):
                     data.append({"user_id": u.user_id, "username": u.username, "is_shared": u in dataset.shared_with.all()})
             return JsonResponse({"users": data}, safe=False)
         return HttpResponse(status=405)
-    else:
-        raise PermissionDenied
+    raise PermissionDenied

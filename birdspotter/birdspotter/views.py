@@ -3,7 +3,6 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 
 from birdspotter.dataio.scripts.get_user_datasets import get_datasets_for_user, get_public_datasets
-from birdspotter.accounts.models import User
 from birdspotter.dataio.models import Dataset
 from .forms import DatasetEditForm
 from django.contrib import messages
@@ -46,8 +45,7 @@ def edit_dataset(request, uuid):
             'isAdmin': False
         }
         return render(request, "dataset_edit.html", context=context)
-    else:
-        raise PermissionDenied
+    raise PermissionDenied
 
 
 # How to correctly send a fully compliant HTTP 204 response, based on https://code.djangoproject.com/ticket/16632
