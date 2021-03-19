@@ -2,12 +2,15 @@ from django import forms
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
 
+
 class NoInput(forms.Widget):
     input_type = "hidden"
     template_name = ""
 
     def render(self, name, value, attrs=None, renderer=None):
         return ""
+
+
 class UploadedFileInput(forms.widgets.FileInput):
     input_type = 'file'
     needs_multipart_form = True
@@ -26,6 +29,8 @@ class UploadedFileInput(forms.widgets.FileInput):
 
     def use_required_attribute(self, initial):
         return super().use_required_attribute(initial) and not initial
+
+
 class ImportForm(forms.Form):
     """Form for the import page
 
@@ -38,6 +43,7 @@ class ImportForm(forms.Form):
             attrs={'type': 'date'} 
         )
     )
+    public = forms.BooleanField(required=False, initial=False, label='Make dataset public')
     file_path = forms.CharField(
         label=".zip or .tif file to import", 
         widget=UploadedFileInput)
