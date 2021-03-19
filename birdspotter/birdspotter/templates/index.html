@@ -3,72 +3,196 @@
 {% block content %}
 {% load template_utilities %}
 <body>
-    <div class="container mt-4">
-        <table id="datasets" class="table table-bordered dt-responsive nowrap" style="width:100%">
-            <thead>
-            <tr>
-                <!-- <th class="details-control sorting_disabled"></th"> -->
-                <th>Name</th>
-                <th>Owner</th>
-                {% if request.user.is_authenticated %}
-                <th>Public</th>
-                {% endif %}
-                <th>Date Uploaded</th>
-                <th>Date Collected</th>
-                <th>View</th>
-                {% if request.user.is_authenticated %}
-                <th>Actions</th>
-                {% endif %}
-            </tr>
-            </thead>
-            <tbody>
-            {% for dataset in datasets %}
-                <tr>
-                    <!-- <td class="details-control sorting_disabled"></td> -->
-                    <td>{{ dataset|get_item:'name' }}</td>
-                    <td>{{ dataset|get_username:'owner_id' }}</td>
-                    {% if request.user.is_authenticated %}
-                    <td>{{ dataset|get_item:'is_public' }}</td>
-                    {% endif %}
-                    <td>{{ dataset|get_date:'date_created' }}</td>
-                    <td>{{ dataset|get_item:'date_collected' }}</td>
-                    <td>
-                        <div style="display: block; width:80%; height: 50%; margin-left: auto; margin-right: auto;">
-                            <a href="/map/{{ dataset|get_item:'dataset_id' }}" style="width: 45%; float: left;"><img src="{% static 'map.svg' %}" alt="Map View" style="object-fit: contain;" title="Map View"></a>
-                            <a href="/data/{{ dataset|get_item:'dataset_id' }}" style="width: 45%; float: right;"><img src="{% static 'graph.svg' %}" alt="Graph View" style="object-fit: contain;" title="Graph View"></a>
-                        </div>
-                    </td>
-                    {% if request.user.is_authenticated %}
-                    <td>
-                        <div class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle " href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Actions</a>
-                            <div class="dropdown-menu dropdown-menu-right">
-                                <a class="nav-link" href="/queue/{{ dataset|get_item:'dataset_id' }}">Queue Analysis</a>
+<div class="container mt-4">
+    <table id="datasets" class="table table-bordered dt-responsive nowrap" style="width:100%">
+        <thead>
+        <tr>
+            <!-- <th class="details-control sorting_disabled"></th"> -->
+            <th>Name</th>
+            <th>Owner</th>
+            {% if request.user.is_authenticated %}
+            <th>Public</th>
+            {% endif %}
+            <th>Date Uploaded</th>
+            <th>Date Collected</th>
+            <th>View</th>
+            {% if request.user.is_authenticated %}
+            <th>Actions</th>
+            {% endif %}
+        </tr>
+        </thead>
+        <tbody>
+        {% for dataset in datasets %}
+        <tr>
+            <!-- <td class="details-control sorting_disabled"></td> -->
+            <td>{{ dataset.name }}</td>
+            <td>{{ dataset|get_username:'owner_id' }}</td>
+            {% if request.user.is_authenticated %}
+            <td>{{ dataset.is_public }}</td>
+            {% endif %}
+            <td>{{ dataset|get_date:'date_created' }}</td>
+            <td>{{ dataset|get_item:'date_collected' }}</td>
+             <td>
+                <div style="display: block; width:80%; height: 50%; margin-left: auto; margin-right: auto;">
+                    <a href="/map/{{ dataset|get_item:'dataset_id' }}" style="width: 45%; float: left;"><img src="{% static 'map.svg' %}" alt="Map View" style="object-fit: contain;" title="Map View"></a>
+                    <a href="/data/{{ dataset|get_item:'dataset_id' }}" style="width: 45%; float: right;"><img src="{% static 'graph.svg' %}" alt="Graph View" style="object-fit: contain;" title="Graph View"></a>
+                </div>
+            </td>
+            {% if request.user.is_authenticated %}
+            <td>
+                <div class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle " href="#" id="navbarDropdown" role="button"
+                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Actions</a>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a class="nav-link" href="/map">Map View</a>
+                             <a class="nav-link" href="/queue/{{ dataset|get_item:'dataset_id' }}">Queue Analysis</a>
                                 {% is_dataset_owner request.user dataset as is_owner %}
                                 {% if is_owner %}
                                 <a class="nav-link" href="/edit/{{ dataset|get_item:'dataset_id' }}">Edit Dataset</a>
+                                 <a class="nav-link" href="/share/{{dataset.dataset_id}}" data-toggle="modal"
+                                       data-target="#share-modal"
+                                       data-button='{"dataset_id": "{{ dataset.dataset_id }}","dataset_name": "{{ dataset.name }}"}'>Share</a>
                                 {% endif %}
                                 {% if request.user.is_authenticated %}
                                 <a class="nav-link" href="/export">Export</a>                                
                                 {% endif %}
-                            </div>
-                        </div>
-                    </td>
-                    {% endif %}
-                </tr>
-            {% endfor %}
-            </tbody>
-
-        </table>
+                    </div>
+                </div>
+            </td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <!-- Modal -->
+    <div class="modal fade" id="share-modal" tabindex="-1" aria-hidden="true" style="max-height: 80vh;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modal-title">Share dataset</h5>
+                    <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="container mx-auto mb-3">
+                <div class="modal-body overflow-auto borderless">
+                    <input type="text" id="search-users" onfocus="this.value=''">
+                    <ul class="list-group" id="share-list" style="max-height: 50vh;overflow:scroll;">
+                    </ul>
+                </div>
+                <div>
+                    <button class="btn btn-primary" type="submit" id="commit-share" data-dismiss="modal">Make Changes</button>
+                </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <script type="text/javascript" charset="utf8"
+</div>
+<script type="text/javascript">
+    $('#share-modal').on('show.bs.modal', function (event) {
+        const data = $.parseJSON($(event.relatedTarget).attr('data-button'))
+        var dataset_name = data.dataset_name
+        var dataset_id = data.dataset_id
+        var modal = $(this)
+        var shared_with = []
+        var remove_share = []
+        modal.find('.modal-title').text(`Share dataset: ${dataset_name}`)
+        $.ajax({
+            type: 'GET',
+            url: `/share/${dataset_id}/`,
+            success: function (resp) {
+                $('#search-users').on('input', function (e) {
+                    let input = $(this).val()
+                    input.value = ''
+                    let filter = input.toLowerCase()
+                    var ul = document.getElementById("share-list");
+                    var filteredArray;
+                    if (filter !== ""){
+                        filteredArray = resp.users.filter(a => a.username.includes(filter))
+                    } else {
+                        filteredArray = []
+                    }
+                    $("#share-list").empty();
+                    filteredArray.map(function (k, _) {
+                        var item = document.createElement("li")
+                        item.setAttribute('class', 'list-group-item')
+                        var checkbox = document.createElement("input")
+                        checkbox.setAttribute('class', 'form-check-input')
+                        checkbox.setAttribute('type', 'checkbox')
+                        if (k.is_shared | shared_with.includes(k.user_id)) {
+                            checkbox.setAttribute('checked', 'true')
+                        }
+                        checkbox.setAttribute('value', k.user_id)
+                        item.appendChild(checkbox)
+                        item.append(`${k.username}`)
+                        ul.appendChild(item)
+                    });
+                    $('#share-list :checkbox').click(function(){
+                        var isChecked = $(this).is(':checked')
+                        var uid = $(this).val()
+                        if (isChecked) {
+                            shared_with.push(uid);
+                            remove_share = remove_share.filter(item => item != uid)
+                        } else {
+                            shared_with = shared_with.filter(item => item != uid)
+                            remove_share.push(uid)
+                        }
+                    });
+            });
+            }
+        });
+        $('#commit-share').on('click', function(e){
+            toastr.options.escapeHtml = true;
+            $.ajax({
+                type: "POST",
+                url: `/share/${dataset_id}/`,
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                data: {
+                    "add_share": shared_with,
+                    "remove_share": remove_share},
+            })
+        });
+    })
+    .on('shown.bs.modal', function() {
+        $(this).find('#search-users').focus()
+    });
+</script>
+<script type="text/javascript" charset="utf8"
         src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.js"></script>
-    <script>
+<script>
     $(document).ready(function () {
         var table = $('#datasets').DataTable({
             "language": {"emptyTable": "No datasets to display"}
         });
+        $('#datasets tbody').on('click', 'td', function () {
+            var tr = $(this).closest('tr');
+            if (!(tr.hasClass('childRowData') || $(this).hasClass('details-control'))) {
+                if (tr.hasClass('selected')) {
+                    tr.removeClass('selected');
+                    $(".dataset-action").addClass('disabled')
+                } else {
+                    table.$('tr.selected').removeClass('selected');
+                    tr.addClass('selected');
+                    $(".dataset-action").removeClass('disabled')
+                }
+            }
+        });
+        // Add event listener for opening and closing details
+        $('#datasets tbody').on('click', 'td.details-control', function () {
+            var tr = $(this).closest('tr');
+            var row = table.row(tr);
+
+            if (row.child.isShown()) {
+                // This row is already open - close it
+                row.child.hide();
+                tr.removeClass('shown');
+            } else {
+                // Open this row
+                row.child("<label for='metadata'>Metadata:<label><textarea id='metadata'>default value</textarea>", "childRowData").show();
+                tr.addClass('shown');
+            }
+        });
     });
-    </script>
+</script>
 </body>
-{% endblock %}
+{% endblock content%}

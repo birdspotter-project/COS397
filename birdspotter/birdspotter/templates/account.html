@@ -35,6 +35,8 @@
 </form>
         <div class="col-sm-offset-2 col-sm-10">
             <button onclick="location.href='/accounts/password_change/'" class="btn btn-outline-primary">Change password</button>
-            <button onclick="location.href='/accounts/request_group/'" class="btn btn-outline-primary">Request privileged access</button>
+            {% if not request.user.is_admin %}
+                <button onclick="location.href='/accounts/request_group/'" class="btn btn-outline-primary">Request privileged access</button>
+            {% endif %}
         </div>
     </div>

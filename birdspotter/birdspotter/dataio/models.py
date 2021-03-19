@@ -48,6 +48,9 @@ class Dataset(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
     geotiff = models.ForeignKey(RawData, on_delete=models.CASCADE,
                                  null=True, blank=True)
+    shared_with = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True,
+                                related_name='datasets_sharedwith')
+    
     def __str__(self):
         return self.name
 
