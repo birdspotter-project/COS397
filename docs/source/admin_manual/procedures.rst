@@ -50,15 +50,37 @@ User Accounts
 -------------
 Once there is a set of admins within the system, user administration will come in two forms.
 
-.. TODO Insert image to show navbar with group requests and admin options
+.. _navbar:
+.. figure:: static/navbar.png
+    :alt: "Admin navbar view"
+    :align: center
+
+    : Admin user navbar
 
 First off, requests for elevated group permissions and access to the aplication (going from a public user to registered user) will be handled in the Group Requests page. An admin simply has to press "Approve" or "Deny" depending on the decision and the decision will be stored and the request removed from the list.
 
-.. TODO: insert image of group requests page
+.. _group_requests:
+.. figure:: static/group_requests.png
+    :alt: "Group requests view"
+    :align: center
+
+    : Group requests view
 
 The other location for user administration will be within the admin page itself. Like the Group Requests page, there will be an option in the navbar for any admin user that will take them to the Django admin panel. From there, click on Users, and then actions such as creating a user, changing a user's account to inactive, or deleting the user can be performed.
 
-.. TODO: Insert images of Django admin panel, and how to manage users
+.. _admin_page:
+.. figure:: static/admin_page.png
+    :alt: "Main admin page"
+    :align: center
+
+    : Main admin page
+
+.. _user_admin:
+.. figure:: static/user_admin.png
+    :alt: "User admin controls"
+    :align: center
+
+    : User admin controls
 
 ------------------
 Django admin panel
