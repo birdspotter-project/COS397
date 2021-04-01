@@ -15,7 +15,8 @@ def index(request, uuid):
 
     args = {}
 
-    shapefile_lines = get_dataset_data(request.user.is_authenticated, uuid)
+    shapefile_lines, dataset_name = get_dataset_data(request.user.is_authenticated, uuid)
+    args['dataset_name'] = dataset_name
     if shapefile_lines is None:
         messages.error(request, "The selected dataset does not have an associated shapefile")
         return redirect('/')

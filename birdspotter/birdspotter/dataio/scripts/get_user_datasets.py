@@ -73,4 +73,4 @@ def get_dataset_data(is_authed, uuid):
                           "island_name" : [aggregation[key][3] for key in aggregation],
                           "size"       : [aggregation[key][2] for key in aggregation]}
 
-    return shapefile_data
+    return shapefile_data, dataset.name
