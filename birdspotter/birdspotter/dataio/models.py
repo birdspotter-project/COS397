@@ -44,7 +44,7 @@ class Dataset(models.Model):
     owner = models.ForeignKey(settings.AUTH_USER_MODEL,
                               on_delete=models.CASCADE)
     is_public = models.BooleanField(default=False)
-    date_collected = models.DateField(blank=True)
+    date_collected = models.DateField(blank=True, null=True)
     date_created = models.DateTimeField(auto_now_add=True)
     geotiff = models.ForeignKey(RawData, on_delete=models.CASCADE,
                                  null=True, blank=True)
