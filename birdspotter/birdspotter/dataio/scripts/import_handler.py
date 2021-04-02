@@ -5,17 +5,18 @@ import shutil
 import logging
 import geopandas as gp
 from fiona.io import ZipMemoryFile
+from datetime import datetime
+
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from birdspotter.dataio.models import Dataset, Shapefile, RawData, Image, RawShapefile
 import uuid
 
-def import_new_data(user, file_path, date_created, is_public, file_name):
+def import_new_data(user, file_path, is_public, file_name):
     """Wrapper for import_data that deals with adding new a dataset
     Args:
         user (User): Data owner
         file_path (String): File Path on system
-        date_created (datetime.date): Description
         is_public (Boolean): Whether dataset should be public
         file_name (String): user-provided file name (used to name new dataset)
     Returns:
@@ -24,16 +25,16 @@ def import_new_data(user, file_path, date_created, is_public, file_name):
     """
     name = os.path.splitext(file_name)[0]
     dataset = Dataset(name=name, owner=get_user_model().objects.get_by_natural_key(user.username),
-                    date_collected=date_created, is_public=is_public)
+                    is_public=is_public)
     dataset.save()
     return import_data(file_path, dataset)
+
 def import_data(file_path, dataset):
     """Takes InMemoryFile user, and dat_created and imports data into the database accordingly (creates GeoTiff or Shapefile model and 
     creates a Dataset for each file)
     Args:
         user (User): Data owner
         file_path (String): File Path on system
-        date_created (datetime.date): Description
         dataset (Dataset): Dataset in order to use existing dataset
     Returns:
         True for success, False for failure
@@ -55,7 +56,7 @@ def import_data(file_path, dataset):
                 return __import_shapefile(shapefile_locs, zip_mem, dataset, zip=zf)
         except zipfile.BadZipfile:
             return False
-    else :
+    else:
         dataset = __import_tiff(file_path, dataset)
         return dataset is not None
 
@@ -69,16 +70,17 @@ def __import_tiff(tiff_file, dataset):
     dataset.save()
     return dataset
 
-
 def __import_shapefile(file_loc, zip_mem, dataset, **kwargs):
+    #2019-06-01
     if len(file_loc) > 0:
         zf=kwargs.get('zip', None)
         with zip_mem.open(file_loc[0]) as open_file:
             shp = gp.GeoDataFrame.from_features(open_file)
             shp_objects = []
+            date_collected_str = shp.iloc[0]['PhotoDate']
             for _, record in shp.iterrows():
                 img = None
-                if zf is not None :
+                if zf is not None:
                     try:
                         img_name = record.Image
                         if img_name in zf.namelist():
@@ -97,5 +99,7 @@ def __import_shapefile(file_loc, zip_mem, dataset, **kwargs):
                                              point_x=record.geometry.x, point_y=record.geometry.y,
                                              latitude=record.Lat, longitude=record.Long, image=img))
         Shapefile.objects.bulk_create(shp_objects, 100)
+        dataset.date_collected = datetime.strptime(date_collected_str, '%Y-%m-%d')
+        dataset.save()
         return True
     return False

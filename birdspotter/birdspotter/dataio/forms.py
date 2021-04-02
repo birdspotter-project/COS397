@@ -38,15 +38,10 @@ class ImportForm(forms.Form):
         created_date (datetime.date): Date when the observation occurred
         file_to_import (File): File that will be saved into fileserver and read into database
         """
-    created_date = forms.DateField(
-        widget=forms.TextInput(     
-            attrs={'type': 'date'} 
-        )
-    )
-    public = forms.BooleanField(required=False, initial=False, label='Make dataset public')
     file_path = forms.CharField(
         label=".zip or .tif file to import", 
         widget=UploadedFileInput)
+    public = forms.BooleanField(required=False, initial=False, label='Make dataset public')
     file_md5 = forms.CharField(max_length=32, widget=NoInput)
     file_name = forms.CharField(max_length=64, widget=NoInput)
     file_size = forms.IntegerField(widget=NoInput)

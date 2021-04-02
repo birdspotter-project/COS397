@@ -28,7 +28,7 @@ def index(request):
         if form.is_valid():
             messages.success(request, "File uploaded, starting processing")
             success = import_new_data(request.user, form.cleaned_data['file_path'],
-                                  form.cleaned_data['created_date'], form.cleaned_data['public'], form.cleaned_data['file_name'])
+                                  form.cleaned_data['public'], form.cleaned_data['file_name'])
             if success:
                 messages.success(request, "File processing successful")
                 return redirect("/")

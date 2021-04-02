@@ -12,7 +12,8 @@ from django.contrib import messages
 def index(request, uuid):
     args = {}
 
-    data_table = get_dataset_data(request.user.is_authenticated, uuid)
+    data_table, dataset_name = get_dataset_data(request.user.is_authenticated, uuid)
+    args['dataset_name'] = dataset_name
     if data_table is None:
         messages.error(request, "The selected dataset does not have an associated shapefile")
         return redirect('/')
