@@ -121,4 +121,4 @@ Restoring the mass storage from backup is very dependent on the exact type and s
 
 User Support
 ================
-User support will be performed either through the application for user based inquiries, or through Github issues for application issues. For issues partainting to a user's account, there is a contact form avaiable after pressing the Contact Admin button on the profile page. For issues with the actual application, such as bugs or unexpected errors, users are encouraged to report the issue to the application's Github issues page, located at https://github.com/birdspotter-project/COS397/issues.
+User support will be performed either through the application for user based inquiries, or through Github issues for application issues. For issues pertaining to a user's account, there is a contact form avaiable after pressing the Contact Admin button on the profile page. For issues (or suggestions) for the application as a whole, such as bugs or unexpected errors, users are encouraged to report the issue to the application's Github issues page, located at https://github.com/birdspotter-project/COS397/issues.
