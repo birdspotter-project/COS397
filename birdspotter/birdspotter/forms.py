@@ -1,3 +1,4 @@
+from django import forms
 from django.forms import ModelForm
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
@@ -9,7 +10,11 @@ class DatasetEditForm(ModelForm):
     """
     class Meta:
         model = Dataset
-        fields = ['name','comments','is_public']
+        fields = ['name','comments','is_public', 'date_collected']
+        widgets = {
+            'date_collected': forms.TextInput(attrs={'type': 'date'})
+        }
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
