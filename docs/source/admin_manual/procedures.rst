@@ -34,7 +34,7 @@ These variables can be left at their default values.
 ------------------------
 Starting the application
 ------------------------
-1. In order to start the application in production more, while in the docker-compose directory, run ``docker-compose -f docker-compose.yml -f docker-compose.prod.yml up``.
+1. In order to start the application in production, while in the docker-compose directory, run ``docker-compose -f docker-compose.yml -f docker-compose.prod.yml up``.
 
 .. note:: To run the application in detached mode (the application is not attached to the bash session) run docker-compose up with the detach flag (``-d``)
 
@@ -121,3 +121,4 @@ Restoring the mass storage from backup is very dependent on the exact type and s
 
 User Support
 ================
+User support will be performed either through the application for user based inquiries, or through Github issues for application issues. For issues partainting to a user's account, there is a contact form avaiable after pressing the Contact Admin button on the profile page. For issues with the actual application, such as bugs or unexpected errors, users are encouraged to report the issue to the application's Github issues page, located at https://github.com/birdspotter-project/COS397/issues.
