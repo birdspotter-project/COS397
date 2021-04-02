@@ -60,6 +60,11 @@ html_theme_options = {
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
 
+latex_documents = [
+    ('index', 'birdspotter.tex', 'Birdspotter',
+     author.replace(', ', '\\and ').replace(' and ', '\\and and '),
+     'manual'),
+]
 
 # Configure figures such that they are numbered accordingly
 numfig = True
