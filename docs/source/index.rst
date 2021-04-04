@@ -15,11 +15,3 @@ Welcome to Birdspotter's documentation!
    admin_manual/system_overview
    admin_manual/procedures
    admin_manual/troubleshooting
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
