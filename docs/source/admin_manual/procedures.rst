@@ -1,6 +1,6 @@
-***************************************
+*************************
 Administrative Procedures
-***************************************
+*************************
 
 Installation
 ================
@@ -33,14 +33,19 @@ These variables can be left at their default values.
 
 ------------------------
 Starting the application
-------------------------
-1. In order to start the application in production, while in the docker-compose directory, run ``docker-compose -f docker-compose.yml -f docker-compose.prod.yml up``.
+------------------------ 
+1. Before starting the application, switch to the docker-compose directory, and verify that the path on the last line of ``docker-compose.prod.yml`` is your mass data storage, or some other suitable directory that exists.
+
+.. warning:: Depending on the type of network share being used for mass data storage, it may be more suitable to re-configure the docker volume driver to use that network share directly. 
+            More info on how to do that can be found here https://docs.docker.com/engine/extend/legacy_plugins/.
+
+2. In order to start the application in production more, run ``docker-compose -f docker-compose.yml -f docker-compose.prod.yml up``.
 
 .. note:: To run the application in detached mode (the application is not attached to the bash session) run docker-compose up with the detach flag (``-d``)
 
-2. Run ``./initial_setup.sh`` to initialize the stack.
-3. Restart the stack by running ``docker-compose restart birdspotter``
-4. To stop the application, if you are in the docker-compose directory, you can run ``docker-compose down``.
+3. Run ``./initial_setup.sh`` to initialize the stack.
+4. Restart the stack by running ``docker-compose restart birdspotter``
+5. To stop the application, if you are in the docker-compose directory, you can run ``docker-compose down``.
    
 - If you are running in the attached mode, i.e. logs are being displayed in the terminal window, stopping the stack can be done with CTRL-C
 
