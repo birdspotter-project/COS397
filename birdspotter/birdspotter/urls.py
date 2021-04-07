@@ -21,6 +21,7 @@ from django.conf import settings
 import private_storage.urls
 
 from birdspotter.dataio.views import share_dataset
+from birdspotter.accounts.views import contact_view
 
 urlpatterns = [
     path('', views.index, name='index'),
@@ -34,5 +35,6 @@ urlpatterns = [
     path('health/', include('health_check.urls')),
     path('private-media/', include(private_storage.urls)),
     path('auth/', views.auth, name='auth'),
-    path('share/<uuid:dataset_id>/', share_dataset)
+    path('share/<uuid:dataset_id>/', share_dataset),
+    path('contact/', contact_view),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) # only works in dev mode

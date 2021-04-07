@@ -17,6 +17,10 @@
 			<li class="nav-item">
 				<a class="nav-link" href="/import">Import</a>
 			</li>
+			{% else %}
+			<li class="nav-item">
+				<a href="/contact" class="nav-link">Contact Admin</a>
+			</li>
 			{% endif %}
             {% if request.user.is_admin %}
                 <li class="nav-item"><a class="nav-link" href="/accounts/group_requests">Group Requests</a></li>
@@ -34,6 +38,7 @@
 						{%if request.user.is_staff %}
 						<a class="dropdown-item" style="padding-bottom: 10px;" href="/queue/">Job Queue</a>
 						{% endif %}
+						<a href="/contact" class="dropdown-item">Contact Admin</a>
 						<div style="padding-left: 20px; padding-top: 10px;"><button type="submit" class="btn btn-danger" onclick="location.href='/accounts/logout/'">Logout</button></div>
 				</div>
 			</li>

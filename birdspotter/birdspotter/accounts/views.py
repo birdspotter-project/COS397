@@ -2,14 +2,17 @@ from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.core.mail import send_mail
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
 from .forms import (AccountForm,
                     RegisterForm,
                     GroupRequestForm,
+                    ContactForm,
                     )
 from .models import GroupRequest
+from .scripts import send_email_to_admins
 
 
 REQUESTS = {
@@ -46,6 +49,23 @@ def logout_view(request):
     """
     logout(request)
     return redirect('/')
+
+def contact_view(request):
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            success = send_email_to_admins(form.cleaned_data['subject'],
+                                form.cleaned_data['message'],
+                                from_email=form.cleaned_data['email'])
+            if success:
+                messages.success(request, 'Email sent successfully')
+            else:
+                messages.error(request, 'Error sending email, please try again')
+            return redirect('/contact')
+    form = ContactForm(initial={
+        'email': request.user.email if request.user.is_authenticated else ''
+    })
+    return render(request, 'contact.html', {'form': form})
 
 
 @login_required
