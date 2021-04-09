@@ -5,7 +5,7 @@ import logging
 
 def send_email_to_admins(subject, message, from_email=""):
     User = get_user_model()
-    admin_emails = User.objects.filter(is_staff=True).values_list('email')
+    admin_emails = [a.email for a in User.objects.filter(is_staff=True)]
     if not admin_emails:
         logging.error('The application has no admins')
     else:
