@@ -15,5 +15,6 @@ class UserModelAdmin(UserAdmin):
     )
     readonly_fields = ('last_login', 'date_joined')
 
+
 admin.site.register(User, UserModelAdmin)
 admin.site.register(GroupRequest)
