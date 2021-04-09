@@ -39,7 +39,7 @@ Starting the application
 .. warning:: Depending on the type of network share being used for mass data storage, it may be more suitable to re-configure the docker volume driver to use that network share directly. 
             More info on how to do that can be found here https://docs.docker.com/engine/extend/legacy_plugins/.
 
-2. In order to start the application in production more, run ``docker-compose -f docker-compose.yml -f docker-compose.prod.yml up``.
+2. In order to start the application in production mode, run ``docker-compose -f docker-compose.yml -f docker-compose.prod.yml up``.
 
 .. note:: To run the application in detached mode (the application is not attached to the bash session) run docker-compose up with the detach flag (``-d``)
 
@@ -66,7 +66,7 @@ Once there is a set of admins within the system, user administration will come i
 
     : Admin user navbar
 
-First off, requests for elevated group permissions and access to the aplication (going from a public user to registered user) will be handled in the Group Requests page. An admin simply has to press "Approve" or "Deny" depending on the decision and the decision will be stored and the request removed from the list.
+First off, requests for elevated group permissions and access to the application (going from a public user to registered user) will be handled in the Group Requests page. An admin simply has to press "Approve" or "Deny" depending on the decision and the decision will be stored and the request removed from the list.
 
 .. _group_requests:
 .. figure:: static/group_requests.png
