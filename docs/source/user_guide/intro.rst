@@ -28,9 +28,13 @@ This guide is intended for all versions of the Birdspotter application.
 
 Purpose
 ==============================
+The purpose of the system is to create a streamlined process that enables users to quickly analyze collected data. The system is mainly focused on the processes related to displaying the data on an interactable map, quickly outputting statistical information, and managing the data long term. 
+
+The purpose of this user guide is to outline these processes and how they can be utilized. 
 
 How to Use this Document
 ==============================
+Each section of this document has a different point of focus but work towards the bigger picture. The first section, the introduction, is a quick rundown of what to expect as well as what the aim of the document is. The second section is the overview which gives a broad description of the system and what it is capable of. The instructions section gives an understanding for how the system is operated and how various components may be utilized. The final section gives a comprehensive rundown of all the system capabilities.
 
 Related Documents
 ==============================
@@ -53,3 +57,4 @@ Conventions
 
 Problem Reporting Instructions
 ==============================
+Software issues can be reported via the contact page. More information can found in the contact page subsection of the instructions section of the user guide. 
