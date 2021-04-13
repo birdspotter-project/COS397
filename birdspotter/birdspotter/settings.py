@@ -45,7 +45,7 @@ SECURE_PROXY_SSL_HEADER = ('X-Forwarded-Proto', 'https')
 PROD_DB = os.getenv('PROD_DB')
 PROD_FS = os.getenv('PROD_FS', 'False')
 PROD_EMAIL = os.getenv('PROD_EMAIL', 'False')
-if PROD_MODE: 
+if PROD_MODE and PROD_MODE.lower() == 'true': 
     PROD_DB = 'true'
     PROD_FS = 'true'
     PROD_EMAIL = 'true'
