@@ -29,6 +29,7 @@ steps:
 - name: deployment-test
   image: devinchristianson/birdspotter:dev
   commands:
+    - cd /app/birdspotter
     - python3 manage.py check --deploy 2>&1
 - name: publish-dev-image
   depends_on: [unit-test, linter-tests, deployment-test]
