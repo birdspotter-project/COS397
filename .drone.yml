@@ -7,7 +7,6 @@ workspace:
 steps:
 - name: unit-test
   image: devinchristianson/birdspotter:dev-deps
-  pull: always
   commands:
     - cd /app/birdspotter
     - python manage.py makemigrations && python manage.py migrate
@@ -24,12 +23,15 @@ steps:
      - /app/birdspotter/coverage.xml
 - name: linter-tests
   image: devinchristianson/birdspotter:dev-deps
-  pull: always
   commands:
     - cd /app/birdspotter
     - prospector
+- name: deployment-test
+  image: devinchristianson/birdspotter:dev
+  commands:
+    - python3 manage.py check --deploy 2>&1
 - name: publish-dev-image
-  depends_on: [unit-test, linter-tests]
+  depends_on: [unit-test, linter-tests, deployment-test]
   when:
     status: 
       - success
@@ -76,6 +78,6 @@ trigger:
     - tag
 ---
 kind: signature
-hmac: 244f19dd808057e7d20d50fdfb2dc7ffc5e8e14a450e211d797b978ac0c4c278
+hmac: fcf9f56326a03c31b4c05a352b98489de4c94f6347e28bb4e5a15b48d781f493
 
 ...
