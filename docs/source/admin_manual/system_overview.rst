@@ -22,7 +22,7 @@ Finally, the mass storage handles the storage of all the raw files (Original Sha
 Hardware and Software requirements
 =====================================
 The web server itself has no particularly strict hardware requirements - one CPU core and 2GB of ram, 
->64gb of hard drive space should be plenty for most small deployments, assuming seperate file storage of some sort is used for the mass file storage component. 
+>64gb of hard drive space should be plenty for most small deployments, assuming separate file storage of some sort is used for the mass file storage component. 
 The provided installation procedures rely on the use of Docker and Docker Compose, so the application can be run on any OS that Docker can run on, 
 though some Linux distros (e.g. Ubuntu, Debian, CentOS, RedHat) will be easier than others as they have more community support.
 

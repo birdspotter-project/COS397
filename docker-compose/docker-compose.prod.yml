@@ -68,3 +68,8 @@ services:
 volumes:
   pgdata:
   media:
+    driver: local # a network share can be used directly via a different driver/plugin (https://docs.docker.com/engine/extend/legacy_plugins/)
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: './rawdata' # Need to substitute the raw path of the datastore if using a local volume

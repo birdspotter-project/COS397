@@ -8,28 +8,10 @@ Welcome to Birdspotter's documentation!
 
 .. toctree::
    :maxdepth: 3
-   :caption: User guide:
-   :numbered:
-
-   user_guide/intro
-   user_guide/overview
-   user_guide/instructions
-   user_guide/reference
-
-.. toctree::
-   :maxdepth: 3
-   :caption: Admin Manual:
+   :caption: Administrator Manual:
    :numbered:
 
    admin_manual/intro
    admin_manual/system_overview
    admin_manual/procedures
    admin_manual/troubleshooting
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`

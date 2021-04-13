@@ -1,0 +1,14 @@
+{% include 'base.html' with back_view="/" %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div class="container">
+    <h1>Contact Admin</h1>
+    <h6>This is for issues specific to only this domain. That can be issues with accounts, or implementation issues. For issues related to the application as a whole, please report an issue <a href="https://github.com/birdspotter-project/COS397/issues">here</a>.</h3> 
+</div>
+<div class="container"><form method="post">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form></div>
+    
+{% endblock content %}
