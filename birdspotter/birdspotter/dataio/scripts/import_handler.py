@@ -46,10 +46,9 @@ def import_data(file_path, dataset):
             with ZipMemoryFile(binary) as zip_mem:
                 zf = zipfile.ZipFile(io.BytesIO(binary))
                 shapefile_locs = list(filter(lambda v: v.endswith('.shp'), zf.namelist()))
-                raw_shp_binary = zipfile.ZipFile(file_path).open(shapefile_locs[0])
                 new_path = os.path.join(settings.PRIVATE_STORAGE_ROOT, "raw_files/", str(uuid.uuid4()))
                 raw_shp_data = RawData.objects.create()
-                raw_shp_data.path.save(new_path, raw_shp_binary)
+                raw_shp_data.path.save(new_path, io.BytesIO(binary))
                 raw_shp_data.save()
                 raw_shp = RawShapefile.objects.create(rawshp=raw_shp_data, dataset=dataset)
                 raw_shp.save()

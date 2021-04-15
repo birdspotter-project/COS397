@@ -4,7 +4,7 @@ certifi==2020.11.8
 click==7.1.2
 click-plugins==1.1.1
 cligj==0.7.0
-Django==3.1.6
+Django==3.1.8
 django-crispy-forms==1.11.0
 django-health-check==3.16.2
 django-mailbox==4.8.2
@@ -41,7 +41,7 @@ ssh-python==0.9.0
 ssh2-python==0.26.0
 stevedore==3.3.0
 toml==0.10.2
-urllib3==1.26.2
+urllib3>=1.26.4
 whitenoise==5.2.0
 wrapt==1.12.1
 zope.event==4.5.0
