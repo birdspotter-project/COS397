@@ -24,7 +24,7 @@ The relevant sections of the user guide for **system operators** is the referenc
 
 Applicability Statement
 ==============================
-This guide is intended for all versions of the Birdspotter application. 
+This guide is intended for use with the version of the birdspotter application that is indicated in the bottom left (e.g. latest, v.1, etc).
 
 Purpose
 ==============================
