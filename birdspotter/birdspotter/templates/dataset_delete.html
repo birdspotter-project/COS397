@@ -1,0 +1,10 @@
+{% include 'base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div class="container"><h1>Delete Dataset</h1></div>
+<div class="container"><form method="post">
+    {% csrf_token %}
+    {% crispy form %}
+</form></div>
+    
+{% endblock content %}

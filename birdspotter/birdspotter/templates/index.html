@@ -49,6 +49,7 @@
                                 {% is_dataset_owner request.user dataset as is_owner %}
                                 {% if is_owner %}
                                 <a class="nav-link" href="/edit/{{ dataset|get_item:'dataset_id' }}">Edit Dataset</a>
+                                <a class="nav-link" href="/delete/{{ dataset|get_item:'dataset_id' }}">Delete Dataset</a>
                                  <a class="nav-link" href="/share/{{dataset.dataset_id}}" data-toggle="modal"
                                        data-target="#share-modal"
                                        data-button='{"dataset_id": "{{ dataset.dataset_id }}","dataset_name": "{{ dataset.name }}"}'>Share</a>

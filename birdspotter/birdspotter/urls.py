@@ -31,6 +31,7 @@ urlpatterns = [
     path('accounts/', include('birdspotter.accounts.urls')),
     path('queue/', include('birdspotter.analysis.urls')),
     path('edit/<uuid>', views.edit_dataset),
+    path('delete/<uuid>', views.delete_dataset),
     path('admin/', admin.site.urls),
     path('health/', include('health_check.urls')),
     path('private-media/', include(private_storage.urls)),

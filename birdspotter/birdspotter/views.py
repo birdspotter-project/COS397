@@ -5,6 +5,7 @@ from django.core.exceptions import PermissionDenied
 from birdspotter.dataio.scripts.get_user_datasets import get_datasets_for_user, get_public_datasets
 from birdspotter.dataio.models import Dataset
 from .forms import DatasetEditForm
+from .forms import DatasetDeleteForm
 from django.contrib import messages
 from django.http import HttpResponse
 
@@ -40,6 +41,30 @@ def edit_dataset(request, uuid):
             'name': dataset.name,
             'is_public': dataset.is_public,
             'date_collected': dataset.date_collected,
+        })
+        context = {
+            'form': form,
+            'isAdmin': False
+        }
+        return render(request, "dataset_edit.html", context=context)
+    raise PermissionDenied
+
+@login_required
+@group_required(GROUPS.registered, GROUPS.privileged, GROUPS.admin)
+def delete_dataset(request, uuid):
+    """
+    Deleting dataset with confirmation
+    """
+    dataset = Dataset.objects.get(dataset_id=uuid)
+    if dataset.owner == request.user:
+        if dataset is not None:
+            form = DatasetDeleteForm(request.POST or None, instance=dataset)
+            if form.is_valid():
+                form.save()
+                messages.success(request, "Data set deletion complete")
+                return redirect("/")
+        form = DatasetDeleteForm(initial={
+            'name': dataset.name,
         })
         context = {
             'form': form,
