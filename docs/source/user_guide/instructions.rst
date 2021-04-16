@@ -99,11 +99,15 @@ Resetting Password
 
 3. Enter your email for the password reset and click "Reset Password"
 
-Home View (Public User)
+Home View
 ==============================
+
+This is the home page of the birdspotter app, and is where you can navigate the datasets that you have access to.
 
 Dataset Selection and Navigating to a View
 ##############################
+
+Note: Public (Unregistered) users do not have access to the Data View, as it contains information not otherwise available to them.
 
 1. Click on the box of the dataset that you would like to look at
 
@@ -113,10 +117,6 @@ Dataset Selection and Navigating to a View
 
 3. To navigate back, click on the back arrow or birdspotter logo
 
-Home View (Registered/Privileged User)
-==============================
-
-This is the home page of the birdspotter app, and is where you can navigate the datasets that you have access to.
 
 Modify Dataset Metadata
 ##############################
