@@ -104,8 +104,15 @@ Home View
 
 This is the home page of the birdspotter app, and is where you can navigate the datasets that you have access to.
 
+.. _home_view:
+.. figure:: static/home_view.png
+   :alt: "Example of the home view"
+   :align: center
+
+   : Example of the home view
+   
 Dataset Selection and Navigating to a View
-##############################
+##########################################
 
 Note: Public (Unregistered) users do not have access to the Data View, as it contains information not otherwise available to them.
 
@@ -113,8 +120,22 @@ Note: Public (Unregistered) users do not have access to the Data View, as it con
 
 2a. To navigate to the map view, click on the left icon under the "view column"
 
+.. _map_view_highlight:
+.. figure:: static/map_view_highlight.png
+   :alt: "Selection for map view"
+   :align: center
+   
+   : Selection for map view
+   
 2b. To navigate to the data view, click on the right icon under the "view column"
 
+.. _data_view_highlight:
+.. figure:: static/data_view_highlight.png
+   :alt: "Selection for data view"
+   :align: center
+   
+   : Selection for data view
+   
 3. To navigate back, click on the back arrow or birdspotter logo
 
 
@@ -160,9 +181,24 @@ Data View
 This View allows registered users to view the data of their own and publically available datasets.
 The data is arranged into the form of charts and tables.
 
+.. _data_view:
+.. figure:: static/data_view.png
+   :alt: "Example Data view for Registered User"
+   :align: center
+
+   : The data view as it may appear to a Registered User
+
 Map View
 ==============================
+
 
 This view allows the user to view a dataset overlaid on a map. Public users only have access to the
 average location and number of data points, while registered users have access to each individual data point,
 and all of the corresponding data.
+
+.. _map_view:
+.. figure:: static/map_view.png
+   :alt: "Example Map view for Registered User"
+   :align: center
+
+   : The map view as it may appear to a Registered User
