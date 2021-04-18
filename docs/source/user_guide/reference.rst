@@ -6,9 +6,7 @@ Contacting an Admin
 ==============================
 This function allows you to contact an admin
 
-Warnings & Cautions
-##############################
-Make sure that the email is typed correctly so that the admin can get back to you.
+.. warning:: Make sure that the email is typed correctly so that the admin can get back to you.
 
 Procedures
 ##############################
@@ -22,16 +20,9 @@ Follow the steps below to contact an admin:
 
 4. Click the "submit" button to send the message.  
 
-Possible Errors
-##############################
-
-
 Reporting an error/issue
 ==============================
 This function allows you to report issues or errors you encounter.
-
-Warnings & Cautions
-##############################
 
 Procedures
 ##############################
@@ -48,6 +39,3 @@ Follow the steps below to report an issue:
 5. Enter the relevant information into the form.
 
 6. Click "Submit new issue".
-
-Possible Errors
-##############################

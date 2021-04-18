@@ -17,9 +17,7 @@ This is the home page of the Birdspotter app and is where you can navigate the d
 Dataset Selection and Navigating to a View
 ##########################################
 
-1. Click on the box of the dataset that you would like to view.
-
-2a. To navigate to the map view, click on the left icon under the "View" column.
+1a. To navigate to the map view, click on the left icon under the "View" column of the chosen dataset row.
 
 .. _map_view_highlight:
 .. figure:: static/map_view_highlight.png
@@ -28,7 +26,7 @@ Dataset Selection and Navigating to a View
    
    : Selection for map view
    
-2b. To navigate to the data view, click on the right icon under the "View" column.
+1b. To navigate to the data view, click on the right icon under the "View" column of the chosen dataset row.
 
 .. _data_view_highlight:
 .. figure:: static/data_view_highlight.png
@@ -37,40 +35,47 @@ Dataset Selection and Navigating to a View
    
    : Selection for data view
    
-3. To navigate back, click on the back arrow or Birdspotter logo.
+2. To navigate back, click on the back arrow or Birdspotter logo.
 
 
 Dataset Actions
 ###############
 
-1. Click on the dataset you would like to Modify.
+1. Select the "Actions" dropdown in the Actions column of the chosen dataset row.
 
-2. Select the "Actions" dropdown in the Actions column of the dataset.
+Modify Dataset Metadata:
+*************************
 
-- Modify Dataset Metadata:
+.. note:: Modifying Metadata is only available for datasets that you own.
 
-    .. note:: Modifying Metadata is only available for datasets that you own.
+1. Select "Edit Dataset".
 
-    1. Select "Edit Dataset".
-    
-    2. Change the metadata to match what you would like to be displayed.
-
+2. Change the metadata to match what you would like to be displayed.
 
 
-- Queue Analysis of a Dataset
 
-    .. warning::  Queueing is not yet implemented
+Queue Analysis of a Dataset
+*****************************
 
-    1. Select “Queue Analysis”.
+.. warning::  Queueing is not yet implemented
 
-    2. Select the algorithm to queue.
+1. Select “Queue Analysis”
+2. Select the algorithm to queue.
 
 
-- Export Dataset
+Export Dataset
+********************
 
-    .. warning::  Exporting is not yet implemented
+.. warning::  Exporting is not yet implemented
+   
+1. Select "Export".
 
-    1. Select "Export".
+Share Dataset
+********************
+
+.. warning::  Exporting is not yet implemented
+   
+1. Select "Share".
 
 Data View
 ==============================
@@ -102,9 +107,7 @@ Importing Files
 
 This function allows you to import .tif and .zip files.
 
-Warnings & Cautions
-##############################
-Make sure to upload the entire .zip file containing your .shp, .shx, and other files.
+.. tip:: Make sure to upload a zip of your entire shapefile, including the .shp, .shx, and other files.
 
 Procedures
 ##############################
@@ -118,10 +121,8 @@ Follow the steps below to import a file.
 
 4. Click the "Submit" button to upload the file. 
 
-Possible Errors
-##############################
-* Uploading a file that is not a .zip or .tif will result in an error. 
-* .shp and .shx files in a .zip with missing fields may lead to errors.
+.. warning:: * Uploading a file that is not a .zip or .tif will result in an error. 
+            * .shp and .shx files in a .zip with missing fields may lead to errors.
 
 Account Management
 ==============================
@@ -129,7 +130,7 @@ Account Management
 Resetting Password
 ##############################
 
-1. Click on your username dropdown in the top right of the app.
+1. Click on the login dropdown in the top right of the app.
 
 2. Click on the "Forgot Password" link.
 
@@ -142,17 +143,19 @@ Modifying Account Data/Changing Password
 
 2. Click on "Profile".
 
-- Modify Profile:
+Modify Profile:
+*****************
 
-    1. Modify profile: Fill out the form with your new/modified information.
+1. Modify profile: Fill out the form with your new/modified information.
     
-    2. Click "Submit".
+2. Click "Submit".
 
-- Change Password:
-    
-    1. Change password: Click "Change Password".
-    
-    2. Fill in the form.
-    
-    3. Click "Submit".
+Change Password:
+*****************
+
+1. Change password: Click "Change Password".
+
+2. Fill in the form.
+
+3. Click "Submit".
 
