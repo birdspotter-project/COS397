@@ -57,4 +57,4 @@ Conventions
 
 Problem Reporting Instructions
 ==============================
-Software issues can be reported via the contact page. More information can found in the contact page subsection of the instructions section of the user guide. 
+Software issues can be reported via the contact page. More information can found in the contact page subsection of the reference section of the user guide. 

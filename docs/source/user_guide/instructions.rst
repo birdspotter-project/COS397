@@ -14,14 +14,12 @@ This is the home page of the birdspotter app, and is where you can navigate the 
 
    : Example of the home view
    
-Dataset Selection and Navigating to a View
+Navigating to a Data View
 ##########################################
 
-Note: Public (Unregistered) users do not have access to the Data View, as it contains information not otherwise available to them.
+.. note:: Public (Unregistered) users do not have access to the Data View, as it contains information not otherwise available to them.
 
-1. Click on the box of the dataset that you would like to look at
-
-2a. To navigate to the map view, click on the left icon under the "view column"
+1a. To navigate to the map view, click on the left icon under the "view column" of the dataset's row
 
 .. _map_view_highlight:
 .. figure:: static/map_view_highlight.png
@@ -30,7 +28,7 @@ Note: Public (Unregistered) users do not have access to the Data View, as it con
    
    : Selection for map view
    
-2b. To navigate to the data view, click on the right icon under the "view column"
+1b. To navigate to the data view, click on the right icon under the "view column"
 
 .. _data_view_highlight:
 .. figure:: static/data_view_highlight.png
@@ -39,43 +37,42 @@ Note: Public (Unregistered) users do not have access to the Data View, as it con
    
    : Selection for data view
    
-3. To navigate back, click on the back arrow or birdspotter logo
+2. To navigate back, click on the back arrow or birdspotter logo
 
 
-Modify Dataset Metadata
+Actions: Modify Dataset Metadata
 ##############################
 
-1. Click on the dataset you would like to Modify
+.. note:: This action is only available for datasets you have ownership permissions for.
 
-2. Select the "Actions" dropdown in the Actions column of the dataset
+1. Select the "Actions" dropdown in the chosen dataset's row
 
-3. Select "Edit Dataset"
+2. Select "Edit Dataset"
 
-4. Change the metadata to match what you would like to be displayed 
+3. Change the metadata to match what you would like to be displayed 
 
-Queue Analysis of a Dataset
+Actions: Queue Analysis of a Dataset
 #################################################
 
 .. warning::  Not yet implemented
+.. note:: This action is only available for datasets you have ownership permissions for.
 
-1. Click on the dataset you would like to Modify
 
-2. Select the “Actions” dropdown in the Actions column of the dataset
+1. Select the "Actions" dropdown in the chosen dataset's row
 
-3. Select “Queue Analysis”
+2. Select “Queue Analysis”
 
-4. Select the algorithm to queue
+3. Select the algorithm to queue
 
-Export Dataset
+Actions: Export Dataset
 ####################################
 
 .. warning::  Not yet implemented
+.. note:: This action is only available for datasets you have permission to export.
 
-1. Click on the dataset you would like to Modify
+1. Select the "Actions" dropdown in the chosen dataset's row
 
-2. Select the "Actions" dropdown in the Actions column of the dataset
-
-3. Select "Export"
+2. Select "Export"
 
 Data View
 ==============================
@@ -109,9 +106,7 @@ Importing Files
 ==============================
 This function allows you to import .tif and .zip files.
 
-Warnings & Cautions
-##############################
-Make sure to upload the entire zip file containing your .shp, .shx, and other files.
+.. tip:: Make sure to upload the entire zip file containing the entire shapefile, such the .shp, .shx, and other files.
 
 Procedures
 ##############################
@@ -125,10 +120,8 @@ Follow the steps below to import a file.
 
 4. Click the "submit" button to upload the file. 
 
-Possible Errors
-##############################
-* Uploading a file that is not a .zip or .tif will result in an error. 
-* .shp and .shx files in a .zip with missing fields may lead to errors.
+.. warning:: * Uploading a file that is not a .zip or .tif will result in an error. 
+             * .shp and .shx files in a .zip with missing fields may lead to errors.
 
 
 Account Management
