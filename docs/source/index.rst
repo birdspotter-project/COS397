@@ -13,6 +13,7 @@ Welcome to Birdspotter's documentation!
 
    user_guide/intro
    user_guide/overview
+   user_guide/public_user_instructions
    user_guide/instructions
    user_guide/reference
 
