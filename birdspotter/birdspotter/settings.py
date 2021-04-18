@@ -33,10 +33,7 @@ if(not SECRET_KEY):
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG')
 CRISPY_FAIL_SILENTLY = not DEBUG
-PROD_DB = os.getenv('PROD_DB')
-PROD_FS = os.getenv('PROD_FS', 'False')
-PROD_EMAIL = os.getenv('PROD_EMAIL', 'False')
-DO_CONDA = os.getenv('DO_CONDA', 'False')
+PROD_MODE = os.getenv('PROD_MODE', 'False')
 
 TESTING = False
 TEST_RUNNER = 'birdspotter.TestRunner.TestRunner'
@@ -44,6 +41,19 @@ TEST_RUNNER = 'birdspotter.TestRunner.TestRunner'
 ALLOWED_HOSTS = []
 USE_X_FORWARDED_HOST = os.getenv('USE_X_FORWARDED_HOST', 'False')
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost').split(',')
+SECURE_PROXY_SSL_HEADER = ('X-Forwarded-Proto', 'https')
+PROD_DB = os.getenv('PROD_DB')
+PROD_FS = os.getenv('PROD_FS', 'False')
+PROD_EMAIL = os.getenv('PROD_EMAIL', 'False')
+if PROD_MODE and PROD_MODE.lower() == 'true': 
+    PROD_DB = 'true'
+    PROD_FS = 'true'
+    PROD_EMAIL = 'true'
+    CSRF_COOKIE_SECURE = True
+    SESSION_COOKIE_SECURE = True
+    SECURE_HSTS_SECONDS = 120
+    SECURE_HSTS_PRELOAD = True
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 
 HEALTH_CHECK = {
     'DISK_USAGE_MAX': 90,  # percent
@@ -107,7 +117,7 @@ TEMPLATE_DIRS = (
 )
 
 WSGI_APPLICATION = 'birdspotter.wsgi.application'
-
+SILENCED_SYSTEM_CHECKS = ["security.W008"] # silence no https re-direct warning, as that is handled by the proxy 
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
