@@ -74,6 +74,16 @@ Actions: Export Dataset
 
 2. Select "Export"
 
+Actions: Export Dataset
+####################################
+
+.. warning::  Not yet implemented
+
+1. Select the "Actions" dropdown in the chosen dataset's row
+
+2. Select "Export"
+
+
 Data View
 ==============================
 
