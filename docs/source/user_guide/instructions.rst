@@ -130,16 +130,35 @@ Account Management
 Creating an account
 ##############################
 
-1. Click on your username dropdown in the top right of the app.
+1. Click the "Login" dropdown in the top right of the app.
 
 2. Click on the "Request Access" option
 
 3. Fill in the required forms and click "Register"
 
+Logging in
+##############################
+1. Click the "Login" dropdown in the top right of the app.
+
+2. Enter your credentials
+
+3. Click "Login" 
+
+Editing account details
+##############################
+
+1. While logged in, click on your username dropdown in the top right of the app.
+
+2. Click on the "Profile" button
+
+3. Edit the account details and save via the "Submit" button
+
 Resetting Password
 ##############################
 
-1. Click on your username dropdown in the top right of the app.
+1. Click the "Login" dropdown in the top right of the app.
+
+.. tip:: If you are logged in, you can change your password via the "Profile" button in the dropdown
 
 2. Click on the "Forgot Password" link
 
