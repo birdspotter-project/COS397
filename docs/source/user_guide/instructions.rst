@@ -5,7 +5,7 @@ Instructions
 Home View
 ==============================
 
-This is the home page of the birdspotter app, and is where you can navigate the datasets that you have access to.
+This is the home page of the Birdspotter app and is where you can navigate the datasets that you have access to.
 
 .. _home_view:
 .. figure:: static/home_view.png
@@ -17,9 +17,9 @@ This is the home page of the birdspotter app, and is where you can navigate the 
 Dataset Selection and Navigating to a View
 ##########################################
 
-1. Click on the box of the dataset that you would like to look at
+1. Click on the box of the dataset that you would like to look at.
 
-2a. To navigate to the map view, click on the left icon under the "view column"
+2a. To navigate to the map view, click on the left icon under the "view column".
 
 .. _map_view_highlight:
 .. figure:: static/map_view_highlight.png
@@ -28,7 +28,7 @@ Dataset Selection and Navigating to a View
    
    : Selection for map view
    
-2b. To navigate to the data view, click on the right icon under the "view column"
+2b. To navigate to the data view, click on the right icon under the "view column".
 
 .. _data_view_highlight:
 .. figure:: static/data_view_highlight.png
@@ -37,23 +37,23 @@ Dataset Selection and Navigating to a View
    
    : Selection for data view
    
-3. To navigate back, click on the back arrow or birdspotter logo
+3. To navigate back, click on the back arrow or Birdspotter logo.
 
 
 Dataset Actions
 ###############
 
-1. Click on the dataset you would like to Modify
+1. Click on the dataset you would like to Modify.
 
-2. Select the "Actions" dropdown in the Actions column of the dataset
+2. Select the "Actions" dropdown in the Actions column of the dataset.
 
 - Modify Dataset Metadata:
 
     .. note:: Modifying Metadata is only available for datasets that you are the owner of.
 
-    1. Select "Edit Dataset"
+    1. Select "Edit Dataset".
     
-    2. Change the metadata to match what you would like to be displayed
+    2. Change the metadata to match what you would like to be displayed.
 
 
 
@@ -61,16 +61,16 @@ Dataset Actions
 
     .. warning::  Queueing is not yet implemented
 
-    1. Select “Queue Analysis”
+    1. Select “Queue Analysis”.
 
-    2. Select the algorithm to queue
+    2. Select the algorithm to queue.
 
 
 - Export Dataset
 
     .. warning::  Exporting is not yet implemented
 
-    1. Select "Export"
+    1. Select "Export".
 
 Data View
 ==============================
@@ -132,28 +132,28 @@ Resetting Password
 
 1. Click on your username dropdown in the top right of the app.
 
-2. Click on the "Forgot Password" link
+2. Click on the "Forgot Password" link.
 
-3. Enter your email for the password reset and click "Reset Password"
+3. Enter your email for the password reset and click "Reset Password".
 
 Modifying Account Data/Changing Password
 ########################################
 
 1. Click on your username dropdown in the top right of the app.
 
-2. Click on "Profile"
+2. Click on "Profile".
 
-- Modify Profile
+- Modify Profile:
 
-    1. Modify profile: Fill out the form with your new/modified information
+    1. Modify profile: Fill out the form with your new/modified information.
     
-    2. Click "Submit"
+    2. Click "Submit".
 
-- Change Password
+- Change Password:
     
-    1. Change password: Click "Change Password"
+    1. Change password: Click "Change Password".
     
-    2. Fill in the form
+    2. Fill in the form.
     
-    3. Click "Submit"
+    3. Click "Submit".
 

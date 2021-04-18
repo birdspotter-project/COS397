@@ -8,7 +8,7 @@ If you do have an account, see the "Instructions" section of the manual.
 Home View
 ==============================
 
-This is the home page of the birdspotter app, Public Users are allowed to see the map view of the public datasets.
+This is the home page of the Birdspotter app, Public Users are allowed to see the map view of the public datasets.
 
 .. _public_home_view:
 .. figure:: static/home_view.png

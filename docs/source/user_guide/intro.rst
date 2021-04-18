@@ -3,7 +3,7 @@ Introduction
 ***************************************
 
 
-Welcome to the Birdspotter User Guide. This guide is designed to provide an overview for how the application is intended and can be used. 
+Welcome to the Birdspotter User Guide. This guide is designed to provide an overview of how the application is intended and can be used. 
 
 Intended Readership
 ==============================
@@ -17,7 +17,7 @@ The categories of users this guide applies to are:
 	* Data Administrators
 	* User Support Staff
 
-The relevant sections of the user guide for **end users** are
+The relevant sections of the user guide for **end-users** are
 
 The relevant sections of the user guide for **system operators** are
 
@@ -34,7 +34,7 @@ The purpose of this user guide is to outline these processes and how they can be
 
 How to Use this Document
 ==============================
-Each section of this document has a different point of focus but work towards the bigger picture. The first section, the introduction, is a quick rundown of what to expect as well as what the aim of the document is. The second section is the overview which gives a broad description of the system and what it is capable of. The instructions section gives an understanding for how the system is operated and how various components may be utilized. The final section gives a comprehensive rundown of all the system capabilities.
+Each section of this document has a different point of focus but work towards the bigger picture. The first section, the introduction, is a quick rundown of what to expect as well as what the aim of the document is. The second section is the overview which gives a broad description of the system and what it is capable of. The instructions section gives an understanding of how the system is operated and how various components may be utilized. The final section gives a comprehensive rundown of all the system capabilities.
 
 Related Documents
 ==============================

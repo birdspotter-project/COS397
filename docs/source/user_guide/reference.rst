@@ -12,7 +12,7 @@ Make sure that the email is typed correctly so that the admin can get back to yo
 
 Procedures
 ##############################
-Follow the steps below to contact an admin
+Follow the steps below to contact an admin:
 
 1. Click on your username dropdown in the top right of the app.
 
@@ -35,7 +35,7 @@ Warnings & Cautions
 
 Procedures
 ##############################
-Follow the steps below to report an issue
+Follow the steps below to report an issue:
 
 1. Click on your username dropdown in the top right of the app.
 
