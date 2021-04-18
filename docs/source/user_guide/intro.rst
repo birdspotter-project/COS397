@@ -17,14 +17,14 @@ The categories of users this guide applies to are:
 	* Data Administrators
 	* User Support Staff
 
-The relevant sections of the user guide for **end users** are
+The relevant sections of the user guide for **end users** is the overview and the instructions section.
 
-The relevant sections of the user guide for **system operators** are
+The relevant sections of the user guide for **system operators** is the references section and the instructions section.
 
 
 Applicability Statement
 ==============================
-This guide is intended for all versions of the Birdspotter application. 
+This guide is intended for use with the version of the birdspotter application that is indicated in the bottom left (e.g. latest, v.1, etc).
 
 Purpose
 ==============================
