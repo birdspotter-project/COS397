@@ -16,9 +16,6 @@ Welcome to Birdspotter's documentation!
    admin_manual/procedures
    admin_manual/troubleshooting
 
-   .. toctree::
-   .. toctree::
-      :maxdepth: 3
       :maxdepth: 3
       :caption: User guide:
       :caption: Administrator Manual:
