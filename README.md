@@ -29,7 +29,7 @@ Note that for most purposes, any real testing should be done within the docker-c
 	- Clone the repository
 2. Switch to docker-compose directory `cd docker-compose`
 3. Create environment file:
-	- Use template `cp .env.example .env`
+	- Use template `cp env.example .env`
 	- Fill in all variables in the .env file that don't have a value
 4. Build and bring up stack: `docker-compose up --build`
 5. Once everything is running, in a new terminal, initialize the stack with `./initial_setup.sh` (note you may have to `chmod +x initial_setup.sh`)

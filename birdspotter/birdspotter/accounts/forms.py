@@ -61,3 +61,14 @@ class GroupRequestForm(forms.ModelForm):
         labels = {
             'notes': 'More details pertaining to the request'
         }
+
+
+class ContactForm(forms.Form):
+    """
+    Form for a user to send an email to the admin team for issues related to
+    their account or for issues with the implementation of the application
+    """
+    email = forms.EmailField()
+    subject = forms.CharField(max_length=32)
+    message = forms.CharField(max_length=2000, 
+                            widget=Textarea(attrs={'cols': 80, 'rows': 10}))

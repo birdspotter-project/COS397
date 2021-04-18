@@ -17,8 +17,6 @@ This is the home page of the birdspotter app, and is where you can navigate the 
 Dataset Selection and Navigating to a View
 ##########################################
 
-Note: Public (Unregistered) users do not have access to the Data View, as it contains information not otherwise available to them.
-
 1. Click on the box of the dataset that you would like to look at
 
 2a. To navigate to the map view, click on the left icon under the "view column"
@@ -42,40 +40,37 @@ Note: Public (Unregistered) users do not have access to the Data View, as it con
 3. To navigate back, click on the back arrow or birdspotter logo
 
 
-Modify Dataset Metadata
-##############################
+Dataset Actions
+###############
 
 1. Click on the dataset you would like to Modify
 
 2. Select the "Actions" dropdown in the Actions column of the dataset
 
-3. Select "Edit Dataset"
+- Modify Dataset Metadata:
 
-4. Change the metadata to match what you would like to be displayed 
+    .. note:: Modifying Metadata is only available for datasets that you are the owner of.
 
-Queue Analysis of a Dataset
-#################################################
+    1. Select "Edit Dataset"
+    
+    2. Change the metadata to match what you would like to be displayed
 
-.. warning::  Not yet implemented
 
-1. Click on the dataset you would like to Modify
 
-2. Select the “Actions” dropdown in the Actions column of the dataset
+- Queue Analysis of a Dataset
 
-3. Select “Queue Analysis”
+    .. warning::  Queueing is not yet implemented
 
-4. Select the algorithm to queue
+    1. Select “Queue Analysis”
 
-Export Dataset
-####################################
+    2. Select the algorithm to queue
 
-.. warning::  Not yet implemented
 
-1. Click on the dataset you would like to Modify
+- Export Dataset
 
-2. Select the "Actions" dropdown in the Actions column of the dataset
+    .. warning::  Exporting is not yet implemented
 
-3. Select "Export"
+    1. Select "Export"
 
 Data View
 ==============================
@@ -94,9 +89,7 @@ Map View
 ==============================
 
 
-This view allows the user to view a dataset overlaid on a map. Public users only have access to the
-average location and number of data points, while registered users have access to each individual data point,
-and all of the corresponding data.
+This view allows registered users to view the contents of the datasets that they have access to overlaid on a world map.
 
 .. _map_view:
 .. figure:: static/map_view.png
@@ -107,11 +100,12 @@ and all of the corresponding data.
 
 Importing Files
 ==============================
+
 This function allows you to import .tif and .zip files.
 
 Warnings & Cautions
 ##############################
-Make sure to upload the entire zip file containing your .shp, .shx, and other files.
+Make sure to upload the entire .zip file containing your .shp, .shx, and other files.
 
 Procedures
 ##############################
@@ -130,18 +124,8 @@ Possible Errors
 * Uploading a file that is not a .zip or .tif will result in an error. 
 * .shp and .shx files in a .zip with missing fields may lead to errors.
 
-
 Account Management
 ==============================
-
-Creating an account
-##############################
-
-1. Click on your username dropdown in the top right of the app.
-
-2. Click on the "Request Access" option
-
-3. Fill in the required forms and click "Register"
 
 Resetting Password
 ##############################
@@ -151,3 +135,25 @@ Resetting Password
 2. Click on the "Forgot Password" link
 
 3. Enter your email for the password reset and click "Reset Password"
+
+Modifying Account Data/Changing Password
+########################################
+
+1. Click on your username dropdown in the top right of the app.
+
+2. Click on "Profile"
+
+- Modify Profile
+
+    1. Modify profile: Fill out the form with your new/modified information
+    
+    2. Click "Submit"
+
+- Change Password
+    
+    1. Change password: Click "Change Password"
+    
+    2. Fill in the form
+    
+    3. Click "Submit"
+

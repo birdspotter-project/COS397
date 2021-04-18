@@ -1,6 +1,6 @@
-***************************************
+*************************
 Administrative Procedures
-***************************************
+*************************
 
 Installation
 ================
@@ -14,7 +14,7 @@ Docker is required to run the application. For instructions on how to install do
 -------------
 The .env file
 -------------
-In order for the application to run correctly, the .env file must be filled out correctly. An example file is located at ``docker-compose/.env.example``. This file must be named ``.env``.
+In order for the application to run correctly, the .env file must be filled out correctly. An example file is located at ``docker-compose/env.example``. This file must be named ``.env``.
 
 - **SECRET_KEY**: The secret key for the application. This should be generated via ``python3 -c "import secrets; print(secrets.token_urlsafe())"``
 - **DEBUG**: should be set to false for production enviroments, though can be useful for troubleshooting.
@@ -27,20 +27,27 @@ In order for the application to run correctly, the .env file must be filled out 
 
 These variables can be left at their default values.
 
-- **PROD_EMAIL**: Whether the application will use a normal mail server to send mail. Setting to false will not send emails and will instead print the email to the application logs (Default ``true``).
-- **USE_X_FOWARDED_HOSTS**: Flag to enable USE_X_FORWARDED_HOST on the server (Default ``true``).
-- **PROD_FS**: Whether the application will use the production file system (Default ``true``).
+- **USE_X_FOWARDED_HOSTS**: Flag to enable USE_X_FORWARDED_HOST on the server (Default ``false``).
+- **PROD_MODE**: Controls whether the application runs in full production mode or note (Default ``false``). Setting this means setting the other PROD_FS and PROD_DB variables is unnecessary
+    - **PROD_FS**: Whether the application will use the production file system (Default ``false``).
+    - **PROD_EMAIL**: Whether the application will use a normal mail server to send mail. Setting to false will not send emails and will instead print the email to the application logs (Default ``false``).
+
 
 ------------------------
 Starting the application
-------------------------
-1. In order to start the application in production, while in the docker-compose directory, run ``docker-compose -f docker-compose.yml -f docker-compose.prod.yml up``.
+------------------------ 
+1. Before starting the application, switch to the docker-compose directory, and verify that the path on the last line of ``docker-compose.prod.yml`` is your mass data storage, or some other suitable directory that exists.
+
+.. warning:: Depending on the type of network share being used for mass data storage, it may be more suitable to re-configure the docker volume driver to use that network share directly. 
+            More info on how to do that can be found here https://docs.docker.com/engine/extend/legacy_plugins/.
+
+2. In order to start the application in production mode, run ``docker-compose -f docker-compose.yml -f docker-compose.prod.yml up``.
 
 .. note:: To run the application in detached mode (the application is not attached to the bash session) run docker-compose up with the detach flag (``-d``)
 
-2. Run ``./initial_setup.sh`` to initialize the stack.
-3. Restart the stack by running ``docker-compose restart birdspotter``
-4. To stop the application, if you are in the docker-compose directory, you can run ``docker-compose down``.
+3. Run ``./initial_setup.sh`` to initialize the stack.
+4. Restart the stack by running ``docker-compose restart birdspotter``
+5. To stop the application, if you are in the docker-compose directory, you can run ``docker-compose down``.
    
 - If you are running in the attached mode, i.e. logs are being displayed in the terminal window, stopping the stack can be done with CTRL-C
 
@@ -61,7 +68,7 @@ Once there is a set of admins within the system, user administration will come i
 
     : Admin user navbar
 
-First off, requests for elevated group permissions and access to the aplication (going from a public user to registered user) will be handled in the Group Requests page. An admin simply has to press "Approve" or "Deny" depending on the decision and the decision will be stored and the request removed from the list.
+First off, requests for elevated group permissions and access to the application (going from a public user to registered user) will be handled in the Group Requests page. An admin simply has to press "Approve" or "Deny" depending on the decision and the decision will be stored and the request removed from the list.
 
 .. _group_requests:
 .. figure:: static/group_requests.png
