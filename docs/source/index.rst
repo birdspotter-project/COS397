@@ -18,7 +18,6 @@ Welcome to Birdspotter's documentation!
 
    :maxdepth: 3
    :caption: User guide:
-   :caption: Administrator Manual:
    :numbered:
    
    user_guide/intro
