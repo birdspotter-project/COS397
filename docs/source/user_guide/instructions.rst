@@ -5,7 +5,7 @@ Instructions
 Home View
 ==============================
 
-This is the home page of the Birdspotter app and is where you can navigate the datasets that you have access to.
+This is the home page of the Birdspotter app and is where you can navigate the datasets that you can access.
 
 .. _home_view:
 .. figure:: static/home_view.png
@@ -17,9 +17,9 @@ This is the home page of the Birdspotter app and is where you can navigate the d
 Dataset Selection and Navigating to a View
 ##########################################
 
-1. Click on the box of the dataset that you would like to look at.
+1. Click on the box of the dataset that you would like to view.
 
-2a. To navigate to the map view, click on the left icon under the "view column".
+2a. To navigate to the map view, click on the left icon under the "View" column.
 
 .. _map_view_highlight:
 .. figure:: static/map_view_highlight.png
@@ -28,7 +28,7 @@ Dataset Selection and Navigating to a View
    
    : Selection for map view
    
-2b. To navigate to the data view, click on the right icon under the "view column".
+2b. To navigate to the data view, click on the right icon under the "View" column.
 
 .. _data_view_highlight:
 .. figure:: static/data_view_highlight.png
@@ -49,7 +49,7 @@ Dataset Actions
 
 - Modify Dataset Metadata:
 
-    .. note:: Modifying Metadata is only available for datasets that you are the owner of.
+    .. note:: Modifying Metadata is only available for datasets that you own.
 
     1. Select "Edit Dataset".
     
@@ -75,8 +75,7 @@ Dataset Actions
 Data View
 ==============================
 
-This View allows registered users to view the data of their own and publically available datasets.
-The data is arranged into the form of charts and tables.
+This view allows registered users to view the data of their own and publically available datasets.
 
 .. _data_view:
 .. figure:: static/data_view.png
@@ -115,9 +114,9 @@ Follow the steps below to import a file.
 
 2. Click on the browse button and locate the file you wish to upload.
 
-3. OPTIONAL: Tick the "Make dataset public" checkbox if you wish to make the dataset public to other users.
+3. OPTIONAL: Tick the "Make Dataset Public" checkbox if you wish to make the dataset public to other users.
 
-4. Click the "submit" button to upload the file. 
+4. Click the "Submit" button to upload the file. 
 
 Possible Errors
 ##############################

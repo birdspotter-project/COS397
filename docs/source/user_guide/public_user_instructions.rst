@@ -8,7 +8,7 @@ If you do have an account, see the "Instructions" section of the manual.
 Home View
 ==============================
 
-This is the home page of the Birdspotter app, Public Users are allowed to see the map view of the public datasets.
+This is the home page of the Birdspotter app. Public users are allowed to see the map view of the public datasets.
 
 .. _public_home_view:
 .. figure:: static/home_view.png
@@ -20,9 +20,9 @@ This is the home page of the Birdspotter app, Public Users are allowed to see th
 Dataset Selection
 #################
 
-1. Click on the box of the dataset that you would like to look at
+1. Click on the box of the dataset that you would like to look at.
 
-2. To navigate to the map view, click on the left icon under the "view column"
+2. To navigate to the map view, click on the left icon under the "View" column.
 
 .. _public_map_view_highlight:
 .. figure:: static/map_view_highlight.png
@@ -32,11 +32,11 @@ Dataset Selection
 Creating an Account
 ###################
 
-1. Click on the "Login" button in the top right of the page
+1. Click on the "Login" button in the top right of the page.
 
-2. Select "Request Access" and fill in the form
+2. Select "Request Access" and fill in the form.
 
-3. Click "Register"
+3. Click "Register".
 
 Map View
 ========
