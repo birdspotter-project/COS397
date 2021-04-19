@@ -7,7 +7,7 @@ Welcome to Birdspotter's documentation!
 =======================================
 
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 2
    :caption: User guide:
    :numbered:
 
@@ -18,7 +18,7 @@ Welcome to Birdspotter's documentation!
    user_guide/reference
 
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 2
    :caption: Admin Manual:
    :numbered:
 
