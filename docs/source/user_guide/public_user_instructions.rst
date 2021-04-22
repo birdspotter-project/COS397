@@ -11,7 +11,7 @@ Home View
 This is the home page of the Birdspotter app. Public users are allowed to see the map view of the public datasets.
 
 .. _public_home_view:
-.. figure:: static/home_view.png
+.. figure:: static/home_view_public.png
    :alt: "Example of the home view"
    :align: center
 
