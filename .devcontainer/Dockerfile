@@ -17,3 +17,4 @@ RUN adduser --disabled-password --gecos "" vscode && usermod -aG sudo vscode \
 
 RUN apt install -y libpq-dev python-dev \
     && pip3 --disable-pip-version-check --no-cache-dir install 'psycopg2==2.8.6'
+RUN apt-get install -y texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended latexmk
