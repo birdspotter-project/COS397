@@ -17,8 +17,19 @@ Only the user-focued documentation is hosted directly on readthedocs; our early 
 The Administrator Manual and User Manual, however, can be found below. 
 
 .. toctree::
-   :maxdepth: 3
-   :caption: Administrator Manual:
+   :maxdepth: 2
+   :caption: User guide:
+   :numbered:
+
+   user_guide/intro
+   user_guide/overview
+   user_guide/public_user_instructions
+   user_guide/instructions
+   user_guide/reference
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Admin Manual:
    :numbered:
 
    admin_manual/intro
