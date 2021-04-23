@@ -44,7 +44,6 @@
                     <a class="nav-link dropdown-toggle " href="#" id="navbarDropdown" role="button"
                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Actions</a>
                     <div class="dropdown-menu dropdown-menu-right">
-                        <a class="nav-link" href="/map">Map View</a>
                              <a class="nav-link" href="/queue/{{ dataset|get_item:'dataset_id' }}">Queue Analysis</a>
                                 {% is_dataset_owner request.user dataset as is_owner %}
                                 {% if is_owner %}
@@ -54,7 +53,7 @@
                                        data-button='{"dataset_id": "{{ dataset.dataset_id }}","dataset_name": "{{ dataset.name }}"}'>Share</a>
                                 {% endif %}
                                 {% if request.user.is_authenticated %}
-                                <a class="nav-link" href="/export">Export</a>                                
+                                <a class="nav-link" href="/">Export</a>                                
                                 {% endif %}
                     </div>
                 </div>
