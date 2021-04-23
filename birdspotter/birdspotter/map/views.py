@@ -15,7 +15,10 @@ def index(request, uuid):
 
     args = {}
 
-    shapefile_lines, dataset_name = get_dataset_data(request.user.is_authenticated, uuid)
+    shapefile_lines, dataset_name, bounds = get_dataset_data(request.user.is_authenticated, uuid)
+    
+    #set the zoom & centering of the dataset to fit the max and min returned by get_dataset_data
+    zoom, center = zoom_center(bounds["lon_bounds"], bounds["lat_bounds"])
     args['dataset_name'] = dataset_name
     if shapefile_lines is None:
         messages.error(request, "The selected dataset does not have an associated shapefile")
@@ -29,7 +32,7 @@ def index(request, uuid):
     
     if not gdf.empty:
         #likely also needs a check for species and other fields if the user is logged in
-        plot = create_map(request.user.is_authenticated, gdf)
+        plot = create_map(request.user.is_authenticated, gdf, zoom, center)
         args['graph_div'] = plot
     else:
         pass
@@ -37,7 +40,7 @@ def index(request, uuid):
     return render(request, 'map.html', args)
 
 
-def create_map(is_admin, gdf):
+def create_map(is_admin, gdf, zoom, center):
     """
     return a figure from plotly.offline.plot
     Arguments:
@@ -48,21 +51,16 @@ def create_map(is_admin, gdf):
                 required: "latitude", "longitude", "island_name", and "size" fields
         
     """
-
-    zoom, center = zoom_center(lons=gdf.longitude, lats=gdf.latitude) #zoom to fit data
     if is_admin:
         #should have data retreived on backend to be consistent
         #fields["species"] = gdf.species
         fig = make_point_map(gdf, zoom, center)
     else:
-        #print("COUNT: ", gdf.size)
-        #fields["size"] = gdf.size
         #need to hide data on backend, not client-side
         fig = make_bubble_map(gdf, zoom, center)      
 
 
     fig.update_layout(margin={"r":0,"l":0,"b":0,"t":0})
-    #fig = fig.to_image(format="png", width=600, height=350, scale=2)
     return plotly.offline.plot(fig, auto_open = False, output_type="div", config={'displayModeBar': False})
 
 

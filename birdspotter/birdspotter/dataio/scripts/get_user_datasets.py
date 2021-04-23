@@ -45,14 +45,32 @@ def get_dataset_data(is_authed, uuid):
                           "comments"    : [i.comments for i in shapefile_lines],
                           }
     else:
-
-        precision = 3       # aggregate data to 3 decimals points of lat/long
+        lat_min = None
+        lat_max = None
+        lon_min = None
+        lon_max = None
+        precision = 1       # aggregate data to 1 decimals points of lat/long
         precision_mod = 1  # allows for more precise tuning, >1 reduces region size <1 increases region size
         aggregation = {}
 
         for i in shapefile_lines:
             # separate by island name and by precision,
             # in case there are multiple islands in one dataset
+            if lat_min == None:
+                lat_min = i.latitude
+                lat_max = i.latitude
+                lon_min = i.longitude
+                lon_max = i.longitude
+            
+            if lat_min > i.latitude:
+                lat_min = i.latitude
+            if lat_max < i.latitude:
+                lat_min = i.latitude
+            if lon_min > i.longitude:
+                lon_min = i.longitude
+            if lon_max < i.longitude:
+                lon_min = i.longitude
+            
             key = (round(i.latitude*precision_mod, precision),
                 round(i.longitude*precision_mod, precision),
                 i.island_name)
@@ -73,4 +91,4 @@ def get_dataset_data(is_authed, uuid):
                           "island_name" : [aggregation[key][3] for key in aggregation],
                           "size"       : [aggregation[key][2] for key in aggregation]}
 
-    return shapefile_data, dataset.name
+    return shapefile_data, dataset.name, {"lat_bounds": (lat_min, lat_max), "lon_bounds": (lon_min, lon_max)}
