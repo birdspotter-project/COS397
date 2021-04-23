@@ -56,20 +56,16 @@ def get_dataset_data(is_authed, uuid):
         for i in shapefile_lines:
             # separate by island name and by precision,
             # in case there are multiple islands in one dataset
-            if lat_min == None:
+            if lat_min is None:
                 lat_min = i.latitude
                 lat_max = i.latitude
                 lon_min = i.longitude
                 lon_max = i.longitude
             
-            if lat_min > i.latitude:
-                lat_min = i.latitude
-            if lat_max < i.latitude:
-                lat_min = i.latitude
-            if lon_min > i.longitude:
-                lon_min = i.longitude
-            if lon_max < i.longitude:
-                lon_min = i.longitude
+            lat_min = min(lat_min, i.latitude)
+            lat_max = max(lat_max, i.latitude)
+            lon_min = min(lon_min, i.longitude)
+            lon_max = max(ln_max, i.longitude)
             
             key = (round(i.latitude*precision_mod, precision),
                 round(i.longitude*precision_mod, precision),
