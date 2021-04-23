@@ -65,7 +65,7 @@ def get_dataset_data(is_authed, uuid):
             lat_min = min(lat_min, i.latitude)
             lat_max = max(lat_max, i.latitude)
             lon_min = min(lon_min, i.longitude)
-            lon_max = max(ln_max, i.longitude)
+            lon_max = max(lon_max, i.longitude)
             
             key = (round(i.latitude*precision_mod, precision),
                 round(i.longitude*precision_mod, precision),
