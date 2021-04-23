@@ -25,6 +25,10 @@ def get_dataset_data(is_authed, uuid):
         is_authed (bool):   true for registered users
         uuid (dataset id)
     """
+    lat_min = None
+    lat_max = None
+    lon_min = None
+    lon_max = None
     dataset = Dataset.objects.get(dataset_id=uuid)
     shapefile_lines = Shapefile.objects.filter(data_set=dataset.id)
     if not shapefile_lines.exists():
@@ -45,10 +49,6 @@ def get_dataset_data(is_authed, uuid):
                           "comments"    : [i.comments for i in shapefile_lines],
                           }
     else:
-        lat_min = None
-        lat_max = None
-        lon_min = None
-        lon_max = None
         precision = 1       # aggregate data to 1 decimals points of lat/long
         precision_mod = 1  # allows for more precise tuning, >1 reduces region size <1 increases region size
         aggregation = {}

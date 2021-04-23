@@ -18,7 +18,6 @@ def index(request, uuid):
     shapefile_lines, dataset_name, bounds = get_dataset_data(request.user.is_authenticated, uuid)
     
     #set the zoom & centering of the dataset to fit the max and min returned by get_dataset_data
-    zoom, center = zoom_center(bounds["lon_bounds"], bounds["lat_bounds"])
     args['dataset_name'] = dataset_name
     if shapefile_lines is None:
         messages.error(request, "The selected dataset does not have an associated shapefile")
@@ -32,7 +31,7 @@ def index(request, uuid):
     
     if not gdf.empty:
         #likely also needs a check for species and other fields if the user is logged in
-        plot = create_map(request.user.is_authenticated, gdf, zoom, center)
+        plot = create_map(request.user.is_authenticated, gdf, bounds)
         args['graph_div'] = plot
     else:
         pass
@@ -40,7 +39,7 @@ def index(request, uuid):
     return render(request, 'map.html', args)
 
 
-def create_map(is_admin, gdf, zoom, center):
+def create_map(is_admin, gdf, bounds):
     """
     return a figure from plotly.offline.plot
     Arguments:
@@ -51,6 +50,11 @@ def create_map(is_admin, gdf, zoom, center):
                 required: "latitude", "longitude", "island_name", and "size" fields
         
     """
+    if is_admin:
+        zoom, center = zoom_center(gdf.longitude, gdf.latitude)
+    else:
+        zoom, center = zoom_center(bounds["lon_bounds"], bounds["lat_bounds"])
+
     if is_admin:
         #should have data retreived on backend to be consistent
         #fields["species"] = gdf.species
