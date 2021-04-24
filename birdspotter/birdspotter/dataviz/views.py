@@ -6,8 +6,6 @@ import pandas as pd
 from birdspotter.dataio.scripts.get_user_datasets import get_dataset_data
 from django.contrib import messages
 
-# Create your views here.
-
 # Data view
 def index(request, uuid):
     args = {}
@@ -62,11 +60,10 @@ def index(request, uuid):
     
         args['nesting_graph'] = plotly.offline.plot(fig_bird_nesting, auto_open = False, output_type='div')
     
-        # Table Figure
-        fig_table = go.Figure(data=[go.Table(header=dict(values=list(combined.columns)),
-                                             cells=dict(values=[combined['species'], combined['Nesting'], combined['Non-Nesting'], combined['Flying']]))])
     
-        args['table'] = plotly.offline.plot(fig_table, auto_open = False, output_type='div')
+        args['table'] = plotly.offline.plot(go.Figure(data=[go.Table(header=dict(values=list(combined.columns)),
+                                             cells=dict(values=[combined['species'], combined['Nesting'], combined['Non-Nesting'], 
+                                            combined['Flying']]))]), auto_open = False, output_type='div')
     
         # Certainty Table Fig
         fig_certainty = go.Figure(data=[go.Table(header=dict(values=['species', 'certain_p1']),
