@@ -1,5 +1,5 @@
 from django.db.models import Q
-
+from django.db.models import Max, Min
 from birdspotter.dataio.models import Dataset
 from birdspotter.dataio.models import Shapefile
 import logging
@@ -25,12 +25,17 @@ def get_dataset_data(is_authed, uuid):
         is_authed (bool):   true for registered users
         uuid (dataset id)
     """
-    lat_min = None
-    lat_max = None
-    lon_min = None
-    lon_max = None
+    
     dataset = Dataset.objects.get(dataset_id=uuid)
     shapefile_lines = Shapefile.objects.filter(data_set=dataset.id)
+    
+    lat_min = Shapefile.objects.aggregate(Min('latitude'))['latitude__min']
+    lat_max = Shapefile.objects.aggregate(Max('latitude'))['latitude__max']
+    lon_min = Shapefile.objects.aggregate(Min('longitude'))['longitude__min']
+    lon_max = Shapefile.objects.aggregate(Max('longitude'))['longitude__max']
+    
+    print(lat_min)
+    print(lat_max)
     if not shapefile_lines.exists():
         logging.error("no shape lines")
         return None
@@ -50,20 +55,10 @@ def get_dataset_data(is_authed, uuid):
                           }
     else:
         aggregation = [0, 0, 0, ""]
-
+        
         for i in shapefile_lines:
             # separate by island name and by precision,
             # in case there are multiple islands in one dataset
-            if lat_min is None:
-                lat_min = i.latitude
-                lat_max = i.latitude
-                lon_min = i.longitude
-                lon_max = i.longitude
-            
-            lat_min = min(lat_min, i.latitude)
-            lat_max = max(lat_max, i.latitude)
-            lon_min = min(lon_min, i.longitude)
-            lon_max = max(lon_max, i.longitude)
             
             aggregation[0] += i.latitude
             aggregation[1] += i.longitude

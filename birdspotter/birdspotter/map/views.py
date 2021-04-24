@@ -52,17 +52,10 @@ def create_map(is_admin, gdf, bounds):
     """
     if is_admin:
         zoom, center = zoom_center(gdf.longitude, gdf.latitude)
-    else:
-        zoom, center = zoom_center(bounds["lon_bounds"], bounds["lat_bounds"])
-
-    if is_admin:
-        #should have data retreived on backend to be consistent
-        #fields["species"] = gdf.species
         fig = make_point_map(gdf, zoom, center)
     else:
-        #need to hide data on backend, not client-side
-        fig = make_bubble_map(gdf, zoom, center)      
-
+        zoom, center = zoom_center(bounds["lon_bounds"], bounds["lat_bounds"])
+        fig = make_bubble_map(gdf, zoom, center)
 
     fig.update_layout(margin={"r":0,"l":0,"b":0,"t":0})
     return plotly.offline.plot(fig, auto_open = False, output_type="div", config={'displayModeBar': False})
