@@ -2,11 +2,14 @@
 # BirdSpotter
 BirdSpotter is a graphical interface for integrating and viewing machine learning and field survey data for rapid population estimation of colonial nesting birds. The creation of this interface will allow officials to quickly and effectively draw conclusions based on data provided from human and machine learning observations of bird species, activity, and location. 
 
+See our Read The Docs documentation here: https://birdspotter-aerial-imagery-handling-and-ai-analysis-management.readthedocs.io/en/latest/
+
 ### Deliverables
 - [Software Requirements Specification](Documentation/Deliverables/Software_Requirements_Specification/SRS.pdf)
 - [Software Design Document](Documentation/Deliverables/Software_Design_Document/SDD.pdf)
 - [UI Design Document](Documentation/Deliverables/UI_Design_Document/UIDD.pdf)
 - [Critical Design Review](https://github.com/devinchristianson/COS397/blob/master/Documentation/Deliverables/CDR.pdf)
+- [Code Inspection Review](https://github.com/devinchristianson/COS397/blob/master/Documentation/Deliverables/CIR.pdf)
 
 ### Manual Development 
 #### Setup Instructions
