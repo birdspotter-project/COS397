@@ -23,7 +23,6 @@ services:
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
     command:
-      - "--log.level=DEBUG"
       - "--ping.entryPoint=ping"
       - "--api.insecure=true"
       - "--providers.docker=true"
