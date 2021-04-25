@@ -2,9 +2,9 @@ from django.contrib.auth.models import Group
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.conf import settings
-from django.core.mail import send_mail
 
 from .models import GroupRequest
+from .scripts import send_email_to_admins
 from birdspotter.utils import GROUPS
 
 import logging
@@ -38,7 +38,6 @@ def send_email_on_group_request(instance, created, **kwargs): # noqa
     a permissions group (including the transition from Public -> Registered)
     """
     if created:
-        send_mail(subject=f'{instance.user} requests {instance.group} permissions',
+        send_email_to_admins(subject=f'{instance.user} requests {instance.group} permissions',
                   message=f'Notes provided:\n{instance.notes}',
-                  from_email='system@birdspotter.net',
-                  recipient_list=['test@test.com'])
+                  from_email=settings.EMAIL_HOST_USER)
