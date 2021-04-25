@@ -164,34 +164,6 @@
         var table = $('#datasets').DataTable({
             "language": {"emptyTable": "No datasets to display"}
         });
-        $('#datasets tbody').on('click', 'td', function () {
-            var tr = $(this).closest('tr');
-            if (!(tr.hasClass('childRowData') || $(this).hasClass('details-control'))) {
-                if (tr.hasClass('selected')) {
-                    tr.removeClass('selected');
-                    $(".dataset-action").addClass('disabled')
-                } else {
-                    table.$('tr.selected').removeClass('selected');
-                    tr.addClass('selected');
-                    $(".dataset-action").removeClass('disabled')
-                }
-            }
-        });
-        // Add event listener for opening and closing details
-        $('#datasets tbody').on('click', 'td.details-control', function () {
-            var tr = $(this).closest('tr');
-            var row = table.row(tr);
-
-            if (row.child.isShown()) {
-                // This row is already open - close it
-                row.child.hide();
-                tr.removeClass('shown');
-            } else {
-                // Open this row
-                row.child("<label for='metadata'>Metadata:<label><textarea id='metadata'>default value</textarea>", "childRowData").show();
-                tr.addClass('shown');
-            }
-        });
     });
 </script>
 </body>
