@@ -7,29 +7,24 @@ workspace:
 steps:
 - name: unit-test
   image: devinchristianson/birdspotter:dev-deps
-  pull: always
   commands:
     - cd /app/birdspotter
     - python manage.py makemigrations && python manage.py migrate
     - coverage run --source='.' manage.py test
     - coverage report
     - coverage xml
-- name: coverage
-  image: plugins/codecov
-  depends_on: [ unit-test ]
-  settings:
-    token: 
-        from_secret: codecov_token
-    files:
-     - /app/birdspotter/coverage.xml
 - name: linter-tests
   image: devinchristianson/birdspotter:dev-deps
-  pull: always
   commands:
     - cd /app/birdspotter
     - prospector
+- name: deployment-test
+  image: devinchristianson/birdspotter:dev
+  commands:
+    - cd /app/birdspotter
+    - python3 manage.py check --deploy 2>&1
 - name: publish-dev-image
-  depends_on: [unit-test, linter-tests]
+  depends_on: [unit-test, linter-tests, deployment-test]
   when:
     status: 
       - success
@@ -76,6 +71,6 @@ trigger:
     - tag
 ---
 kind: signature
-hmac: 244f19dd808057e7d20d50fdfb2dc7ffc5e8e14a450e211d797b978ac0c4c278
+hmac: c3570d7065ffa5d7f8510637b5348902ad22823493e5326fe35b7bfde074b3a6
 
 ...

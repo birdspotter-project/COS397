@@ -14,7 +14,7 @@ Docker is required to run the application. For instructions on how to install do
 -------------
 The .env file
 -------------
-In order for the application to run correctly, the .env file must be filled out correctly. An example file is located at ``docker-compose/.env.example``. This file must be named ``.env``.
+In order for the application to run correctly, the .env file must be filled out correctly. An example file is located at ``docker-compose/env.example``. This file must be named ``.env``.
 
 - **SECRET_KEY**: The secret key for the application. This should be generated via ``python3 -c "import secrets; print(secrets.token_urlsafe())"``
 - **DEBUG**: should be set to false for production enviroments, though can be useful for troubleshooting.
@@ -27,14 +27,16 @@ In order for the application to run correctly, the .env file must be filled out 
 
 These variables can be left at their default values.
 
-- **PROD_EMAIL**: Whether the application will use a normal mail server to send mail. Setting to false will not send emails and will instead print the email to the application logs (Default ``true``).
-- **USE_X_FOWARDED_HOSTS**: Flag to enable USE_X_FORWARDED_HOST on the server (Default ``true``).
-- **PROD_FS**: Whether the application will use the production file system (Default ``true``).
+- **USE_X_FOWARDED_HOSTS**: Flag to enable USE_X_FORWARDED_HOST on the server (Default ``false``).
+- **PROD_MODE**: Controls whether the application runs in full production mode or note (Default ``false``). Setting this means setting the other PROD_FS and PROD_DB variables is unnecessary
+    - **PROD_FS**: Whether the application will use the production file system (Default ``false``).
+    - **PROD_EMAIL**: Whether the application will use a normal mail server to send mail. Setting to false will not send emails and will instead print the email to the application logs (Default ``false``).
+
 
 ------------------------
 Starting the application
 ------------------------ 
-1. Before starting the application, switch to the docker-compose directory, and verify that the path on the last line of ``docker-compose.prod.yml`` is your mass data storage, or some other suitable directory that exists.
+1. Before starting the application, switch to the docker-compose directory, and verify that the path on the last line of ``docker-compose.prod.yml`` is your mass data storage, or some other suitable directory that exists, and that this mass storage is writable by userid 100 : group 101.
 
 .. warning:: Depending on the type of network share being used for mass data storage, it may be more suitable to re-configure the docker volume driver to use that network share directly. 
             More info on how to do that can be found here https://docs.docker.com/engine/extend/legacy_plugins/.

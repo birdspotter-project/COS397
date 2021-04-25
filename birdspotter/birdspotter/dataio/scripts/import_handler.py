@@ -2,10 +2,10 @@ import io
 import zipfile
 import os
 import shutil 
-import logging
 import geopandas as gp
 from fiona.io import ZipMemoryFile
 from datetime import datetime
+import logging
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -48,6 +48,8 @@ def import_data(file_path, dataset):
                 shapefile_locs = list(filter(lambda v: v.endswith('.shp'), zf.namelist()))
                 new_path = os.path.join(settings.PRIVATE_STORAGE_ROOT, "raw_files/", str(uuid.uuid4()))
                 raw_shp_data = RawData.objects.create()
+                raw_shp_data.name = f"{dataset.name}"
+                raw_shp_data.ext = "zip"
                 raw_shp_data.path.save(new_path, io.BytesIO(binary))
                 raw_shp_data.save()
                 raw_shp = RawShapefile.objects.create(rawshp=raw_shp_data, dataset=dataset)
@@ -60,10 +62,11 @@ def import_data(file_path, dataset):
         return dataset is not None
 
 def __import_tiff(tiff_file, dataset):
-    new_path = os.path.join(settings.PRIVATE_STORAGE_ROOT, "raw_files/", str(uuid.uuid4()))
-    logging.error(new_path)
+    relative_path = f"raw_files/{str(uuid.uuid4())}"
+    new_path = os.path.join(settings.PRIVATE_STORAGE_ROOT, relative_path)
     shutil.move(tiff_file, new_path)
-    tiff = RawData.objects.create(path=new_path)
+    tiff = RawData.objects.create(path=new_path, name=f"{dataset.name}", ext="tif")
+    tiff.path.name=relative_path
     tiff.save()
     dataset.geotiff=tiff
     dataset.save()
@@ -76,7 +79,10 @@ def __import_shapefile(file_loc, zip_mem, dataset, **kwargs):
         with zip_mem.open(file_loc[0]) as open_file:
             shp = gp.GeoDataFrame.from_features(open_file)
             shp_objects = []
-            date_collected_str = shp.iloc[0]['PhotoDate']
+            try:
+                date_collected_str = shp.iloc[0]['PhotoDate']
+            except KeyError:
+                logging.error('PhotoDate not found, cannot generate date collected')
             for _, record in shp.iterrows():
                 img = None
                 if zf is not None:
@@ -89,14 +95,18 @@ def __import_shapefile(file_loc, zip_mem, dataset, **kwargs):
                             img.save()
                     except AttributeError:
                         img = None
-                shp_objects.append(Shapefile(data_set=dataset,
-                                             island_name=record.IslandName, cireg=record.CIREG,
-                                             photo_date=record.PhotoDate, observer=record.Observer,
-                                             species=record.Species,
-                                             behavior=record.Behavior, certain_p1=record.CertainP1,
-                                             comments=record.Comments if record.Comments else '',
-                                             point_x=record.geometry.x, point_y=record.geometry.y,
-                                             latitude=record.Lat, longitude=record.Long, image=img))
+                try:
+                    shp_objects.append(Shapefile(data_set=dataset,
+                                                 island_name=record.IslandName, cireg=record.CIREG,
+                                                 photo_date=record.PhotoDate, observer=record.Observer,
+                                                 species=record.Species,
+                                                 behavior=record.Behavior, certain_p1=record.CertainP1,
+                                                 comments=record.Comments if record.Comments else '',
+                                                 point_x=record.geometry.x, point_y=record.geometry.y,
+                                                 latitude=record.Lat, longitude=record.Long, image=img))
+                except AttributeError:
+                    logging.error('Missing one of the required shapefile attributes')
+                    return False
         Shapefile.objects.bulk_create(shp_objects, 100)
         dataset.date_collected = datetime.strptime(date_collected_str, '%Y-%m-%d')
         dataset.save()
