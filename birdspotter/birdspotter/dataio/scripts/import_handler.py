@@ -2,7 +2,6 @@ import io
 import zipfile
 import os
 import shutil 
-import logging
 import geopandas as gp
 from fiona.io import ZipMemoryFile
 from datetime import datetime
@@ -27,9 +26,9 @@ def import_new_data(user, file_path, is_public, file_name):
     dataset = Dataset(name=name, owner=get_user_model().objects.get_by_natural_key(user.username),
                     is_public=is_public)
     dataset.save()
-    return import_data(file_path, dataset)
+    return import_data(file_path, dataset, name)
 
-def import_data(file_path, dataset):
+def import_data(file_path, dataset, name):
     """Takes InMemoryFile user, and dat_created and imports data into the database accordingly (creates GeoTiff or Shapefile model and 
     creates a Dataset for each file)
     Args:
@@ -48,6 +47,8 @@ def import_data(file_path, dataset):
                 shapefile_locs = list(filter(lambda v: v.endswith('.shp'), zf.namelist()))
                 new_path = os.path.join(settings.PRIVATE_STORAGE_ROOT, "raw_files/", str(uuid.uuid4()))
                 raw_shp_data = RawData.objects.create()
+                raw_shp_data.name = f"{name}"
+                raw_shp_data.ext = "zip"
                 raw_shp_data.path.save(new_path, io.BytesIO(binary))
                 raw_shp_data.save()
                 raw_shp = RawShapefile.objects.create(rawshp=raw_shp_data, dataset=dataset)
@@ -56,14 +57,15 @@ def import_data(file_path, dataset):
         except zipfile.BadZipfile:
             return False
     else:
-        dataset = __import_tiff(file_path, dataset)
+        dataset = __import_tiff(file_path, dataset, name)
         return dataset is not None
 
-def __import_tiff(tiff_file, dataset):
-    new_path = os.path.join(settings.PRIVATE_STORAGE_ROOT, "raw_files/", str(uuid.uuid4()))
-    logging.error(new_path)
+def __import_tiff(tiff_file, dataset, name):
+    relative_path = f"raw_files/{str(uuid.uuid4())}"
+    new_path = os.path.join(settings.PRIVATE_STORAGE_ROOT, relative_path)
     shutil.move(tiff_file, new_path)
-    tiff = RawData.objects.create(path=new_path)
+    tiff = RawData.objects.create(path=new_path, name=f"{name}", ext="tif")
+    tiff.path.name=relative_path
     tiff.save()
     dataset.geotiff=tiff
     dataset.save()
