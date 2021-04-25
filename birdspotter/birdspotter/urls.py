@@ -20,7 +20,7 @@ from django.conf.urls.static import static
 from django.conf import settings
 import private_storage.urls
 
-from birdspotter.dataio.views import share_dataset
+from birdspotter.dataio.views import share_dataset, export_dataset, raw_data
 from birdspotter.accounts.views import contact_view
 
 urlpatterns = [
@@ -37,4 +37,6 @@ urlpatterns = [
     path('auth/', views.auth, name='auth'),
     path('share/<uuid:dataset_id>/', share_dataset),
     path('contact/', contact_view),
+    path('rawdata/<int:pk>', raw_data.as_view()),
+    path('export/<uuid:dataset_id>/', export_dataset)
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) # only works in dev mode

@@ -208,7 +208,6 @@ PRIVATE_STORAGE_INTERNAL_URL = '/media/protected/'
 if PROD_FS : 
     PRIVATE_STORAGE_ROOT = '/share/media/protected/'
     PRIVATE_STORAGE_SERVER = 'nginx'
-    PRIVATE_STORAGE_INTERNAL_URL = '/media/protected/'
     STATIC_URL = '/static/'
     MEDIA_URL = '/share/media/'
     MEDIA_ROOT = '/media/'

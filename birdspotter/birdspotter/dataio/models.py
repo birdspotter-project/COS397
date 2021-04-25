@@ -4,6 +4,7 @@ visualizations and analysis
 from django.conf import settings
 from django.db import models
 from private_storage.storage.files import PrivateFileSystemStorage
+from private_storage.fields import PrivateFileField
 import uuid
 
 
@@ -15,8 +16,9 @@ class RawData(models.Model):
     Attributes:
         path (str): File path to file on fileserver
     """
-
-    path = models.FileField(storage=PrivateFileSystemStorage, upload_to="raw_files/")
+    name = models.CharField(max_length=50, null=True)
+    ext = models.CharField(max_length=10, null=True)
+    path = PrivateFileField(storage=PrivateFileSystemStorage, upload_to="raw_files/")
 
 
 class Dataset(models.Model):

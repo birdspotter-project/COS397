@@ -36,7 +36,7 @@ These variables can be left at their default values.
 ------------------------
 Starting the application
 ------------------------ 
-1. Before starting the application, switch to the docker-compose directory, and verify that the path on the last line of ``docker-compose.prod.yml`` is your mass data storage, or some other suitable directory that exists.
+1. Before starting the application, switch to the docker-compose directory, and verify that the path on the last line of ``docker-compose.prod.yml`` is your mass data storage, or some other suitable directory that exists, and that this mass storage is writable by userid 100 : group 101.
 
 .. warning:: Depending on the type of network share being used for mass data storage, it may be more suitable to re-configure the docker volume driver to use that network share directly. 
             More info on how to do that can be found here https://docs.docker.com/engine/extend/legacy_plugins/.
