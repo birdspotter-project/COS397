@@ -76,7 +76,10 @@ def __import_shapefile(file_loc, zip_mem, dataset, **kwargs):
         with zip_mem.open(file_loc[0]) as open_file:
             shp = gp.GeoDataFrame.from_features(open_file)
             shp_objects = []
-            date_collected_str = shp.iloc[0]['PhotoDate']
+            try:
+                date_collected_str = shp.iloc[0]['PhotoDate']
+            except KeyError:
+                logging.error('PhotoDate not found, cannot generate date collected')
             for _, record in shp.iterrows():
                 img = None
                 if zf is not None:
