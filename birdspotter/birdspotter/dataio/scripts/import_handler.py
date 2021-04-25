@@ -89,14 +89,17 @@ def __import_shapefile(file_loc, zip_mem, dataset, **kwargs):
                             img.save()
                     except AttributeError:
                         img = None
-                shp_objects.append(Shapefile(data_set=dataset,
-                                             island_name=record.IslandName, cireg=record.CIREG,
-                                             photo_date=record.PhotoDate, observer=record.Observer,
-                                             species=record.Species,
-                                             behavior=record.Behavior, certain_p1=record.CertainP1,
-                                             comments=record.Comments if record.Comments else '',
-                                             point_x=record.geometry.x, point_y=record.geometry.y,
-                                             latitude=record.Lat, longitude=record.Long, image=img))
+                try:
+                    shp_objects.append(Shapefile(data_set=dataset,
+                                                 island_name=record.IslandName, cireg=record.CIREG,
+                                                 photo_date=record.PhotoDate, observer=record.Observer,
+                                                 species=record.Species,
+                                                 behavior=record.Behavior, certain_p1=record.CertainP1,
+                                                 comments=record.Comments if record.Comments else '',
+                                                 point_x=record.geometry.x, point_y=record.geometry.y,
+                                                 latitude=record.Lat, longitude=record.Long, image=img))
+                except AttributeError:
+                    return False
         Shapefile.objects.bulk_create(shp_objects, 100)
         dataset.date_collected = datetime.strptime(date_collected_str, '%Y-%m-%d')
         dataset.save()
