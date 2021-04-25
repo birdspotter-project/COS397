@@ -13,14 +13,6 @@ steps:
     - coverage run --source='.' manage.py test
     - coverage report
     - coverage xml
-- name: coverage
-  image: plugins/codecov
-  depends_on: [ unit-test ]
-  settings:
-    token: 
-        from_secret: codecov_token
-    files:
-     - /app/birdspotter/coverage.xml
 - name: linter-tests
   image: devinchristianson/birdspotter:dev-deps
   commands:
@@ -79,6 +71,6 @@ trigger:
     - tag
 ---
 kind: signature
-hmac: ba18a313ef5c03b137c2fc20b65c4455b008b3a66ed3a66b73b321e916bcc7e4
+hmac: c3570d7065ffa5d7f8510637b5348902ad22823493e5326fe35b7bfde074b3a6
 
 ...
