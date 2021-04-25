@@ -11,9 +11,6 @@ from birdspotter.utils import group_required, GROUPS
 
 from .forms import DatasetEditForm
 
-import logging
-
-
 def index(request):
     """
     Application index which is also the landing page. This view displays a table with all datasets available to the
@@ -62,7 +59,6 @@ def delete_dataset(request, dataset_id):
         success = dataset.delete()
         if success[0]:
             messages.success(request, 'Dataset delted successfully')
-            logging.info(f'Dataset {dataset_id} deleted by {request.user}')
         else:
             messages.error(request, 'Error deleting dataset')
         return HttpResponse(200)
