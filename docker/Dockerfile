@@ -20,6 +20,14 @@ COPY --from=prod-deps /usr/local/lib/python3.8/dist-packages/ /usr/local/lib/pyt
 COPY --from=prod-deps /usr/lib/python3.8/ /usr/lib/python3.8/
 COPY --from=prod-deps /usr/lib/x86_64-linux-gnu/ /usr/lib/x86_64-linux-gnu/
 COPY --from=prod-deps /usr/bin/python3 /usr/bin/python3
+RUN deluser _apt \
+    && groupadd -g 101 birdspotter \
+    && useradd -r -u 100 -g birdspotter birdspotter \
+    && mkdir -p /share/media/ \
+    && mkdir -p /share/static/ \ 
+    && chown -R 100:101 /share/media/ \
+    && chown -R 100:101 /share/static/
+USER birdspotter
 WORKDIR /app
 COPY ./birdspotter ./birdspotter
 COPY ./manage.py .

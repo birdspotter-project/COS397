@@ -23,6 +23,7 @@ services:
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
     command:
+      - "--log.level=DEBUG"
       - "--ping.entryPoint=ping"
       - "--api.insecure=true"
       - "--providers.docker=true"
@@ -48,7 +49,7 @@ services:
       - media:/share/media
     labels:
     - "traefik.enable=true"
-    - "traefik.http.routers.media.rule=Host(`${DOMAIN}`) && PathPrefix(`/media`) || PathPrefix(`/upload`)"
+    - "traefik.http.routers.media.rule=Host(`${DOMAIN}`) && PathPrefix(`/media`) || PathPrefix(`/upload`) || PathPrefix(`/rawdata`)"
     - "traefik.http.routers.media.entrypoints=web"
   mail: 
     image: antespi/docker-imap-devel:latest
