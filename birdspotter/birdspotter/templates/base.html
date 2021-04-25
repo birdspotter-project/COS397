@@ -37,7 +37,11 @@
             crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw==" crossorigin="anonymous"></script>
 
-
+        <script>
+            toastr.options = {
+                positionClass: 'toast-top-right',
+            };
+        </script>
     {% for message in messages %}
     {% if 'safe' in message.tags %}
         <script>
@@ -52,6 +56,10 @@
     {% endif %}
     {% endfor %}
     {% endblock %}
-    
+    <style>
+        .toast-top-right {
+            top: 70px;
+        }
+    </style>
 </body>
 </html>

@@ -5,6 +5,7 @@ import shutil
 import geopandas as gp
 from fiona.io import ZipMemoryFile
 from datetime import datetime
+import logging
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -78,7 +79,10 @@ def __import_shapefile(file_loc, zip_mem, dataset, **kwargs):
         with zip_mem.open(file_loc[0]) as open_file:
             shp = gp.GeoDataFrame.from_features(open_file)
             shp_objects = []
-            date_collected_str = shp.iloc[0]['PhotoDate']
+            try:
+                date_collected_str = shp.iloc[0]['PhotoDate']
+            except KeyError:
+                logging.error('PhotoDate not found, cannot generate date collected')
             for _, record in shp.iterrows():
                 img = None
                 if zf is not None:
@@ -91,14 +95,18 @@ def __import_shapefile(file_loc, zip_mem, dataset, **kwargs):
                             img.save()
                     except AttributeError:
                         img = None
-                shp_objects.append(Shapefile(data_set=dataset,
-                                             island_name=record.IslandName, cireg=record.CIREG,
-                                             photo_date=record.PhotoDate, observer=record.Observer,
-                                             species=record.Species,
-                                             behavior=record.Behavior, certain_p1=record.CertainP1,
-                                             comments=record.Comments if record.Comments else '',
-                                             point_x=record.geometry.x, point_y=record.geometry.y,
-                                             latitude=record.Lat, longitude=record.Long, image=img))
+                try:
+                    shp_objects.append(Shapefile(data_set=dataset,
+                                                 island_name=record.IslandName, cireg=record.CIREG,
+                                                 photo_date=record.PhotoDate, observer=record.Observer,
+                                                 species=record.Species,
+                                                 behavior=record.Behavior, certain_p1=record.CertainP1,
+                                                 comments=record.Comments if record.Comments else '',
+                                                 point_x=record.geometry.x, point_y=record.geometry.y,
+                                                 latitude=record.Lat, longitude=record.Long, image=img))
+                except AttributeError:
+                    logging.error('Missing one of the required shapefile attributes')
+                    return False
         Shapefile.objects.bulk_create(shp_objects, 100)
         dataset.date_collected = datetime.strptime(date_collected_str, '%Y-%m-%d')
         dataset.save()
