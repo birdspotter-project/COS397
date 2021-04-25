@@ -53,7 +53,7 @@
                                        data-button='{"dataset_id": "{{ dataset.dataset_id }}","dataset_name": "{{ dataset.name }}"}'>Share</a>
                                 {% endif %}
                                 {% if request.user.is_authenticated %}
-                                <a class="nav-link" href="/export">Export</a>                                
+                                <a class="nav-link" href="/export/{{dataset.dataset_id}}">Export</a>                                
                                 {% endif %}
                     </div>
                 </div>

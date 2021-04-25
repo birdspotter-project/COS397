@@ -2,7 +2,6 @@ from django import forms
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
 
-
 class NoInput(forms.Widget):
     input_type = "hidden"
     template_name = ""

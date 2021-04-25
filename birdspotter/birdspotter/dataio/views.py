@@ -1,17 +1,18 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
 from django.http import JsonResponse, HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
+from django.conf import settings
+import logging
+import os
 
 from .forms import ImportForm
-import logging
-from django.conf import settings
 from .scripts.import_handler import import_new_data
-from .models import Dataset
-from django.shortcuts import redirect
-
+from .models import Dataset, RawData, RawShapefile
+from birdspotter.utils import GROUPS
+from private_storage.views import PrivateStorageDetailView
 
 @login_required
 def index(request):
@@ -88,3 +89,46 @@ def share_dataset(request, dataset_id):
             return JsonResponse({"users": data}, safe=False)
         return HttpResponse(status=405)
     raise PermissionDenied
+
+
+@login_required
+def export_dataset(request, dataset_id):
+    """
+    Handles the export dialog and accepts GET and POST requests to /export/<dataset_id>/
+    POST: Get list of potential raw_data's
+    GET: Returns an object with an array of usernames, along with if they are already shared the dataset
+    """
+    dataset = Dataset.objects.get(dataset_id=dataset_id)
+    # only allow owner of dataset to share the dataset
+    if dataset.owner == request.user or request.user.is_admin() or request.user.groups.filter(name=GROUPS.privileged).exists():
+        if request.method == "GET":
+            data_id = ""
+            if dataset.geotiff:
+                data_id = dataset.geotiff.pk
+                # the name is synced here because this is the only time it matters that it's synced
+                dataset.geotiff.name = dataset.name
+                dataset.geotiff.save()
+            elif RawShapefile.objects.filter(dataset=dataset).exists():
+                rawshp = RawShapefile.objects.filter(dataset=dataset)[0].rawshp
+                data_id = rawshp.pk
+                # the name is synced here because this is the only time it matters that it's synced
+                rawshp.name = dataset.name
+                rawshp.save()
+            else:
+                messages.error(request, "No data stored for this dataset")
+                return redirect("/")
+            messages.success(request, "Dataset Downloaded")
+            return redirect(f"/rawdata/{data_id}")
+    raise PermissionDenied
+
+
+class raw_data(PrivateStorageDetailView):
+    model = RawData
+    model_file_field = 'path'
+    model_file_name = 'name'
+    model_file_ext = 'ext'
+    content_disposition = 'inline'
+    def get_content_disposition_filename(self, private_file):
+        name = getattr(self.object, self.model_file_name)
+        ext = getattr(self.object, self.model_file_ext)
+        return f"{name}.{ext}" or os.path.basename(private_file.relative_name)
