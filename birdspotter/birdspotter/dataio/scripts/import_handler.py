@@ -5,6 +5,7 @@ import shutil
 import geopandas as gp
 from fiona.io import ZipMemoryFile
 from datetime import datetime
+import logging
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -104,6 +105,7 @@ def __import_shapefile(file_loc, zip_mem, dataset, **kwargs):
                                                  point_x=record.geometry.x, point_y=record.geometry.y,
                                                  latitude=record.Lat, longitude=record.Long, image=img))
                 except AttributeError:
+                    logging.error('Missing one of the required shapefile attributes')
                     return False
         Shapefile.objects.bulk_create(shp_objects, 100)
         dataset.date_collected = datetime.strptime(date_collected_str, '%Y-%m-%d')
