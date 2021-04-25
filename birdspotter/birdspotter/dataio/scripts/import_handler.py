@@ -26,9 +26,9 @@ def import_new_data(user, file_path, is_public, file_name):
     dataset = Dataset(name=name, owner=get_user_model().objects.get_by_natural_key(user.username),
                     is_public=is_public)
     dataset.save()
-    return import_data(file_path, dataset, name)
+    return import_data(file_path, dataset)
 
-def import_data(file_path, dataset, name):
+def import_data(file_path, dataset):
     """Takes InMemoryFile user, and dat_created and imports data into the database accordingly (creates GeoTiff or Shapefile model and 
     creates a Dataset for each file)
     Args:
@@ -47,7 +47,7 @@ def import_data(file_path, dataset, name):
                 shapefile_locs = list(filter(lambda v: v.endswith('.shp'), zf.namelist()))
                 new_path = os.path.join(settings.PRIVATE_STORAGE_ROOT, "raw_files/", str(uuid.uuid4()))
                 raw_shp_data = RawData.objects.create()
-                raw_shp_data.name = f"{name}"
+                raw_shp_data.name = f"{dataset.name}"
                 raw_shp_data.ext = "zip"
                 raw_shp_data.path.save(new_path, io.BytesIO(binary))
                 raw_shp_data.save()
@@ -57,14 +57,14 @@ def import_data(file_path, dataset, name):
         except zipfile.BadZipfile:
             return False
     else:
-        dataset = __import_tiff(file_path, dataset, name)
+        dataset = __import_tiff(file_path, dataset)
         return dataset is not None
 
-def __import_tiff(tiff_file, dataset, name):
+def __import_tiff(tiff_file, dataset):
     relative_path = f"raw_files/{str(uuid.uuid4())}"
     new_path = os.path.join(settings.PRIVATE_STORAGE_ROOT, relative_path)
     shutil.move(tiff_file, new_path)
-    tiff = RawData.objects.create(path=new_path, name=f"{name}", ext="tif")
+    tiff = RawData.objects.create(path=new_path, name=f"{dataset.name}", ext="tif")
     tiff.path.name=relative_path
     tiff.save()
     dataset.geotiff=tiff
