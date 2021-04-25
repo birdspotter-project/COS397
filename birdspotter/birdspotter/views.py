@@ -1,15 +1,18 @@
-from django.shortcuts import render, redirect
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
+from django.http import HttpResponse
+from django.shortcuts import render, redirect
+
 
 from birdspotter.dataio.scripts.get_user_datasets import get_datasets_for_user, get_public_datasets
 from birdspotter.dataio.models import Dataset
-from .forms import DatasetEditForm
-from .forms import DatasetDeleteForm
-from django.contrib import messages
-from django.http import HttpResponse
-
 from birdspotter.utils import group_required, GROUPS
+
+from .forms import DatasetEditForm
+
+import logging
+
 
 def index(request):
     """
@@ -50,28 +53,21 @@ def edit_dataset(request, uuid):
     raise PermissionDenied
 
 @login_required
-@group_required(GROUPS.registered, GROUPS.privileged, GROUPS.admin)
-def delete_dataset(request, uuid):
+def delete_dataset(request, dataset_id):
     """
-    Deleting dataset with confirmation
+    Deleting dataset by dataset_id
     """
-    dataset = Dataset.objects.get(dataset_id=uuid)
-    if dataset.owner == request.user:
-        if dataset is not None:
-            form = DatasetDeleteForm(request.POST or None, instance=dataset)
-            if form.is_valid():
-                form.save()
-                messages.success(request, "Data set deletion complete")
-                return redirect("/")
-        form = DatasetDeleteForm(initial={
-            'name': dataset.name,
-        })
-        context = {
-            'form': form,
-            'isAdmin': False
-        }
-        return render(request, "dataset_edit.html", context=context)
+    dataset = Dataset.objects.get(dataset_id=dataset_id)
+    if request.method == 'POST':
+        success = dataset.delete()
+        if success[0]:
+            messages.success(request, 'Dataset delted successfully')
+            logging.info(f'Dataset {dataset_id} deleted by {request.user}')
+        else:
+            messages.error(request, 'Error deleting dataset')
+        return HttpResponse(200)
     raise PermissionDenied
+
 
 
 # How to correctly send a fully compliant HTTP 204 response, based on https://code.djangoproject.com/ticket/16632
