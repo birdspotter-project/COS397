@@ -1,7 +1,6 @@
 #!/bin/bash
 set -e
 
-docker-compose exec birdspotter python3 manage.py makemigrations
 docker-compose exec birdspotter python3 manage.py migrate
 docker-compose exec birdspotter python3 manage.py create_groups
 docker-compose exec birdspotter python3 manage.py create_inbox
