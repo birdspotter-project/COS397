@@ -1,14 +1,15 @@
-from django.shortcuts import render, redirect
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
+from django.http import HttpResponse
+from django.shortcuts import render, redirect
+
 
 from birdspotter.dataio.scripts.get_user_datasets import get_datasets_for_user, get_public_datasets
 from birdspotter.dataio.models import Dataset
-from .forms import DatasetEditForm
-from django.contrib import messages
-from django.http import HttpResponse
-
 from birdspotter.utils import group_required, GROUPS
+
+from .forms import DatasetEditForm
 
 def index(request):
     """
@@ -47,6 +48,22 @@ def edit_dataset(request, uuid):
         }
         return render(request, "dataset_edit.html", context=context)
     raise PermissionDenied
+
+@login_required
+def delete_dataset(request, dataset_id):
+    """
+    Deleting dataset by dataset_id
+    """
+    dataset = Dataset.objects.get(dataset_id=dataset_id)
+    if request.method == 'POST':
+        success = dataset.delete()
+        if success[0]:
+            messages.success(request, 'Dataset delted successfully')
+        else:
+            messages.error(request, 'Error deleting dataset')
+        return HttpResponse(200)
+    raise PermissionDenied
+
 
 
 # How to correctly send a fully compliant HTTP 204 response, based on https://code.djangoproject.com/ticket/16632
