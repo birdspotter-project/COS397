@@ -58,7 +58,7 @@ def delete_dataset(request, dataset_id):
     if request.method == 'POST':
         success = dataset.delete()
         if success[0]:
-            messages.success(request, 'Dataset delted successfully')
+            messages.success(request, 'Dataset deleted successfully')
         else:
             messages.error(request, 'Error deleting dataset')
         return HttpResponse(200)
