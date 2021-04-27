@@ -10,6 +10,7 @@ steps:
   commands:
     - cd /app/birdspotter
     - python manage.py makemigrations && python manage.py migrate
+    - python manage.py collectstatic
     - coverage run --source='.' manage.py test
     - coverage report
     - coverage xml
@@ -22,6 +23,7 @@ steps:
   image: birdspotter/birdspotter:dev
   commands:
     - cd /app/birdspotter
+    - export PROD_MODE=true
     - python3 manage.py check --deploy 2>&1
 - name: publish-dev-image
   depends_on: [unit-test, linter-tests, deployment-test]
@@ -71,6 +73,6 @@ trigger:
     - tag
 ---
 kind: signature
-hmac: da0c25f1219c23076d69a2dcd9a8d4a9eacf8d0dbab852f279bc1756982b36d9
+hmac: 3a5262b923b1987064405826914d7c54ed20ae48221d8f71bb55b60715bf6b3f
 
 ...
