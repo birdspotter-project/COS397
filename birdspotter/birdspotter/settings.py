@@ -31,7 +31,7 @@ if(not SECRET_KEY):
     logging.warning("WARNING - IMPORTANT: SECRET_KEY env var was not set, random secret key was used")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DEBUG', False)
+DEBUG = os.getenv('DEBUG', 'False')
 CRISPY_FAIL_SILENTLY = not DEBUG
 PROD_MODE = os.getenv('PROD_MODE', 'False')
 
