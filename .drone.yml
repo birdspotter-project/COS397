@@ -6,7 +6,7 @@ workspace:
   base: /app
 steps:
 - name: unit-test
-  image: devinchristianson/birdspotter:dev-deps
+  image: birdspotter/birdspotter:dev-deps
   commands:
     - cd /app/birdspotter
     - python manage.py makemigrations && python manage.py migrate
@@ -14,12 +14,12 @@ steps:
     - coverage report
     - coverage xml
 - name: linter-tests
-  image: devinchristianson/birdspotter:dev-deps
+  image: birdspotter/birdspotter:dev-deps
   commands:
     - cd /app/birdspotter
     - prospector
 - name: deployment-test
-  image: devinchristianson/birdspotter:dev
+  image: birdspotter/birdspotter:dev
   commands:
     - cd /app/birdspotter
     - python3 manage.py check --deploy 2>&1
@@ -32,7 +32,7 @@ steps:
       - push
   image: plugins/docker
   settings:
-    repo: devinchristianson/birdspotter
+    repo: birdspotter/birdspotter
     username: 
       from_secret: dockerhub_username
     password: 
@@ -51,7 +51,7 @@ steps:
       - tag
   image: plugins/docker
   settings:
-    repo: devinchristianson/birdspotter
+    repo: birdspotter/birdspotter
     username: 
       from_secret: dockerhub_username
     password: 
@@ -71,6 +71,6 @@ trigger:
     - tag
 ---
 kind: signature
-hmac: c3570d7065ffa5d7f8510637b5348902ad22823493e5326fe35b7bfde074b3a6
+hmac: da0c25f1219c23076d69a2dcd9a8d4a9eacf8d0dbab852f279bc1756982b36d9
 
 ...
