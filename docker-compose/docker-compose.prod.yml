@@ -1,7 +1,7 @@
 version: "3.9"
 services:
   birdspotter:
-    image: devinchristianson/birdspotter:latest
+    image: birdspotter/birdspotter:latest
     env_file: 
       - .env
     environment:
@@ -55,7 +55,7 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
   nginx:
-    image: devinchristianson/birdspotter:nginx-upload
+    image: birdspotter/proxy-upload:v0.0.3
     depends_on:
       - birdspotter
     volumes:
