@@ -71,9 +71,9 @@ def make_point_map(gdf, zoom, center):
         center (dict): dictionary with keys "lat" and "lon", used to set the center
                         of the map to specified latitude and longitude
     """
-    fig = px.scatter_mapbox(gdf, lat="latitude", lon="longitude", 
+    fig = px.scatter_mapbox(gdf, lat="latitude", lon="longitude", color="species",
                             hover_name="island_name", hover_data=["species"],
-                            color_discrete_sequence=["red"], zoom=zoom, center=center)
+                             zoom=zoom, center=center)
     
     fig.update_layout(mapbox_style="white-bg",
                       mapbox_layers=[
